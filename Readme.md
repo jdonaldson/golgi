@@ -7,17 +7,15 @@ class Main {
     static function main() {
         trace("hello world");
         var r = new Router(); 
-        Dispatch.dispatch("foo", r);
-        Dispatch.dispatch("bar", r);
-        try {
-        Dispatch.dispatch("blah", r);
-        } catch (e:Dynamic){
-            trace("not matched!");
-        }
+        r.dispatch("foob/1");
     }
 }
 
-class Router extends Dispatch {
+class Router implements Dispatch {
+    public function foob(?x:Int){
+        trace(x + " is the value for x in foob");
+
+    }
     public function foo(){
         trace("foo was called!");
     }

@@ -1,3 +1,4 @@
 -lua out.lua
 -main Main
 -cmd lua out.lua
+-D eval-stack

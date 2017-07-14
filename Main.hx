@@ -2,17 +2,14 @@ class Main {
     static function main() {
         trace("hello world");
         var r = new Router(); 
-        Dispatch.dispatch("foo", r);
-        Dispatch.dispatch("bar", r);
-        try {
-        Dispatch.dispatch("blah", r);
-        } catch (e:Dynamic){
-            trace("not matched!");
-        }
+        r.dispatch("foob");
     }
 }
 
-class Router extends Dispatch {
+class Router implements Dispatch {
+    public function foob(){
+        trace("foob was called");
+    }
     public function foo(){
         trace("foo was called!");
     }

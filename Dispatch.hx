@@ -35,7 +35,6 @@ class Builder {
 
         var handler_steps = [];
         for (i in 0...routes.length){
-            var handler_name = routes[i].name;
             var route = routes[i];
             var validation_args = [];
             for (j in 0...route.ffun.args.length){
@@ -49,6 +48,7 @@ class Builder {
                 }
                 validation_args.push(validation);
             }
+            var handler_name = route.name;
             var macro_step = macro {
                 if (this.reg.matched($v{i} + 1)!= null){
                     var parts = Validate.split(this.reg.matchedRight(),"/");

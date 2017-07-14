@@ -12,7 +12,7 @@ class Validate {
         }
     }
     public static function int(str:String, optional:Bool) : Int {
-        if (str == null){
+        if (str == null || str == ''){
             if (!optional) throw "Missing argument";
             else return null;
         } else {
@@ -22,7 +22,7 @@ class Validate {
         }
     }
     public static function float(str:String, optional:Bool) : Float {
-        if (str == null){
+        if (str == null || str == ''){
             if (!optional) throw "Missing argument";
             else return null;
         } else {
@@ -32,7 +32,7 @@ class Validate {
         }
     }
     public static function bool(str:String, optional:Bool) : Bool {
-        if (str == null){
+        if (str == null || str == ''){
             if (!optional) throw "Missing argument";
             else return null;
         } else {

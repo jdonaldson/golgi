@@ -2,7 +2,7 @@ class Main {
     static function main() {
         trace("hello world");
         var r = new Router(); 
-        r.dispatch("foob/1");
+        r.dispatch("foob/");
     }
 }
 

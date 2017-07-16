@@ -36,6 +36,7 @@ class Builder {
                     case {type : TPath({name : "Float"})}  : macro Validate.float(parts[$v{j}+1]  , $v{arg.opt});
                     case {type : TPath({name : "Bool"})}   : macro Validate.bool(parts[$v{j}+1]   , $v{arg.opt});
                     case {name : "args", type : TAnonymous(fields)} : {
+                        trace(arg.type + " is the value for arg");
                         if (j != route.ffun.args.length-1){
                             Context.error("The args argument must be the final argument accepted by the route", route.route.pos);
                         }
@@ -43,12 +44,15 @@ class Builder {
                         for (f in fields){
                             switch(f.kind){
                                 case FVar(fv): {
+                                    trace(fv + " is the value for fv");
+                                    trace(f.meta + " is the value for f.meta");
+                                    var optional = Lambda.exists(f.meta, function(m) return m.name == ":optional");
                                     var fname = f.name; 
                                     var expr = switch(fv){
-                                        case TPath({name : "Int"})    : macro Validate.int(args.$fname, $v{arg.opt});
-                                        case TPath({name : "String"}) : macro Validate.string(args.$fname, $v{arg.opt});
-                                        case TPath({name : "Float"})  : macro Validate.float(args.$fname, $v{arg.opt});
-                                        case TPath({name : "Bool"})   : macro Validate.bool(args.$fname, $v{arg.opt});
+                                        case TPath({name : "Int"})    : macro Validate.int(args.$fname, $v{optional});
+                                        case TPath({name : "String"}) : macro Validate.string(args.$fname, $v{optional});
+                                        case TPath({name : "Float"})  : macro Validate.float(args.$fname, $v{optional});
+                                        case TPath({name : "Bool"})   : macro Validate.bool(args.$fname, $v{optional});
                                         default : Context.error("Unhandled argument type", route.route.pos); 
                                     };
                                     vfields.push({field:fname, expr : expr});

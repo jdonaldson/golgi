@@ -3,7 +3,7 @@ class Validate {
     public static function split(str:String, delim:String) : Array<String> {
         return str.split(delim);
     }
-    public static function string(str:String, optional:Bool) : String {
+    public static function string(str:String, optional=false) : String {
         if (str == null){
             if (!optional) throw "Missing argument";
             else return null;
@@ -11,7 +11,7 @@ class Validate {
             return StringTools.urlDecode(str);
         }
     }
-    public static function int(str:String, optional:Bool) : Int {
+    public static function int(str:String, optional=false) : Int {
         if (str == null || str == ''){
             if (!optional) throw "Missing argument";
             else return null;
@@ -21,7 +21,7 @@ class Validate {
             return res;
         }
     }
-    public static function float(str:String, optional:Bool) : Float {
+    public static function float(str:String, optional=false) : Float {
         if (str == null || str == ''){
             if (!optional) throw "Missing argument";
             else return null;
@@ -31,7 +31,7 @@ class Validate {
             return res;
         }
     }
-    public static function bool(str:String, optional:Bool) : Bool {
+    public static function bool(str:String, optional=false) : Bool {
         if (str == null || str == ''){
             if (!optional) throw "Missing argument";
             else return null;

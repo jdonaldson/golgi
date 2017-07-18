@@ -36,9 +36,7 @@ class Validate {
             if (!optional) throw "Missing argument";
             else return null;
         } else {
-            var res = Std.parseInt(str);
-            if (res == null) throw "Invalid argument type";
-            return res > 0;
+            return str != "0" && str != "false";
         }
     }
 }

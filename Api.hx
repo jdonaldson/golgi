@@ -1,5 +1,5 @@
+@:allow(Dispatch)
 @:autoBuild(Builder.build())
 class Api {
-    private var _url : String;
-    public function dispatch(parts : Array<String>, params: Dynamic<Dynamic>){}
+    function __dispatch__(parts : Array<String>, params: Dynamic<Dynamic>){}
 }

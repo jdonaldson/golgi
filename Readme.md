@@ -11,7 +11,7 @@ class Main {
     }
 }
 
-class Router implements Dispatch {
+class Router implements Api {
     public function foob(?x:Int){
         trace(x + " is the value for x in foob");
 

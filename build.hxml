@@ -1,4 +1,24 @@
 -lua out.lua
 -main Main
 -cmd lua out.lua
--D eval-stack
+-cp ../hx3compat/std/
+
+
+# --next 
+# -main Main
+# -cp ../hx3compat/std/
+# -js out.js
+# -cmd node out.js
+
+# --next
+
+# -main Main
+# -cp ../hx3compat/std/
+# -x out
+
+
+# --next
+# -main Main
+# -cp ../hx3compat/std/
+# -php outphp
+# -cmd php outphp/Index.php

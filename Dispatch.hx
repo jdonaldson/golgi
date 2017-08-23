@@ -5,7 +5,7 @@ class Dispatch {
         this.parts = parts;
         this.params = params;
     }
-    public function dispatch(api : Api){
+    inline public function dispatch(api : Api){
         api.__dispatch__(this.parts, this.params);
     };
     public static function run(path : String, params : Dynamic, api : Api ){

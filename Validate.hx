@@ -14,7 +14,7 @@ class Validate {
     public static function int(str:String, optional=false) : Int {
         if (str == null || str == ''){
             if (!optional) throw "Missing argument";
-            else return null;
+            return 0;
         } else {
             var res = Std.parseInt(str);
             if (res == null) throw "Invalid argument type";
@@ -24,17 +24,17 @@ class Validate {
     public static function float(str:String, optional=false) : Float {
         if (str == null || str == ''){
             if (!optional) throw "Missing argument";
-            else return null;
+            else return 0.0;
         } else {
             var res = Std.parseFloat(str);
-            if (res == null) throw "Invalid argument type";
+            // if (res == null) throw "Invalid argument type";
             return res;
         }
     }
     public static function bool(str:String, optional=false) : Bool {
         if (str == null || str == ''){
             if (!optional) throw "Missing argument";
-            else return null;
+            return false;
         } else {
             return str != "0" && str != "false";
         }

@@ -51,7 +51,7 @@ class Builder {
                     }
                     subdispatch = true;
                 }
-                case _ : continue; 
+                case _ : continue;
             }
         }
         return {fn : fn, subdispatch : subdispatch, params : params};
@@ -59,12 +59,12 @@ class Builder {
 
 
     static function processFn(f : Field, fn : Function ){
-        var path_arg = 0; 
+        var path_arg = 0;
         var path_idx = 0;
         var status = checkFn(fn);
         var exprs = [];
         for (i in 0...fn.args.length){
-            var arg = fn.args[i];  
+            var arg = fn.args[i];
             var arg_expr = processArg(arg, i, status);
             exprs.push(arg_expr);
         }
@@ -81,11 +81,11 @@ class Builder {
                 case FFun(fn)  : {
                     routes.push(processFn(f,fn));
                 }
-                default : continue; 
+                default : continue;
             }
         }
 
-        // validate: optional dispatch argument must be first, 
+        // validate: optional dispatch argument must be first,
         // optional params must be last, only one of each
         for (r in routes){
             var dispatch = false;
@@ -109,45 +109,20 @@ class Builder {
         var path =  [for (r in routes) '(^${r.route.name}$)'].join("|");
         var pattern = macro $v{path};
 
-        var handler_steps = [];
-
-
-        for (i in 0...routes.length){
-            var route = routes[i];
-            var path_arg_count = route.ffun.args.length; 
-            if (route.subdispatch) path_arg_count--;
-            if (route.params) path_arg_count--;
-            var handler_name = route.route.name;
-            var macro_step = macro {
-                if (this.reg.matched($v{i + 1})!= null){
-                    if (!$v{route.subdispatch} && $v{path_arg_count} != parts_arg_count){
-                        throw 'Path args do not match funciton args for ${route.route.name}: path_args:' + parts_arg_count + ' and function_args: ${$v{path_arg_count}}';
-                    };
-                    trace(parts);
-                    this.$handler_name($a{route.exprs});
-                    return;
-                }
-            }
-            handler_steps.push(macro_step);
-        }
-
-
         var handler_macro = macro {
-            var matched = this.reg.match(parts[0]);
-            var parts_arg_count = parts.length-1;
-            if (!matched){
-                throw "not matched";
-            } else {
-                $a{handler_steps};
+            if (parts.length == 0) return;
+            if (dict.exists(parts[0])){
+                dict.get(parts[0])(parts.slice(1),params);
+                return;
             }
         };
 
-        var ereg_field = {
-            name: "reg",
+        var map_field = {
+            name: "dict",
             doc: null,
             meta: [],
             access: [],
-            kind: FVar(macro:EReg),
+            kind: FVar(macro:Map<String, Array<String>->Dynamic->Void> ),
             pos: Context.currentPos()
         }
 
@@ -163,19 +138,32 @@ class Builder {
             pos: Context.currentPos()
         };
 
+        var d = [];
+        d.push( macro var d = new Map());
+        for (route in routes){
+            var handler_name = route.route.name;
+            d.push( macro {
+                d.set($v{route.route.name},
+                        function(parts:Array<String>, params:Dynamic){
+                            this.$handler_name($a{route.exprs});
+                        });
+            });
+        };
+        d.push(macro this.dict = d);
+
+        var block = macro $b{d};
+
         var new_field = {
             name: "new",
             doc: null,
             meta: [],
             access: [APublic],
-            kind: FFun({args : [], ret : null , expr : macro {
-                this.reg = new EReg($pattern, 'i');
-            }}), 
+            kind: FFun({args : [], ret : null , expr : block}),
             pos: Context.currentPos()
         };
 
         fields.push(dispatch_func);
-        fields.push(ereg_field);
+        fields.push(map_field);
         fields.push(new_field);
 
         return fields;

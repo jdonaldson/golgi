@@ -9,10 +9,10 @@ class Dispatch {
         api.__dispatch__(this.parts, this.params);
     };
     public static function run(path : String, params : Dynamic, api : Api ){
-        var parts = path.split("/");
+        // var parts = path.split("/");
+        var parts = [path];
         if( parts[0] == "" ) parts.shift();
-        var d = new Dispatch(parts, params);
-        api.__dispatch__(d.parts, d.params);
+        api.__dispatch__(parts, params);
     }
 
 }

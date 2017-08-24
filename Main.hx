@@ -2,22 +2,25 @@ class Main {
     static function main() {
         var r = new Router(); 
         var n = 100000;
+        trace(n + " is the value for n");
         var t = haxe.Timer.stamp();
-        var routes = ["blah", "foob", "doof", "beans", "bear", "bing", "boo", "bad","balls","bed"]; 
-        var routes = ["blah"]; 
-
+        var routes = ["blah1","blah2","blah3","blah4","blah5","blah6"]; 
+        var sum = 0.0;
+        var t = haxe.Timer.stamp();
+        var b = new Blaher();
         for (i in 0...n){
-            Dispatch.run("blah", {}, new Blaher());
+            var route = routes[Std.random(routes.length)];
+            Dispatch.run(route, {}, b);
         }
-
         var time = (haxe.Timer.stamp() - t);
         var rps = n/time;
-        trace(n + " is the value for n");
         trace(time + " is the value for time");
         trace(rps + " is the value for rps");
         var t= haxe.Timer.stamp();
+        var o = new Old();
         for (i in 0...n){
-            haxe.web.Dispatch.run("foo", new Map(), new Old());
+            var route = routes[Std.random(routes.length)];
+            haxe.web.Dispatch.run(route, new Map(), o);
         }
         var time = haxe.Timer.stamp() - t;
         trace(time + " is the value for time");
@@ -30,28 +33,25 @@ class Main {
 class Old {
     var count = 0;
     public function new(){}
-    function doFoo(){
+    function doBlah1(){
         count++;
     }
-    function doFoo1(){
+    function doBlah2(){
         count++;
     }
-    function doFoo2(){
+    function doBlah3(){
         count++;
     }
-    function doFoo3(){
+    function doBlah4(){
         count++;
     }
-    function doFoo4(){
+    function doBlah5(){
         count++;
     }
-    function doFoo5(){
+    function doBlah6(){
         count++;
     }
-    function doFoo6(){
-        count++;
-    }
-    function doFoo7(){
+    function doBlah7(){
         count++;
     }
 }
@@ -73,36 +73,25 @@ class Router extends Api {
 
 class Blaher extends Api {
     public var count =0;
-    public function blah(){
-        // var f= haxe.Json.stringify(count);
-        // var v = haxe.Json.parse(f);
+    public function blah1(){
         count++;
     }
-    public function foob(){
+    public function blah2(){
         count++;
     }
-    public function doof(){
+    public function blah3(){
         count++;
     }
-    public function beans(){
+    public function blah4(){
         count++;
     }
-    public function bear(){
+    public function blah5(){
         count++;
     }
-    public function bing(){
+    public function blah6(){
         count++;
     }
-    public function boo(){
-        count++;
-    }
-    public function bad(){
-        count++;
-    }
-    public function balls(){
-        count++;
-    }
-    public function bed(){
+    public function blah7(){
         count++;
     }
 }

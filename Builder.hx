@@ -100,15 +100,6 @@ class Builder {
                 }
             }
         }
-
-
-
-        // sort
-        routes.sort(function(x,y) return x.route.name.length > y.route.name.length ? -1 : x.route.name.length < y.route.name.length ? 1 : 0);
-
-        var path =  [for (r in routes) '(^${r.route.name}$)'].join("|");
-        var pattern = macro $v{path};
-
         var handler_macro = macro {
             if (parts.length == 0) return;
             if (dict.exists(parts[0])){

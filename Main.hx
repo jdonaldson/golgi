@@ -1,6 +1,5 @@
 class Main {
     static function main() {
-        var r = new Router(); 
         var n = 100000;
         trace(n + " is the value for n");
         var t = haxe.Timer.stamp();
@@ -14,8 +13,12 @@ class Main {
         }
         var time = (haxe.Timer.stamp() - t);
         var rps = n/time;
-        trace(time + " is the value for time");
-        trace(rps + " is the value for rps");
+        var spr = time/n;
+        trace("[hxdispatch] " + b.count + " is the value for b.count");
+        trace("[hxdispatch] " + time + " is the value for time");
+        trace("[hxdispatch] " + rps + " is the value for rps");
+        trace("[hxdispatch] " + spr + " is the value for spr");
+
         var t= haxe.Timer.stamp();
         var o = new Old();
         for (i in 0...n){
@@ -23,15 +26,19 @@ class Main {
             haxe.web.Dispatch.run(route, new Map(), o);
         }
         var time = haxe.Timer.stamp() - t;
-        trace(time + " is the value for time");
         var rps = n/time;
-        trace(rps + " is the value for rps");
+        trace("-----------");
+        trace("[Dispatch] " + o.count + " is the value for o.count");
+        trace("[Dispatch] " + time + " is the value for time");
+        trace("[Dispatch] " + rps + " is the value for rps");
+        trace("[Dispatch] " + spr + " is the value for spr");
+
     }
     static function main2(){
     }
 }
 class Old {
-    var count = 0;
+    public var count = 0;
     public function new(){}
     function doBlah1(){
         count++;
@@ -57,22 +64,9 @@ class Old {
 }
 
 
-class Router extends Api {
-    public function foob(?x:Int, k:Float, params : {a : Int, ?b:Float}){
-        trace(x + " is the value for x in foob");
-        trace(k + " is the value for k");
-    }
-    public function dood(d:Dispatch, x : Int){
-        // trace("dood was called!");
-        d.dispatch(new Blaher());
-    }
-    public function bar(){
-        trace("bar was called");
-    }
-}
 
 class Blaher extends Api {
-    public var count =0;
+    public var count = 0;
     public function blah1(){
         count++;
     }

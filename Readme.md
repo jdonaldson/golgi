@@ -1,5 +1,5 @@
-# hxdispatch
-a quick sketch of an @:autoBuild-generated dispatch mechanism for url routing.
+# golgi 
+A composable routing library for Haxe.
 
 ```haxe
 
@@ -12,12 +12,9 @@ class Main {
 }
 
 class Router implements Api {
-    public function foob(?x:Int){
-        trace(x + " is the value for x in foob");
+    public function foo(?x:Int){
+        trace(x + " is the value for x in foo");
 
-    }
-    public function foo(){
-        trace("foo was called!");
     }
     public function bar(){
         trace("bar was called");

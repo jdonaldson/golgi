@@ -18,10 +18,10 @@ class Main {
         var time = (haxe.Timer.stamp() - t);
         var rps = n/time;
         var spr = time/n;
-        trace("[hxdispatch] " + b.count + " is the value for b.count");
-        trace("[hxdispatch] " + time + " is the value for time");
-        trace("[hxdispatch] " + rps + " is the value for rps");
-        trace("[hxdispatch] " + spr + " is the value for spr");
+        trace("[golgi] " + b.count + " is the value for b.count");
+        trace("[golgi] " + time + " is the value for time");
+        trace("[golgi] " + rps + " is the value for rps");
+        trace("[golgi] " + spr + " is the value for spr");
 
         var t= haxe.Timer.stamp();
         var o = new Old();

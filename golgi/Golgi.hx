@@ -10,8 +10,7 @@ class Golgi {
         api.__dispatch__(this.parts, this.params);
     };
     public static function run(path : String, params : Dynamic, api : Api ){
-        // var parts = path.split("/");
-        var parts = [path];
+        var parts = path.split("/");
         if( parts[0] == "" ) parts.shift();
         api.__dispatch__(parts, params);
     }

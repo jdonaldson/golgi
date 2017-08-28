@@ -1,4 +1,5 @@
-class Dispatch {
+package golgi;
+class Golgi {
     var parts : Array<String>;
     var params : Dynamic<Dynamic>; 
     public function new(parts : Array<String>, params : Dynamic){

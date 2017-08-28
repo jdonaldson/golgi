@@ -1,24 +1,28 @@
+-cmd echo "*** lua"
 -lua out.lua
 -main Main
 -cmd lua out.lua
 -cp ../hx3compat/std/
 
 
---next 
--main Main
--cp ../hx3compat/std/
--js out.js
--cmd node out.js
+# --next 
+# -cmd echo "*** node"
+# -main Main
+# -cp ../hx3compat/std/
+# -js out.js
+# -cmd node out.js
 
---next
+# --next
 
--main Main
--cp ../hx3compat/std/
--x out
+# -cmd echo "*** neko"
+# -main Main
+# -cp ../hx3compat/std/
+# -x out
 
 
---next
--main Main
--cp ../hx3compat/std/
--php outphp
--cmd php outphp/Index.php
+# --next
+# -cmd echo "*** php"
+# -main Main
+# -cp ../hx3compat/std/
+# -php outphp
+# -cmd php outphp/Index.php

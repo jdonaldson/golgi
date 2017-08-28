@@ -1,5 +1,8 @@
+package golgi;
+
 import haxe.macro.Context;
 import haxe.macro.Expr;
+import golgi.Validate;
 using haxe.macro.ComplexTypeTools;
 
 typedef CheckFn = {
@@ -8,6 +11,7 @@ typedef CheckFn = {
     fn : Function
 }
 
+#if macro
 class Builder {
 
     static function processArg(arg : FunctionArg, idx : Int, check: CheckFn){
@@ -160,3 +164,4 @@ class Builder {
         return fields;
     }
 }
+#end

@@ -1,3 +1,4 @@
+package golgi;
 
 class Validate {
     public static function split(str:String, delim:String) : Array<String> {

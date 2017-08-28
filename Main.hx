@@ -1,3 +1,7 @@
+import golgi.Api;
+import golgi.Builder;
+import golgi.Golgi;
+
 class Main {
     static function main() {
         var n = 100000;
@@ -9,7 +13,7 @@ class Main {
         var b = new Blaher();
         for (i in 0...n){
             var route = routes[Std.random(routes.length)];
-            Dispatch.run(route, {}, b);
+            Golgi.run(route, {}, b);
         }
         var time = (haxe.Timer.stamp() - t);
         var rps = n/time;

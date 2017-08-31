@@ -20,10 +20,10 @@ class Builder {
         var dispatch_slice = check.fn.args.length;
         if (check.params) dispatch_slice--;
         return switch(arg){
-            case {type : TPath({name : "Int"})}     : macro Validate.int(parts[$v{path_idx++}] , $v{arg.opt});
-            case {type : TPath({name : "String"})}  : macro Validate.string(parts[$v{path_idx++}] , $v{arg.opt});
-            case {type : TPath({name : "Float"})}   : macro Validate.float(parts[$v{path_idx++}]  , $v{arg.opt});
-            case {type : TPath({name : "Bool"})}    : macro Validate.bool(parts[$v{path_idx++}]   , $v{arg.opt});
+            case {type : TPath({name : "Int"})}     : macro golgi.Validate.int(parts[$v{path_idx++}] , $v{arg.opt});
+            case {type : TPath({name : "String"})}  : macro golgi.Validate.string(parts[$v{path_idx++}] , $v{arg.opt});
+            case {type : TPath({name : "Float"})}   : macro golgi.Validate.float(parts[$v{path_idx++}]  , $v{arg.opt});
+            case {type : TPath({name : "Bool"})}    : macro golgi.Validate.bool(parts[$v{path_idx++}]   , $v{arg.opt});
             case {type : TPath({name : "Dispatch"})}: {
                 macro new Dispatch(parts.slice($v{dispatch_slice}), params);
             };
@@ -107,7 +107,7 @@ class Builder {
         var handler_macro = macro {
             if (parts.length == 0) return;
             if (dict.exists(parts[0])){
-                dict.get(parts[0])(parts.slice(1),params);
+                dict.get(parts[0])(parts,params);
                 return;
             }
         };

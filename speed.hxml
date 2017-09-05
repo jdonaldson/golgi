@@ -1,0 +1,32 @@
+
+
+# --next
+
+# -cmd echo "*** neko"
+# -main SpeedTest
+# -cp ../hx3compat/std/
+# -x out
+
+
+# --next
+# -cmd echo "*** php"
+# -main SpeedTest
+# -cp ../hx3compat/std/
+# -php outphp
+# -cmd php outphp/Index.php
+
+
+
+
+-cmd echo "*** node"
+-main SpeedTest
+-cp ../hx3compat/std/
+-js out.js
+-cmd node out.js
+--next 
+
+-cmd echo "*** lua"
+-lua out.lua
+-main SpeedTest
+-cmd lua out.lua
+-cp ../hx3compat/std/

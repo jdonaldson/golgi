@@ -4,6 +4,7 @@ import haxe.macro.Context;
 import haxe.macro.Expr;
 import golgi.Validate;
 using haxe.macro.ComplexTypeTools;
+using haxe.macro.TypeTools;
 
 typedef CheckFn = {
     subdispatch : Bool,
@@ -14,24 +15,48 @@ typedef CheckFn = {
 #if macro
 class Builder {
 
+    static function validateArg(arg_expr : Expr, arg_type : ComplexType, optional : Bool, leftovers : ComplexType->Expr){
+        return switch(arg_type){
+            case TPath({name : "Int"})     : macro golgi.Validate.int   (${arg_expr} , $v{optional});
+            case TPath({name : "String"})  : macro golgi.Validate.string(${arg_expr} , $v{optional});
+            case TPath({name : "Float"})   : macro golgi.Validate.float (${arg_expr} , $v{optional});
+            case TPath({name : "Bool"})    : macro golgi.Validate.bool  (${arg_expr} , $v{optional});
+            default : leftovers(arg_type);  
+        }
+    }
     static function processArg(arg : FunctionArg, idx : Int, check: CheckFn){
         var path_idx = idx;
         if (!check.subdispatch) path_idx++;
         var dispatch_slice = check.fn.args.length;
         if (check.params) dispatch_slice--;
-        return switch(arg){
-            case {type : TPath({name : "Int"})}     : macro golgi.Validate.int(parts[$v{path_idx++}] , $v{arg.opt});
-            case {type : TPath({name : "String"})}  : macro golgi.Validate.string(parts[$v{path_idx++}] , $v{arg.opt});
-            case {type : TPath({name : "Float"})}   : macro golgi.Validate.float(parts[$v{path_idx++}]  , $v{arg.opt});
-            case {type : TPath({name : "Bool"})}    : macro golgi.Validate.bool(parts[$v{path_idx++}]   , $v{arg.opt});
-            case {type : TPath({name : "Dispatch"})}: {
-                macro new Dispatch(parts.slice($v{dispatch_slice}), params);
-            };
-            case {name : "params", type : TAnonymous(fields)} : {
-                macro params;
+        var path = macro parts[$v{path_idx++}];
+        var pos = check.fn.expr.pos;
+        return validateArg(path, arg.type, arg.opt, function(c){
+            return switch(arg){
+                case {type : TPath({name : "Dispatch"})}: {
+                    macro new Dispatch(parts.slice($v{dispatch_slice}), params);
+                };
+                case {name : "params", type : TAnonymous(fields)} : {
+                    var arr = [];
+                    for (f in fields){
+                        switch(f.kind){
+                            case FVar(t): {
+                                var name = f.name;
+                                var pf = macro params.$name; 
+                                var v = validateArg(pf, t, false, function(c) {
+                                    Context.error('Unhandled argument type on params.${f.name}. Only String, Float, Int, and Bool are supported', pos);
+                                    return macro null;
+                                });
+                                arr.push({field : name , expr : v});
+                            };
+                            default : null;
+                        }
+                    }
+                    {expr :EObjectDecl(arr), pos : pos};
+                }
+                case _ : Context.error('Unhandled argument type ${arg.type} on ${arg.name}.  Only String, Float, Int, and Bool are supported.', pos);
             }
-            case _ : Context.error('Unhandled argument type on ${arg.name}', check.fn.expr.pos);
-        }
+        });
     }
 
     static function checkFn(fn:Function) : CheckFn{
@@ -39,19 +64,20 @@ class Builder {
         var params = false;
         for (i in 0...fn.args.length){
             var arg = fn.args[i];
+            var pos = fn.expr.pos;
             switch(arg){
                 case {name : "params", type : TAnonymous(fields)} : {
                     if (i != fn.args.length-1){
-                        Context.error("The params argument must be unique and the final argument in the method signature", arg.value.pos);
+                        Context.error("The params argument must be unique and the final argument in the method signature", pos);
                     }
                     params = true;
                 };
-                case {name : "params"} : {
-                    Context.error("The params argument must be an anonymous object type declaration (and not a type def)", arg.value.pos);
+                case {name : "params", type : TPath({name : name})} : {
+                    Context.error("The params argument must be an anonymous object type declaration (and not a typedef... yet)", pos);
                 }
                 case {type : TPath({name : "Dispatch"})}: {
                     if (i != 0){
-                        Context.error("The Dispatch typed argument must be unique and the first argument in the method signature", arg.value.pos);
+                        Context.error("The Dispatch typed argument must be unique and the first argument in the method signature", pos);
                     }
                     subdispatch = true;
                 }

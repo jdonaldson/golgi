@@ -135,6 +135,8 @@ class Builder {
             if (dict.exists(parts[0])){
                 dict.get(parts[0])(parts,params);
                 return;
+            } else {
+                throw golgi.Error.NotFound(parts[0]);
             }
         };
 

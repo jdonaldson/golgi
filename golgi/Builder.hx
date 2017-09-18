@@ -15,20 +15,20 @@ typedef CheckFn = {
 #if macro
 class Builder {
 
-    static function validateArg(arg_expr : Expr, arg_name : String, arg_type : ComplexType, optional : Bool, validate_name : Bool, leftovers : ComplexType->Expr){
+    static function validateArg(arg_expr : Expr, arg_name : String, arg_type : ComplexType, optional : Bool, validate_name : Bool, pos : haxe.macro.Position, leftovers : ComplexType->Expr){
         var leftover = false;
         var res =  switch(arg_type){
-            case TPath({name : "Int"})     : macro golgi.Validate.int   (${arg_expr} , $v{optional});
-            case TPath({name : "String"})  : macro golgi.Validate.string(${arg_expr} , $v{optional});
-            case TPath({name : "Float"})   : macro golgi.Validate.float (${arg_expr} , $v{optional});
-            case TPath({name : "Bool"})    : macro golgi.Validate.bool  (${arg_expr} , $v{optional});
+            case TPath({name : "Int"})     : macro golgi.Validate.int   (${arg_expr} , $v{optional}, $v{arg_name});
+            case TPath({name : "String"})  : macro golgi.Validate.string(${arg_expr} , $v{optional}, $v{arg_name});
+            case TPath({name : "Float"})   : macro golgi.Validate.float (${arg_expr} , $v{optional}, $v{arg_name});
+            case TPath({name : "Bool"})    : macro golgi.Validate.bool  (${arg_expr} , $v{optional}, $v{arg_name});
             default : {
                 leftover = true;
                 leftovers(arg_type);  
             }
         }
         if (validate_name && !leftover && ["context","params"].indexOf(arg_name) != -1){
-            Context.error('Reserved path argument name for $arg_name', arg_expr.pos );
+            Context.error('Reserved path argument name for $arg_name', pos );
         }
         return res;
     }
@@ -39,11 +39,10 @@ class Builder {
         if (check.params) dispatch_slice--;
         var path = macro parts[$v{path_idx++}];
         var pos = check.fn.expr.pos;
-        return validateArg(path, arg.name, arg.type, arg.opt, true, function(c){
-            var seen_params = false;
+        return validateArg(path, arg.name, arg.type, arg.opt, true, pos, function(c){
             return switch(arg){
-                case {type : TPath({name : "Dispatch"})}: {
-                    macro new Dispatch(parts.slice($v{dispatch_slice}), params);
+                case {name : "golgi"}: {
+                    macro new Golgi(parts.slice($v{dispatch_slice}), params, context);
                 };
                 case {name : "context"} : {
                     macro untyped $i{"context"};
@@ -55,7 +54,7 @@ class Builder {
                             case FVar(t): {
                                 var name = f.name;
                                 var pf = macro params.$name; 
-                                var v = validateArg(pf, name, t, false, false, function(c) {
+                                var v = validateArg(pf, name, t, false, false, pos, function(c) {
                                     Context.error('Unhandled argument type on params.${f.name}. Only String, Float, Int, and Bool are supported', pos);
                                     return macro null;
                                 });
@@ -84,10 +83,7 @@ class Builder {
                 case {name : "params", type : TPath({name : name})} : {
                     Context.error("The params argument must be an anonymous object type declaration (and not a typedef... yet)", pos);
                 }
-                case {type : TPath({name : "Dispatch"})}: {
-                    if (i != 0){
-                        Context.error("The Dispatch typed argument must be unique and the first argument in the method signature", pos);
-                    }
+                case {type : TPath({name : "Golgi", pack : ["golgi"]})}: {
                     subdispatch = true;
                 }
                 case _ : continue;
@@ -97,15 +93,42 @@ class Builder {
     }
 
 
+    static function ensureOrder(m:Map<String,Int>, names : Array<String>, expr : Expr){
+        for (i in 0...names.length){
+            var name = names[i];
+            for (j in (i+1)...names.length){
+                var other = names[j];
+                if (m.exists(name) && m.exists(other)){
+                    if (m.get(name) > m.get(other)){
+                        Context.error('$name must come before $other in the argument order', expr.pos);
+                    }
+                }
+            }
+        }
+    }
+
     static function processFn(f : Field, fn : Function ){
         var path_arg = 0;
         var path_idx = 0;
         var status = checkFn(fn);
         var exprs = [];
+        var m = new Map<String, Int>();
         for (i in 0...fn.args.length){
             var arg = fn.args[i];
+            if (arg.name == "golgi"){
+                if (!Context.unify(Context.getType("golgi.Golgi"), arg.type.toType())){
+                    Context.error("golgi argument must be of Golgi type", fn.expr.pos);
+                }
+            }
+            m.set(arg.name, i);
             var arg_expr = processArg(arg, i, status);
             exprs.push(arg_expr);
+        }
+        ensureOrder(m, ["params", "context", "golgi"], fn.expr);
+        if (m.exists("golgi")){
+            if (!m.exists("context")){
+                Context.error("Subrouting in golgi requires a passed context argument", fn.expr.pos);
+            }
         }
         return {route:f, ffun : fn, subdispatch : status.subdispatch, params : status.params, exprs : exprs};
     }
@@ -138,19 +161,7 @@ class Builder {
             }
         }
 
-        for (r in routes){
-            var dispatch = false;
-            var params = false;
-            for (i in 0...r.ffun.args.length){
-                var a = r.ffun.args[i];
-                switch(a){
-                    case {type : TPath({name : "Dispatch"})}:{
 
-                    }
-                    case _ : null;
-                }
-            }
-        }
         var handler_macro = macro {
             if (parts.length == 0) return null;
             if (dict.exists(parts[0])){

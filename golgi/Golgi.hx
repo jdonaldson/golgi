@@ -1,5 +1,5 @@
 package golgi;
-class Golgi <A>{
+class Golgi{
     var parts : Array<String>;
     var params : Dynamic<Dynamic>;
     var context : Dynamic<Dynamic>;

@@ -3,7 +3,7 @@ package golgi;
 enum Error {
 	NotFound( path : String );
 	InvalidValue;
-	Missing;
+	Missing( name : String);
 	MissingParam( path : String, p : String );
 	TooManyValues;
 }

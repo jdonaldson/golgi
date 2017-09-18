@@ -15,14 +15,22 @@ typedef CheckFn = {
 #if macro
 class Builder {
 
-    static function validateArg(arg_expr : Expr, arg_type : ComplexType, optional : Bool, leftovers : ComplexType->Expr){
-        return switch(arg_type){
+    static function validateArg(arg_expr : Expr, arg_name : String, arg_type : ComplexType, optional : Bool, validate_name : Bool, leftovers : ComplexType->Expr){
+        var leftover = false;
+        var res =  switch(arg_type){
             case TPath({name : "Int"})     : macro golgi.Validate.int   (${arg_expr} , $v{optional});
             case TPath({name : "String"})  : macro golgi.Validate.string(${arg_expr} , $v{optional});
             case TPath({name : "Float"})   : macro golgi.Validate.float (${arg_expr} , $v{optional});
             case TPath({name : "Bool"})    : macro golgi.Validate.bool  (${arg_expr} , $v{optional});
-            default : leftovers(arg_type);  
+            default : {
+                leftover = true;
+                leftovers(arg_type);  
+            }
         }
+        if (validate_name && !leftover && ["context","params"].indexOf(arg_name) != -1){
+            Context.error('Reserved path argument name for $arg_name', arg_expr.pos );
+        }
+        return res;
     }
     static function processArg(arg : FunctionArg, idx : Int, check: CheckFn){
         var path_idx = idx;
@@ -31,7 +39,8 @@ class Builder {
         if (check.params) dispatch_slice--;
         var path = macro parts[$v{path_idx++}];
         var pos = check.fn.expr.pos;
-        return validateArg(path, arg.type, arg.opt, function(c){
+        return validateArg(path, arg.name, arg.type, arg.opt, true, function(c){
+            var seen_params = false;
             return switch(arg){
                 case {type : TPath({name : "Dispatch"})}: {
                     macro new Dispatch(parts.slice($v{dispatch_slice}), params);
@@ -46,7 +55,7 @@ class Builder {
                             case FVar(t): {
                                 var name = f.name;
                                 var pf = macro params.$name; 
-                                var v = validateArg(pf, t, false, function(c) {
+                                var v = validateArg(pf, name, t, false, false, function(c) {
                                     Context.error('Unhandled argument type on params.${f.name}. Only String, Float, Int, and Bool are supported', pos);
                                     return macro null;
                                 });
@@ -156,7 +165,7 @@ class Builder {
             doc: null,
             meta: [],
             access: [],
-            kind: FVar(macro:Map<String, Array<String>->Dynamic->Dynamic->String> ),
+            kind: FVar(macro:Map<String, Array<String>->Dynamic->Dynamic->$tret> ),
             pos: Context.currentPos()
         }
 
@@ -179,7 +188,7 @@ class Builder {
             var handler_name = route.route.name;
             d.push( macro {
                 d.set($v{route.route.name},
-                        function(parts:Array<String>, params:Dynamic, context : Dynamic){
+                        cast function(parts:Array<String>, params:Dynamic, context : Dynamic){
                             return this.$handler_name($a{route.exprs});
                         });
             });

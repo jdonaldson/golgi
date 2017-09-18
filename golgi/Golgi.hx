@@ -8,10 +8,10 @@ class Golgi <A>{
         this.params = params;
         this.context = context;
     }
-    public static function run<A,B>(path : String, params : Dynamic, request : A, api : Api<A,B> ) {
+    public static function run<A,B>(path : String, params : Dynamic, context : A, api : Api<A,B> ) {
         var parts = path.split("/");
         if( parts[0] == "" ) parts.shift();
-        api.__dispatch__(parts, params, request);
+        api.__dispatch__(parts, params, context);
      }
 
 }

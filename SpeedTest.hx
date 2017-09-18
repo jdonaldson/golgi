@@ -8,7 +8,6 @@ class SpeedTest {
         trace(n + " is the value for n");
         var t = haxe.Timer.stamp();
         var routes = ["blah1/1/2","blah2/1/5","blah3/1/2","blah4/1/8","blah5/1/2","blah6/1/2"]; 
-        var routes = ["blah1/1/2","blah2/1/5","blah3/1/2","blah4/1/8","blah5/1/2","blah6/1/2"]; 
         var sum = 0.0;
         var b = new Blaher();
         var o = {};
@@ -16,7 +15,7 @@ class SpeedTest {
         var t = haxe.Timer.stamp();
         for (i in 0...n){
             try{
-                Golgi.run(routes[Std.random(routes.length)], o, b);
+                Golgi.run(routes[Std.random(routes.length)], o, null, b);
             } catch (e : Dynamic) {
                 trace(e + " is the value for e");
             }
@@ -65,14 +64,14 @@ class Old {
 
 
 
-class Blaher extends Api {
+class Blaher extends Api<{}, String> {
     public var count = 0;
     public function blah(){ count = count + Std.random(10); }
-    public function blah1(x:Int, y:Int){ count = count + Std.random(10); }
-    public function blah2(x:Int, y:Int){ count = count + Std.random(10); }
-    public function blah3(x:Int, y:Int){ count = count + Std.random(10); }
-    public function blah4(x:Int, y:Int){ count = count + Std.random(10); }
-    public function blah5(x:Int, y:Int){ count = count + Std.random(10); }
-    public function blah6(x:Int, y:Int){ count = count + Std.random(10); }
+    public function blah1(x:Int, y:Int){ count = count + Std.random(10); return 'hi'; }
+    public function blah2(x:Int, y:Int){ count = count + Std.random(10); return 'hi'; }
+    public function blah3(x:Int, y:Int){ count = count + Std.random(10); return 'hi'; }
+    public function blah4(x:Int, y:Int){ count = count + Std.random(10); return 'hi'; }
+    public function blah5(x:Int, y:Int){ count = count + Std.random(10); return 'hi'; }
+    public function blah6(x:Int, y:Int){ count = count + Std.random(10); return 'hi'; }
 }
 

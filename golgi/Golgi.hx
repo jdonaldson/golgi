@@ -1,12 +1,15 @@
 package golgi;
-class Golgi{
+class Golgi<TCtx>{
     var parts : Array<String>;
     var params : Dynamic<Dynamic>;
-    var context : Dynamic<Dynamic>;
-    public function new(parts : Array<String>, params : Dynamic, context : Dynamic){
+    var context : TCtx;
+    public function new(parts : Array<String>, params : Dynamic, context : TCtx){
         this.parts = parts;
         this.params = params;
         this.context = context;
+    }
+    inline public function subroute<TRet>(api : Api<TCtx,TRet>){
+        return api.__dispatch__(this.parts, this.params, this.context);
     }
     public static function run<A,B>(path : String, params : Dynamic, context : A, api : Api<A,B> ) {
         var parts = path.split("/");

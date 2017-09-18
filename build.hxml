@@ -1,3 +1,5 @@
 -main Main
 -lua out.lua
 -cmd lua out.lua
+-cp ../hx3compat/std/
+

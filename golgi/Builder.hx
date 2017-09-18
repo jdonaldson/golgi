@@ -7,7 +7,7 @@ using haxe.macro.ComplexTypeTools;
 using haxe.macro.TypeTools;
 
 typedef CheckFn = {
-    subdispatch : Bool,
+    subroute : Bool,
     params : Bool,
     fn : Function
 }
@@ -34,7 +34,7 @@ class Builder {
     }
     static function processArg(arg : FunctionArg, idx : Int, check: CheckFn){
         var path_idx = idx;
-        if (!check.subdispatch) path_idx++;
+        if (!check.subroute) path_idx++;
         var dispatch_slice = check.fn.args.length;
         if (check.params) dispatch_slice--;
         var path = macro parts[$v{path_idx++}];
@@ -42,7 +42,7 @@ class Builder {
         return validateArg(path, arg.name, arg.type, arg.opt, true, pos, function(c){
             return switch(arg){
                 case {name : "golgi"}: {
-                    macro new Golgi(parts.slice($v{dispatch_slice}), params, context);
+                    macro new Golgi(parts.slice($v{dispatch_slice -1}), params, context);
                 };
                 case {name : "context"} : {
                     macro untyped $i{"context"};
@@ -71,7 +71,7 @@ class Builder {
     }
 
     static function checkFn(fn:Function) : CheckFn{
-        var subdispatch = false;
+        var subroute = false;
         var params = false;
         for (i in 0...fn.args.length){
             var arg = fn.args[i];
@@ -84,12 +84,12 @@ class Builder {
                     Context.error("The params argument must be an anonymous object type declaration (and not a typedef... yet)", pos);
                 }
                 case {type : TPath({name : "Golgi", pack : ["golgi"]})}: {
-                    subdispatch = true;
+                    subroute = true;
                 }
                 case _ : continue;
             }
         }
-        return {fn : fn, subdispatch : subdispatch, params : params};
+        return {fn : fn, subroute : subroute, params : params};
     }
 
 
@@ -130,7 +130,7 @@ class Builder {
                 Context.error("Subrouting in golgi requires a passed context argument", fn.expr.pos);
             }
         }
-        return {route:f, ffun : fn, subdispatch : status.subdispatch, params : status.params, exprs : exprs};
+        return {route:f, ffun : fn, subroute : status.subroute, params : status.params, exprs : exprs};
     }
 
     macro public static function build() : Array<Field>{
@@ -163,9 +163,16 @@ class Builder {
 
 
         var handler_macro = macro {
-            if (parts.length == 0) return null;
-            if (dict.exists(parts[0])){
-                return dict.get(parts[0])(parts,params,context);
+            var path = "";
+            if (parts.length == 0) {
+                parts = [];
+            } else {
+                path = parts[0];
+            }
+            trace(dict + " is the value for dict");
+            trace(path + " is the value for path");
+            if (dict.exists(path)){
+                return dict.get(path)(parts,params,context);
             } else {
                 throw golgi.Error.NotFound(parts[0]);
             }
@@ -195,12 +202,24 @@ class Builder {
 
         var d = [];
         d.push( macro var d = new Map());
+        var default_field = null;
         for (route in routes){
             var handler_name = route.route.name;
+            var field_name = handler_name;
+            for (r in route.route.meta){
+                trace(r.name + " is the value for r.name");
+                if (r.name == "default"){
+                    if (default_field != null){
+                        Context.error("Only one default field per Api", Context.currentPos());
+                    }
+                    default_field = r.name; 
+                    handler_name = "";
+                }
+            }
             d.push( macro {
-                d.set($v{route.route.name},
+                d.set($v{handler_name},
                         cast function(parts:Array<String>, params:Dynamic, context : Dynamic){
-                            return this.$handler_name($a{route.exprs});
+                            return this.$field_name($a{route.exprs});
                         });
             });
         };

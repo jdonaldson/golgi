@@ -50,6 +50,7 @@ class SpeedTest {
     static function main2(){
     }
 }
+
 class Old {
     public var count = 0;
     public function new(){}

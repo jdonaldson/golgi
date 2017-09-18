@@ -1,19 +1,18 @@
 package golgi;
-class Golgi {
+class Golgi <A>{
     var parts : Array<String>;
     var params : Dynamic<Dynamic>;
-    public function new(parts : Array<String>, params : Dynamic){
+    var context : Dynamic<Dynamic>;
+    public function new(parts : Array<String>, params : Dynamic, context : Dynamic){
         this.parts = parts;
         this.params = params;
+        this.context = context;
     }
-    inline public function dispatch<T>(api : Api){
-        api.__dispatch__(this.parts, this.params);
-    };
-    public static function run<T>(path : String, params : Dynamic, api : Api ) {
+    public static function run<A,B>(path : String, params : Dynamic, request : A, api : Api<A,B> ) {
         var parts = path.split("/");
         if( parts[0] == "" ) parts.shift();
-        api.__dispatch__(parts, params);
-    }
+        api.__dispatch__(parts, params, request);
+     }
 
 }
 

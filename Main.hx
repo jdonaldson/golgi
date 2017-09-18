@@ -10,7 +10,7 @@ typedef Blah = {
 class Main {
     static function main() {
         try{
-        Golgi.run("food/1/3", {y:"hi", z:"ho"}, new Foo());
+        Golgi.run("foo/1", {y:"hi", z:"ho"}, {}, new Foo());
         } catch(e:golgi.Error){
             switch(e){
                 case InvalidValue : trace("yep");
@@ -23,11 +23,12 @@ class Main {
     }
 }
 
-class Foo extends Api {
-    public function foo(x:Int, params : {y : String, z : Int}){
+class Foo extends Api<Req,String> {
+    public function foo(x:Int, params : {y : String, z : Int}, context : Req) : String {
         trace((params.z + 4) + " is the value for (params.z + 4)");
         trace(x + " is the value for x");
         trace(params.y + " is the value for params.y");
+        return "foo";
     }
 }
 
@@ -39,3 +40,6 @@ abstract Boo(Int){
         return [this].toString();
     }
 }
+
+typedef Req = {}
+typedef Res = {}

@@ -36,6 +36,9 @@ class Builder {
                 case {type : TPath({name : "Dispatch"})}: {
                     macro new Dispatch(parts.slice($v{dispatch_slice}), params);
                 };
+                case {name : "context"} : {
+                    macro untyped $i{"context"};
+                }
                 case {name : "params", type : TAnonymous(fields)} : {
                     var arr = [];
                     for (f in fields){
@@ -67,9 +70,6 @@ class Builder {
             var pos = fn.expr.pos;
             switch(arg){
                 case {name : "params", type : TAnonymous(fields)} : {
-                    if (i != fn.args.length-1){
-                        Context.error("The params argument must be unique and the final argument in the method signature", pos);
-                    }
                     params = true;
                 };
                 case {name : "params", type : TPath({name : name})} : {
@@ -105,6 +105,20 @@ class Builder {
         var fields = Context.getBuildFields();
         var routes = [];
 
+        var cls = Context.getLocalClass();
+        var k = cls.get().superClass;
+        while(k.t.get().module != "golgi.Api"){
+             k = k.t.get().superClass; 
+             if (k == null){
+                 Context.error("Class must extend golgi.Api", cls.get().pos);
+             }
+        }
+        var tctx = k.params[0].toComplexType();
+        var tret = k.params[1].toComplexType();
+
+
+
+
         // capture function types
         for (f in fields){
             switch(f.kind){
@@ -115,8 +129,6 @@ class Builder {
             }
         }
 
-        // validate: optional dispatch argument must be first,
-        // optional params must be last, only one of each
         for (r in routes){
             var dispatch = false;
             var params = false;
@@ -131,10 +143,9 @@ class Builder {
             }
         }
         var handler_macro = macro {
-            if (parts.length == 0) return;
+            if (parts.length == 0) return null;
             if (dict.exists(parts[0])){
-                dict.get(parts[0])(parts,params);
-                return;
+                return dict.get(parts[0])(parts,params,context);
             } else {
                 throw golgi.Error.NotFound(parts[0]);
             }
@@ -145,7 +156,7 @@ class Builder {
             doc: null,
             meta: [],
             access: [],
-            kind: FVar(macro:Map<String, Array<String>->Dynamic->Void> ),
+            kind: FVar(macro:Map<String, Array<String>->Dynamic->Dynamic->String> ),
             pos: Context.currentPos()
         }
 
@@ -157,7 +168,8 @@ class Builder {
             kind: FFun({args : [
                 {name:"parts", type: TPath({name : "Array", pack:[], params : [TPType(TPath({name : "String", pack : []}))] })},
                 {name:"params", type: TPath({name : "Dynamic", pack:[]})},
-            ], ret : null , expr : handler_macro}),
+                {name:"context", type: TPath({name : "Dynamic", pack:[]})}
+            ], ret : tret, expr : handler_macro}),
             pos: Context.currentPos()
         };
 
@@ -167,8 +179,8 @@ class Builder {
             var handler_name = route.route.name;
             d.push( macro {
                 d.set($v{route.route.name},
-                        function(parts:Array<String>, params:Dynamic){
-                            this.$handler_name($a{route.exprs});
+                        function(parts:Array<String>, params:Dynamic, context : Dynamic){
+                            return this.$handler_name($a{route.exprs});
                         });
             });
         };

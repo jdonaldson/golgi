@@ -20,7 +20,6 @@ class Main {
         try{
             Golgi.run("foo/1", {y:"hi", z:4}, {a:4}, new Foo());
         } catch(e:golgi.Error){
-            trace(e + " is the value for e");
             switch(e){
                 case InvalidValue : trace("yep");
                 default : trace("nope");
@@ -33,13 +32,8 @@ class Main {
 
 class Foo extends Api<Req,String> {
     public function foo(x:Int, params : {y : String, z : Int}, context : Req, golgi : Golgi<Req>) : String {
-        trace(golgi + " is the value for golgi");
         var res = golgi.subroute(new Bar());
         trace(res + " is the value for res");
-        trace(context + " is the value for context");
-        trace((params.z + 4) + " is the value for (params.z + 4)");
-        trace(x + " is the value for x");
-        trace(params.y + " is the value for params.y");
         return "foo";
     }
 }

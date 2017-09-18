@@ -145,16 +145,17 @@ class Builder {
                  Context.error("Class must extend golgi.Api", cls.get().pos);
              }
         }
-        var tctx = k.params[0].toComplexType();
-        var tret = k.params[1].toComplexType();
-
-
+        var tctx = k.params[0];
+        var tret = k.params[1];
 
 
         // capture function types
         for (f in fields){
             switch(f.kind){
                 case FFun(fn)  : {
+                    if(!Context.unify(k.params[1], fn.ret.toType())){
+                        Context.error('Every route function in this class must be of the same type ${k.params[1]}', fn.expr.pos);
+                    }
                     routes.push(processFn(f,fn));
                 }
                 default : continue;
@@ -169,8 +170,6 @@ class Builder {
             } else {
                 path = parts[0];
             }
-            trace(dict + " is the value for dict");
-            trace(path + " is the value for path");
             if (dict.exists(path)){
                 return dict.get(path)(parts,params,context);
             } else {
@@ -178,12 +177,14 @@ class Builder {
             }
         };
 
+        var tret_complex = tret.toComplexType(); 
+
         var map_field = {
             name: "dict",
             doc: null,
             meta: [],
             access: [],
-            kind: FVar(macro:Map<String, Array<String>->Dynamic->Dynamic->$tret> ),
+            kind: FVar(macro:Map<String, Array<String>->Dynamic->Dynamic->$tret_complex> ),
             pos: Context.currentPos()
         }
 
@@ -196,7 +197,7 @@ class Builder {
                 {name:"parts", type: TPath({name : "Array", pack:[], params : [TPType(TPath({name : "String", pack : []}))] })},
                 {name:"params", type: TPath({name : "Dynamic", pack:[]})},
                 {name:"context", type: TPath({name : "Dynamic", pack:[]})}
-            ], ret : tret, expr : handler_macro}),
+            ], ret : tret_complex, expr : handler_macro}),
             pos: Context.currentPos()
         };
 

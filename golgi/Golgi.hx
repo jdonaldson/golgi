@@ -9,12 +9,12 @@ class Golgi<TCtx>{
         this.context = context;
     }
     inline public function subroute<TRet>(api : Api<TCtx,TRet>){
-        return api.__dispatch__(this.parts, this.params, this.context);
+        return api.__golgi__(this.parts, this.params, this.context);
     }
     public static function run<A,B>(path : String, params : Dynamic, context : A, api : Api<A,B> ) {
         var parts = path.split("/");
         if( parts[0] == "" ) parts.shift();
-        api.__dispatch__(parts, params, context);
+        api.__golgi__(parts, params, context);
      }
 
 }

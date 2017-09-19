@@ -189,7 +189,7 @@ class Builder {
         }
 
         var dispatch_func = {
-            name: "__dispatch__",
+            name: "__golgi__",
             doc: null,
             meta: [],
             access: [AOverride],
@@ -208,7 +208,6 @@ class Builder {
             var handler_name = route.route.name;
             var field_name = handler_name;
             for (r in route.route.meta){
-                trace(r.name + " is the value for r.name");
                 if (r.name == "default"){
                     if (default_field != null){
                         Context.error("Only one default field per Api", Context.currentPos());

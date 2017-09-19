@@ -187,6 +187,14 @@ class Builder {
             kind: FVar(macro:Map<String, Array<String>->Dynamic->Dynamic->$tret_complex> ),
             pos: Context.currentPos()
         }
+        var pattern_field = {
+            name: "patterns",
+            doc: null,
+            meta: [],
+            access: [],
+            kind: FVar(macro:Array<{ pattern : String, func : Array<String>->Dynamic->Dynamic->$tret_complex}>),
+            pos: Context.currentPos()
+        }
 
         var dispatch_func = {
             name: "__golgi__",
@@ -203,11 +211,16 @@ class Builder {
 
         var d = [];
         d.push( macro var d = new Map());
+        d.push( macro var r = new Array());
         var default_field = null;
         for (route in routes){
             var handler_name = route.route.name;
             var field_name = handler_name;
+            var pattern = null;
             for (r in route.route.meta){
+                if (r.name == "pattern"){
+                    pattern = r.params[0];
+                }
                 if (r.name == "default"){
                     if (default_field != null){
                         Context.error("Only one default field per Api", Context.currentPos());
@@ -216,14 +229,22 @@ class Builder {
                     handler_name = "";
                 }
             }
-            d.push( macro {
-                d.set($v{handler_name},
-                        cast function(parts:Array<String>, params:Dynamic, context : Dynamic){
-                            return this.$field_name($a{route.exprs});
-                        });
-            });
+
+            var func = macro function(parts:Array<String>, params:Dynamic, context : Dynamic){
+                return this.$field_name($a{route.exprs});
+            };
+
+            if (pattern == null){
+                d.push( macro { d.set($v{handler_name}, $func); });
+            } else {
+                d.push(macro { pattern : $v{pattern}, func : $func });
+            };
+
         };
-        d.push(macro this.dict = d);
+        d.push(macro {
+            this.dict = d;
+            this.patterns = r;
+        });
 
         var block = macro $b{d};
 
@@ -238,6 +259,7 @@ class Builder {
 
         fields.push(dispatch_func);
         fields.push(map_field);
+        fields.push(pattern_field);
         fields.push(new_field);
 
         return fields;

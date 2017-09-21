@@ -39,6 +39,14 @@ class Builder {
         }
         return res;
     }
+
+    static function arg_error(arg : FunctionArg, ?param : String){
+        var type = arg.type.toType().toString();
+        var name = arg.name;
+        var param_str = param != null ? 'on params.$param' : '';
+        Context.error('Unhandled argument type "$type" $param_str for $name.  Only types unifying with String, Float, Int, and Bool are supported as path arguments.', Context.currentPos());
+        return null;
+    }
     static function processArg(arg : FunctionArg, idx : Int, check: CheckFn){
         var path_idx = idx;
         if (!check.subroute) path_idx++;
@@ -62,18 +70,17 @@ class Builder {
                                 var name = f.name;
                                 var pf = macro params.$name; 
                                 var v = validateArg(pf, name, t, false, false, pos, function(c) {
-                                    Context.error('Unhandled argument type "${arg.type.toString}" on params.${f.name}. Only types unifying String, Float, Int, and Bool are supported as path arguments', pos);
-                                    return macro null;
+                                    return arg_error(arg, f.name);
                                 });
                                 arr.push({field : name , expr : v});
                             };
-                            default : null;
+                            default : arg_error(arg);
                         }
                     }
                     {expr :EObjectDecl(arr), pos : pos};
                 }
                 case _ : {
-                    Context.error('Unhandled argument type "${arg.type.toString()}" on ${arg.name}.  Only types unifying with String, Float, Int, and Bool are supported as path arguments.', pos);
+                    arg_error(arg);
                 }
             }
         });
@@ -89,9 +96,6 @@ class Builder {
                 case {name : "params", type : TAnonymous(fields)} : {
                     params = true;
                 };
-                case {name : "params", type : TPath({name : name})} : {
-                    Context.error("The params argument must be an anonymous object type declaration (and not a typedef... yet)", pos);
-                }
                 case {type : TPath({name : "Golgi", pack : ["golgi"]})}: {
                     subroute = true;
                 }

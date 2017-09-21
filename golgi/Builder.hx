@@ -62,7 +62,7 @@ class Builder {
                                 var name = f.name;
                                 var pf = macro params.$name; 
                                 var v = validateArg(pf, name, t, false, false, pos, function(c) {
-                                    Context.error('Unhandled argument type on params.${f.name}. Only String, Float, Int, and Bool are supported', pos);
+                                    Context.error('Unhandled argument type "${arg.type.toString}" on params.${f.name}. Only types unifying String, Float, Int, and Bool are supported as path arguments', pos);
                                     return macro null;
                                 });
                                 arr.push({field : name , expr : v});
@@ -72,7 +72,9 @@ class Builder {
                     }
                     {expr :EObjectDecl(arr), pos : pos};
                 }
-                case _ : Context.error('Unhandled argument type ${arg.type} on ${arg.name}.  Only String, Float, Int, and Bool are supported.', pos);
+                case _ : {
+                    Context.error('Unhandled argument type "${arg.type.toString()}" on ${arg.name}.  Only types unifying with String, Float, Int, and Bool are supported as path arguments.', pos);
+                }
             }
         });
     }

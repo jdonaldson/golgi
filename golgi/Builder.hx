@@ -40,6 +40,9 @@ class Builder {
         return res;
     }
 
+    /**
+      An error message creator for argument problems
+     **/
     static function arg_error(arg : FunctionArg, ?param : String){
         var type = arg.type.toType().toString();
         var name = arg.name;
@@ -47,6 +50,10 @@ class Builder {
         Context.error('Unhandled argument type "$type" $param_str for $name.  Only types unifying with String, Float, Int, and Bool are supported as path arguments.', Context.currentPos());
         return null;
     }
+
+    /**
+      Process the args, wrapping them in validators and constructors where appropriate.
+     **/
     static function processArg(arg : FunctionArg, idx : Int, check: CheckFn){
         var path_idx = idx;
         if (!check.subroute) path_idx++;
@@ -79,6 +86,9 @@ class Builder {
                     }
                     {expr :EObjectDecl(arr), pos : pos};
                 }
+                case {name : "params"} : {
+                    Context.error("The 'params' argument must be an anonymous object declaration", Context.currentPos());
+                }
                 case _ : {
                     arg_error(arg);
                 }
@@ -86,7 +96,10 @@ class Builder {
         });
     }
 
-    static function checkFn(fn:Function) : CheckFn{
+    /**
+      Check the function to ensure that it is valid for a route
+     **/
+    static function checkFn(fn:Function) : CheckFn {
         var subroute = false;
         var params = false;
         for (i in 0...fn.args.length){
@@ -106,6 +119,9 @@ class Builder {
     }
 
 
+    /**
+      Make sure that the special named arguments happen in the right order
+     **/
     static function ensureOrder(m:Map<String,Int>, names : Array<String>, expr : Expr){
         for (i in 0...names.length){
             var name = names[i];
@@ -120,6 +136,10 @@ class Builder {
         }
     }
 
+
+    /**
+      Process the function, ensuring that special named arguments are the right type, and in the right order
+     **/
     static function processFn(f : Field, fn : Function ){
         var path_arg = 0;
         var path_idx = 0;
@@ -146,6 +166,9 @@ class Builder {
         return {route:f, ffun : fn, subroute : status.subroute, params : status.params, exprs : exprs};
     }
 
+    /**
+      The main build method for golgi api types
+     **/
     macro public static function build() : Array<Field>{
         var fields = Context.getBuildFields();
         var routes = [];

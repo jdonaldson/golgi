@@ -15,17 +15,24 @@ typedef CheckFn = {
 #if macro
 class Builder {
 
+    static function unify(t:haxe.macro.ComplexType, str:String){
+        return Context.unify(t.toType(), Context.getType(str));
+    }
     static function validateArg(arg_expr : Expr, arg_name : String, arg_type : ComplexType, optional : Bool, validate_name : Bool, pos : haxe.macro.Position, leftovers : ComplexType->Expr){
         var leftover = false;
-        var res =  switch(arg_type){
-            case TPath({name : "Int"})     : macro golgi.Validate.int   (${arg_expr} , $v{optional}, $v{arg_name});
-            case TPath({name : "String"})  : macro golgi.Validate.string(${arg_expr} , $v{optional}, $v{arg_name});
-            case TPath({name : "Float"})   : macro golgi.Validate.float (${arg_expr} , $v{optional}, $v{arg_name});
-            case TPath({name : "Bool"})    : macro golgi.Validate.bool  (${arg_expr} , $v{optional}, $v{arg_name});
-            default : {
-                leftover = true;
-                leftovers(arg_type);  
-            }
+        arg_type = Context.followWithAbstracts(arg_type.toType()).toComplexType();
+        var res = if (unify(arg_type,"Int")) {
+            macro golgi.Validate.int   (${arg_expr} , $v{optional}, $v{arg_name});
+        } else if (unify(arg_type, "String")){
+            macro golgi.Validate.string(${arg_expr} , $v{optional}, $v{arg_name});
+        } else if (unify(arg_type, "Float")){
+            macro golgi.Validate.float (${arg_expr} , $v{optional}, $v{arg_name});
+        } else if (unify(arg_type, "Bool")){
+            macro golgi.Validate.bool  (${arg_expr} , $v{optional}, $v{arg_name});
+        }
+        else {
+            leftover = true;
+            leftovers(arg_type);  
         }
         if (validate_name && !leftover && ["context","params"].indexOf(arg_name) != -1){
             Context.error('Reserved path argument name for $arg_name', pos );

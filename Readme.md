@@ -173,7 +173,7 @@ class Main {
 ```
 
 ## Abstract type route arguments
-It's possible for routes to accept Abstract types! The Abstract type must unify 
+It's possible for routes to accept *abstract* types! The abstract type must unify 
 with one of the four basic value types.  This opens up a lot of
 possibilities for automated instantiation and reduction of boilerplate:
 

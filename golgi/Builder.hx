@@ -32,7 +32,7 @@ class Builder {
         }
         else {
             leftover = true;
-            leftovers(arg_type);  
+            leftovers(arg_type);
         }
         if (validate_name && !leftover && ["context","params"].indexOf(arg_name) != -1){
             Context.error('Reserved path argument name for $arg_name', pos );
@@ -75,7 +75,7 @@ class Builder {
                         switch(f.kind){
                             case FVar(t): {
                                 var name = f.name;
-                                var pf = macro params.$name; 
+                                var pf = macro params.$name;
                                 var v = validateArg(pf, name, t, false, false, pos, function(c) {
                                     return arg_error(arg, f.name);
                                 });
@@ -176,7 +176,7 @@ class Builder {
         var cls = Context.getLocalClass();
         var k = cls.get().superClass;
         while(k.t.get().module != "golgi.Api"){
-             k = k.t.get().superClass; 
+             k = k.t.get().superClass;
              if (k == null){
                  Context.error("Class must extend golgi.Api", cls.get().pos);
              }
@@ -189,7 +189,9 @@ class Builder {
         for (f in fields){
             switch(f.kind){
                 case FFun(fn)  : {
-                    if(!Context.unify(k.params[1], fn.ret.toType())){
+                    if (f.access.indexOf(APublic) == -1) continue;
+                    else if (f.access.indexOf(AStatic) != -1) continue;
+                    else if(fn.ret == null || !Context.unify(k.params[1], fn.ret.toType())){
                         Context.error('Every route function in this class must be of the same type ${k.params[1]}', fn.expr.pos);
                     }
                     routes.push(processFn(f,fn));
@@ -213,7 +215,7 @@ class Builder {
             }
         };
 
-        var tret_complex = tret.toComplexType(); 
+        var tret_complex = tret.toComplexType();
 
         var map_field = {
             name: "dict",
@@ -261,7 +263,7 @@ class Builder {
                     if (default_field != null){
                         Context.error("Only one default field per Api", Context.currentPos());
                     }
-                    default_field = r.name; 
+                    default_field = r.name;
                     handler_name = "";
                 }
             }

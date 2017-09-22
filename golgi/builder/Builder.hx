@@ -29,13 +29,13 @@ class Builder {
             return leftovers(arg_type);
         }
         var res = if (unify(arg_type,"Int")) {
-            macro golgi.Validate.int   (${arg_expr} , $v{optional}, $v{arg_name});
+            macro golgi.Validate.int(${arg_expr} , $v{optional}, $v{arg_name});
         } else if (unify(arg_type, "String")){
             macro golgi.Validate.string(${arg_expr} , $v{optional}, $v{arg_name});
         } else if (unify(arg_type, "Float")){
-            macro golgi.Validate.float (${arg_expr} , $v{optional}, $v{arg_name});
+            macro golgi.Validate.float(${arg_expr} , $v{optional}, $v{arg_name});
         } else if (unify(arg_type, "Bool")){
-            macro golgi.Validate.bool  (${arg_expr} , $v{optional}, $v{arg_name});
+            macro golgi.Validate.bool(${arg_expr} , $v{optional}, $v{arg_name});
         } else {
             leftovers(arg_type);
         }

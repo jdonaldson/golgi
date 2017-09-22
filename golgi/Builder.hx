@@ -9,6 +9,7 @@ using haxe.macro.TypeTools;
 typedef CheckFn = {
     subroute : Bool,
     params : Bool,
+    context : Bool,
     fn : Function
 }
 
@@ -18,11 +19,10 @@ class Builder {
     static function unify(t:haxe.macro.ComplexType, str:String){
         return Context.unify(t.toType(), Context.getType(str));
     }
-    static function validateArg(arg_expr : Expr, arg_name : String, arg_type : ComplexType, optional : Bool, validate_name : Bool, pos : haxe.macro.Position, leftovers : ComplexType->Expr){
+    static function validateArg(arg_expr : Expr, arg_name : String, arg_type : ComplexType, optional : Bool, validate_name : Bool, reserved : Array<String>, leftovers : ComplexType->Expr){
         var leftover = false;
         arg_type = Context.followWithAbstracts(arg_type.toType()).toComplexType();
-        //TODO : Add preprocessing step for reserved names
-        if (["context","params"].indexOf(arg_name) != -1){
+        if (reserved.indexOf(arg_name) != -1){
             return leftovers(arg_type);
         }
         var res = if (unify(arg_type,"Int")) {
@@ -54,13 +54,14 @@ class Builder {
       Process the args, wrapping them in validators and constructors where appropriate.
      **/
     static function processArg(arg : FunctionArg, idx : Int, check: CheckFn){
-        var path_idx = idx;
-        if (!check.subroute) path_idx++;
+        var path_idx = idx + 1;
         var dispatch_slice = check.fn.args.length;
         if (check.params) dispatch_slice--;
+        if (check.context) dispatch_slice--;
         var path = macro parts[$v{path_idx++}];
         var pos = check.fn.expr.pos;
-        return validateArg(path, arg.name, arg.type, arg.opt, true, pos, function(c){
+        var reserved = ["golgi", "params", "context"];
+        return validateArg(path, arg.name, arg.type, arg.opt, true, reserved, function(c){
             return switch(arg){
                 case {name : "golgi"}: {
                     macro new Golgi(parts.slice($v{dispatch_slice -1}), params, context);
@@ -75,7 +76,7 @@ class Builder {
                             case FVar(t): {
                                 var name = f.name;
                                 var pf = macro params.$name;
-                                var v = validateArg(pf, name, t, false, false, pos, function(c) {
+                                var v = validateArg(pf, name, t, false, false, [], function(c) {
                                     return arg_error(arg, f.name);
                                 });
                                 arr.push({field : name , expr : v});
@@ -101,6 +102,7 @@ class Builder {
     static function checkFn(fn:Function) : CheckFn {
         var subroute = false;
         var params = false;
+        var context = false;
         for (i in 0...fn.args.length){
             var arg = fn.args[i];
             var pos = fn.expr.pos;
@@ -111,10 +113,13 @@ class Builder {
                 case {type : TPath({name : "Golgi", pack : ["golgi"]})}: {
                     subroute = true;
                 }
+                case {name : "contex"}: {
+                    context = true;
+                }
                 case _ : continue;
             }
         }
-        return {fn : fn, subroute : subroute, params : params};
+        return {fn : fn, subroute : subroute, params : params, context : context};
     }
 
 

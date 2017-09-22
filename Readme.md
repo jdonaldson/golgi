@@ -14,6 +14,11 @@ to others. (web url routing is possible, but not supported specifically)
 4. Routes should avoid annoying duplication. (Where possible, use idioms and
    typing features to inform common functionality)
 
+Golgi is based heavily off of
+[haxe.web.Dispatch](http://api.haxe.org/haxe/web/Dispatch.html).  However,
+Dispatch is older and couldn't utilize many of the modern macro features that
+Haxe >3 now provides.
+
 
 # Intro
 Here's a small example of a small route class:
@@ -43,8 +48,10 @@ by ``Router``.  This method manages the lookup of the right function on Router,
 and invokes the function there.  *The Golgi "run" method requires some other
 parameters which we'll get in to soon.*
 
+# Fully Typed Path Arguments
+
 The next step is to do something useful with the API, such as accept typed
-arguments:
+arguments from the parsed path:
 
 ```haxe
 class Router implements golgi.Api<String,String>  {
@@ -78,6 +85,7 @@ somewhat limited.  They can only be value types that are able to be converted
 from ``String``, such as ``Float``, ``Int``, and ``Bool``.  *More types are
 available via abstract typing which is described later on*.
 
+# Route Parameter Support
 
 We can also pass in URL parameters using a special ``params`` argument:
 
@@ -105,6 +113,7 @@ The ``params`` argument is *reserved*.  That is, you can only use that argument
 name to specify url parameters, and it must be typed as an anonymous object.
 Also, all param fields must be simple value types (``String``,``Bool``,``Int``, etc).
 
+# Additional Context
 Last but not least, it's common to utilize a *request* argument for route handling.
 This is often necessary for web routing, when certain routing logic involves
 checking headers, etc.  In Golgi this is called a *context* argument.  It can be
@@ -132,11 +141,14 @@ class Main {
 Here we're using a string type for our context.  Web routers will typically pass
 in a structural type, or some sort of class.
 
-We can see that the type parameters of the Golgi Api include the type for the
-context (``String``).  The second type parameter (also ``String``) indicates
-the return value that *every* function in the Api must satisfy.  With this
-constraint, it's possible to get a statically typed results from an arbitrary
-route request:
+
+# Golgi Type Parameters Explained
+
+We can see that the type parameters of the Golgi Api ``Router<String,String>``
+include the type for the context (``String``).  The second type parameter (also
+``String``) indicates the return value that *every* function in the Api must
+satisfy.  With this constraint, it's possible to get a statically typed results
+from an arbitrary route request:
 
 ```haxe
 class Main {
@@ -149,6 +161,21 @@ class Main {
 
 With a consistent return value type retrieved from the route request, it becomes
 easier to write a flexible response.
+
+# Sub-Routing
+
+It's also possible to do sub-routing in Golgi.  This process involves using a
+secondary Golgi Api to process additional url parameters, common in hierarchical
+routing scenarios.
+
+```haxe
+class Router implements golgi.Api<String,String>  {
+    public function foo(x:Int, context : String, golgi : Golgi<String,String>){
+        golgi.
+        return 'foo';
+    }
+}
+```
 
 # Extra Features
 

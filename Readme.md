@@ -39,7 +39,7 @@ class Main {
 
 Here we're running the Golgi router on the path ``"foo"``, using the Api defined
 by ``Router``.  This method manages the lookup of the right function on Router,
-and invokes the function there.  *The Golgi ``run`` method requires some other
+and invokes the function there.  *The Golgi "run" method requires some other
 parameters which we'll get in to soon.*
 
 The next step is to do something useful with the API, such as accept typed
@@ -75,7 +75,7 @@ thrown.
 We can add as many typed arguments as we want, but the argument types are
 somewhat limited.  They can only be value types that are able to be converted 
 from ``String``, such as ``Float``, ``Int``, and ``Bool``.  *More types are
-available via ``abstract`` typing which is described later on*.
+available via abstract typing which is described later on*.
 
 
 We can also pass in URL parameters using a special ``params`` argument:

@@ -2,16 +2,17 @@
 A composable routing library for Haxe.
 
 Golgi is an opinionated routing library for Haxe. It does not try to be a web
-routing library on its own, but can be used as the basis for one.  
+routing library on its own, but can be used as the basis for one.
 
 It follows design decisions based on these priorities:
 
-1. Route resolution should be simple fast  (rather than flexible and slow)
-2. Routes should be composable and configurable (rather than global and static) 
-3. Route handling should support common cases (web routing), but be adaptable
-to other use cases. (rather than web specific routing)
-4. Routes should avoid annoying repetition. (rather than duplicating
-   functionality in many places).
+1. Route resolution should be simple, fast, and composable.  (e.g. regular expression matches are
+   slower, rely on complex resolution ordering, and typically are applied
+   globally).
+3. Route handling should support common cases, but be adaptable
+to others. (web url routing is possible, but not supported specifically)
+4. Routes should avoid annoying duplication. (Where possible, use idioms and
+   typing features to inform common functionality)
 
 
 # Intro
@@ -32,7 +33,7 @@ function:
 ```haxe
 class Main {
     static function main() {
-        Golgi.run("foo", {}, "", new Router()); 
+        Golgi.run("foo", {}, "", new Router());
     }
 }
 ```
@@ -60,20 +61,20 @@ invoke it with the following call:
 ```haxe
 class Main {
     static function main() {
-        Golgi.run("foo/1", {}, "", new Router()); 
+        Golgi.run("foo/1", {}, "", new Router());
     }
 }
 ```
 
 Note that the argument ``x`` inside the function body is typed as an ``Int``.
-Golgi splits the paths into chunks, reads the type information on the``Router`` 
-method interface, and then makes the appropriate conversion.  If the ``x`` 
+Golgi splits the paths into chunks, reads the type information on the``Router``
+method interface, and then makes the appropriate conversion.  If the ``x``
 argument is missing, a ``NotFound(path:String)`` error is thrown.  If the
 argument can not be converted to an ``Int``, then a ``InvalidValue`` error is
-thrown. 
+thrown.
 
 We can add as many typed arguments as we want, but the argument types are
-somewhat limited.  They can only be value types that are able to be converted 
+somewhat limited.  They can only be value types that are able to be converted
 from ``String``, such as ``Float``, ``Int``, and ``Bool``.  *More types are
 available via abstract typing which is described later on*.
 
@@ -95,17 +96,17 @@ The params are passed in using the second argument of the ``Golgi.run`` method:
 ```haxe
 class Main {
     static function main() {
-        Golgi.run("foo/1", {y : 4}, "", new Router()); 
+        Golgi.run("foo/1", {y : 4}, "", new Router());
     }
 }
 ```
 
-The ``params`` argument is *reserved*.  That is, you can only use that argument 
+The ``params`` argument is *reserved*.  That is, you can only use that argument
 name to specify url parameters, and it must be typed as an anonymous object.
-Also, all param fields must be simple value types (``String``,``Bool``,``Int``, etc). 
+Also, all param fields must be simple value types (``String``,``Bool``,``Int``, etc).
 
 Last but not least, it's common to utilize a *request* argument for route handling.
-This is often necessary for web routing, when certain routing logic involves 
+This is often necessary for web routing, when certain routing logic involves
 checking headers, etc.  In Golgi this is called a *context* argument.  It can be
 of any type, so once again *context* is a reserved argument name:
 
@@ -123,7 +124,7 @@ class Router implements golgi.Api<String,String>  {
 ```haxe
 class Main {
     static function main() {
-        Golgi.run("foo/1", {y : 4}, "dummy", new Router()); 
+        Golgi.run("foo/1", {y : 4}, "dummy", new Router());
     }
 }
 ```
@@ -132,7 +133,7 @@ Here we're using a string type for our context.  Web routers will typically pass
 in a structural type, or some sort of class.
 
 We can see that the type parameters of the Golgi Api include the type for the
-context (``String``).  The second type parameter (also ``String``) indicates 
+context (``String``).  The second type parameter (also ``String``) indicates
 the return value that *every* function in the Api must satisfy.  With this
 constraint, it's possible to get a statically typed results from an arbitrary
 route request:
@@ -140,7 +141,7 @@ route request:
 ```haxe
 class Main {
     static function main() {
-        var result = Golgi.run("foo/1", {y : 4}, "dummy", new Router()); 
+        var result = Golgi.run("foo/1", {y : 4}, "dummy", new Router());
         trace('The result is always a string for Router: $result');
     }
 }
@@ -168,13 +169,13 @@ class Router implements golgi.Api<String,String>  {
 ```haxe
 class Main {
     static function main() {
-        Golgi.run("", {}, "", new Router()); 
+        Golgi.run("", {}, "", new Router());
     }
 }
 ```
 
 ## Abstract type route arguments
-It's possible for routes to accept *abstract* types! The abstract type must unify 
+It's possible for routes to accept *abstract* types! The abstract type must unify
 with one of the four basic value types.  This opens up a lot of
 possibilities for automated instantiation and reduction of boilerplate:
 

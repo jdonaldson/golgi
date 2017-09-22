@@ -106,7 +106,8 @@ Also, all param fields must be simple value types (``String``,``Bool``,``Int``, 
 
 Last but not least, it's common to utilize a *request* argument for route handling.
 This is often necessary for web routing, when certain routing logic involves 
-checking headers, etc:
+checking headers, etc.  In Golgi this is called a *context* argument.  It can be
+of any type, so once again *context* is a reserved argument name:
 
 ```haxe
 class Router implements golgi.Api<String,String>  {

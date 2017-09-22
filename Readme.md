@@ -2,7 +2,7 @@
 A composable routing library for Haxe.
 
 Golgi is an opinionated routing library for Haxe. It does not try to be a web
-routing library, but can be used as the basis for one.  
+routing library on its own, but can be used as the basis for one.  
 
 It follows design decisions based on these priorities:
 

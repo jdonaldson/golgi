@@ -8,8 +8,11 @@ class Golgi<TCtx>{
         this.params = params;
         this.context = context;
     }
-    inline public function subroute<TRet>(api : Api<TCtx,TRet>){
+    inline public function subroute<TRet>(api : Api<TCtx,TRet>) : TRet {
         return api.__golgi__(this.parts, this.params, this.context);
+    }
+    inline public function mapContext<TCtxa>(ctxf : TCtx->TCtxa) : Golgi<TCtxa> {
+        return new Golgi(this.parts, this.params, ctxf(this.context));
     }
     public static function run<A,B>(path : String, params : Dynamic, context : A, api : Api<A,B> ) {
         var parts = path.split("/");

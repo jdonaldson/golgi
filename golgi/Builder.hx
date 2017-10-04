@@ -162,12 +162,25 @@ class Builder {
             exprs.push(arg_expr);
         }
         ensureOrder(m, ["params", "context", "golgi"], fn.expr);
-        if (m.exists("golgi")){
-            if (!m.exists("context")){
-                Context.error("Subrouting in golgi requires a passed context argument", fn.expr.pos);
+        // if (m.exists("golgi")){
+        //     if (!m.exists("context")){
+        //         Context.error("Subrouting in golgi requires a passed context argument", fn.expr.pos);
+        //     }
+        // }
+        var mw_idx = -1;
+        var mw = [];
+        for (i in 0...f.meta.length){
+            var m = f.meta[i];
+            if (m.name == ":mw"){
+                mw_idx = i;
             }
         }
-        return {route:f, ffun : fn, subroute : status.subroute, params : status.params, exprs : exprs};
+        if (mw_idx != -1){
+            var mwv = f.meta[mw_idx];
+            var k = mwv.params[0].expr;
+            mw.push(k);
+        }
+        return {route:f, ffun : fn, subroute : status.subroute, params : status.params, exprs : exprs, middleware : mw};
     }
 
     /**
@@ -262,25 +275,42 @@ class Builder {
             for (r in route.route.meta){
                 if (r.name == "pattern"){
                     pattern = r.params[0];
-                }
-                if (r.name == "default"){
+                } else if (r.name == "default"){
                     if (default_field != null){
                         Context.error("Only one default field per Api", Context.currentPos());
                     }
                     default_field = r.name;
                     handler_name = "";
+                } else {
+                    pattern = macro $v{field_name};
                 }
             }
 
-            var func = macro function(parts:Array<String>, params:Dynamic, context : Dynamic){
-                return this.$field_name($a{route.exprs});
-            };
 
-            if (pattern == null){
+            if (route.middleware.length > 0){
+                var next = macro function(context : Dynamic): Dynamic{
+                    return this.$field_name($a{route.exprs});
+                };
+                for (i in 0...route.middleware.length){
+                    var m = route.middleware[i];
+                    var mm = {expr:m, pos: Context.currentPos()};
+                    next = macro return $mm(context, $next);
+                }
+                var func = macro function(parts:Array<String>, params:Dynamic, context : Dynamic){
+                    return $next;
+                };
                 d.push( macro { d.set($v{handler_name}, $func); });
             } else {
-                d.push(macro { pattern : $v{pattern}, func : $func });
-            };
+                var func = macro function(parts:Array<String>, params:Dynamic, context : Dynamic){
+                    return this.$field_name($a{route.exprs});
+                };
+                d.push( macro { d.set($v{handler_name}, $func); });
+            }
+
+            // if (pattern == null){
+            // } else {
+            //     d.push(macro { pattern : $v{pattern}, func : $func });
+            // };
 
         };
         d.push(macro {

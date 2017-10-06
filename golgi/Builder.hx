@@ -264,6 +264,16 @@ class Builder {
             pos: Context.currentPos()
         };
 
+
+        fields.push(dispatch_func);
+        fields.push(map_field);
+        fields.push(pattern_field);
+        var new_field = buildConstructor(routes);
+        fields.push(new_field);
+
+        return fields;
+    }
+    static function buildConstructor(routes:Array<Route>){
         var d = [];
         d.push( macro var d = new Map());
         d.push( macro var r = new Array());
@@ -320,7 +330,7 @@ class Builder {
 
         var block = macro $b{d};
 
-        var new_field = {
+        return {
             name: "new",
             doc: null,
             meta: [],
@@ -328,13 +338,15 @@ class Builder {
             kind: FFun({args : [], ret : null , expr : block}),
             pos: Context.currentPos()
         };
-
-        fields.push(dispatch_func);
-        fields.push(map_field);
-        fields.push(pattern_field);
-        fields.push(new_field);
-
-        return fields;
     }
 }
 #end
+
+typedef Route = {
+    route:Field,
+    ffun : Function,
+    subroute : Bool,
+    params : Bool,
+    exprs : Array<Expr>,
+    middleware : Array<ExprDef>,
+}

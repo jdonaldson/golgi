@@ -1,5 +1,4 @@
 import golgi.Api;
-import golgi.Builder;
 import golgi.Golgi;
 
 typedef Blah = {
@@ -10,16 +9,21 @@ typedef Blah = {
 class Main {
     static function main() {
         try{
-        Golgi.run("food/1", {}, {}, new Foo());
+            Golgi.run("food/1", {}, {}, new Foo());
         } catch (e:Dynamic){
             trace(e + " is the value for e");
         }
+        trace("DONE");
     }
 }
 
 class Foo extends Api<Req,String> {
-    public function food(x  : Int, context : String, golgi : golgi.Golgi<Req>) : String {
-        trace("HI");
+    static function bar(context:Req, next : Req->String) : String {
+        return next(context) + "!";
+    }
+    @:mw(bar)
+    public function food(x  : Int, context : String, golgi : Golgi<Req>) : String {
+        trace(x + " is the value for x");
         return 'o';
     }
 

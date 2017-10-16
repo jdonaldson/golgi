@@ -1,6 +1,8 @@
 package golgi.builder;
 
 import haxe.macro.Context;
+import golgi.builder.Constructor.build;
+import golgi.builder.Dispatcher.build;
 import haxe.macro.Expr;
 import golgi.Validate;
 using haxe.macro.ComplexTypeTools;
@@ -12,6 +14,7 @@ typedef CheckFn = {
     context : Bool,
     fn : Function
 }
+
 
 #if macro
 class Builder {
@@ -51,7 +54,7 @@ class Builder {
     }
 
     /**
-      Process the args, wrapping them in validators and constructors where appropriate.
+      Process theπ args, wrapping them in validators and constructors where appropriate.
      **/
     static function processArg(arg : FunctionArg, idx : Int, check: CheckFn){
         var path_idx = idx + 1;
@@ -218,57 +221,22 @@ class Builder {
         }
 
 
-        var handler_macro = macro {
-            var path = "";
-            if (parts.length == 0) {
-                parts = [];
-            } else {
-                path = parts[0];
-            }
-            if (dict.exists(path)){
-                return dict.get(path)(parts,params,context);
-            } else {
-                throw golgi.Error.NotFound(parts[0]);
-            }
-        };
-
         var tret_complex = tret.toComplexType();
 
         var map_field = {
-            name: "dict",
-            doc: null,
-            meta: [],
-            access: [],
-            kind: FVar(macro:Map<String, Array<String>->Dynamic->Dynamic->$tret_complex> ),
-            pos: Context.currentPos()
-        }
-        var pattern_field = {
-            name: "patterns",
-            doc: null,
-            meta: [],
-            access: [],
-            kind: FVar(macro:Array<{ pattern : String, func : Array<String>->Dynamic->Dynamic->$tret_complex}>),
-            pos: Context.currentPos()
+            name   : "dict",
+            doc    : null,
+            meta   : [],
+            access : [],
+            kind   : FVar(macro:Map<String, Array<String>->Dynamic->Dynamic->$tret_complex> ),
+            pos    : Context.currentPos()
         }
 
-        var dispatch_func = {
-            name: "__golgi__",
-            doc: null,
-            meta: [],
-            access: [AOverride],
-            kind: FFun({args : [
-                {name:"parts", type: TPath({name : "Array", pack:[], params : [TPType(TPath({name : "String", pack : []}))] })},
-                {name:"params", type: TPath({name : "Dynamic", pack:[]})},
-                {name:"context", type: TPath({name : "Dynamic", pack:[]})}
-            ], ret : tret_complex, expr : handler_macro}),
-            pos: Context.currentPos()
-        };
 
-
+        var dispatch_func = Dispatcher.build(tret_complex);
         fields.push(dispatch_func);
         fields.push(map_field);
-        fields.push(pattern_field);
-        var new_field = Constructor.buildConstructor(routes);
+        var new_field = Constructor.build(routes);
         fields.push(new_field);
 
         return fields;

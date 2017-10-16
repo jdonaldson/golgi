@@ -2,11 +2,13 @@ package golgi.builder;
 import golgi.builder.Route;
 import haxe.macro.Context;
 import haxe.macro.Expr;
+/**
+  Steps for generating the golgi instance constructor
+ **/
 class Constructor {
-    public static function buildConstructor(routes:Array<Route>){
+    public static function build(routes:Array<Route>){
         var d = [];
-        d.push( macro var d = new Map());
-        d.push( macro var r = new Array());
+        d.push( macro this.dict = new Map());
         var default_field = null;
         for (route in routes){
             var handler_name = route.route.name;
@@ -39,18 +41,14 @@ class Constructor {
                 var func = macro function(parts:Array<String>, params:Dynamic, context : Dynamic){
                     return $next;
                 };
-                d.push( macro { d.set($v{handler_name}, $func); });
+                d.push( macro { dict.set($v{handler_name}, $func); });
             } else {
                 var func = macro function(parts:Array<String>, params:Dynamic, context : Dynamic){
                     return this.$field_name($a{route.exprs});
                 };
-                d.push( macro { d.set($v{handler_name}, $func); });
+                d.push( macro { dict.set($v{handler_name}, $func); });
             }
         };
-        d.push(macro {
-            this.dict = d;
-            this.patterns = r;
-        });
 
         var block = macro $b{d};
 

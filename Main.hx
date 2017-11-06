@@ -17,6 +17,8 @@ class Main {
     }
 }
 
+@:context(context)
+@:params(params)
 class Foo extends Api<Req,String> {
     static function bar(context:Req, next : Req->String) : String {
         return next(context) + "!";

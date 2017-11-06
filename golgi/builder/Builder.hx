@@ -54,7 +54,7 @@ class Builder {
     }
 
     /**
-      Process theπ args, wrapping them in validators and constructors where appropriate.
+      Process the args, wrapping them in validators and constructors where appropriate.
      **/
     static function processArg(arg : FunctionArg, idx : Int, check: CheckFn){
         var path_idx = idx + 1;
@@ -147,7 +147,7 @@ class Builder {
     /**
       Process the function, ensuring that special named arguments are the right type, and in the right order
      **/
-    static function processFn(f : Field, fn : Function ){
+    static function processFn(f : Field, fn : Function ) : RouteInfo {
         var path_arg = 0;
         var path_idx = 0;
         var status = checkFn(fn);
@@ -165,11 +165,7 @@ class Builder {
             exprs.push(arg_expr);
         }
         ensureOrder(m, ["params", "context", "golgi"], fn.expr);
-        // if (m.exists("golgi")){
-        //     if (!m.exists("context")){
-        //         Context.error("Subrouting in golgi requires a passed context argument", fn.expr.pos);
-        //     }
-        // }
+
         var mw_idx = -1;
         var mw = [];
         for (i in 0...f.meta.length){
@@ -183,7 +179,25 @@ class Builder {
             var k = mwv.params[0].expr;
             mw.push(k);
         }
-        return {route:f, ffun : fn, subroute : status.subroute, params : status.params, exprs : exprs, middleware : mw};
+        return {
+            route      : f,
+            ffun       : fn,
+            subroute   : status.subroute,
+            params     : status.params,
+            exprs      : exprs,
+            middleware : mw
+        };
+    }
+
+    static function findGolgiSuper(cls : Null<haxe.macro.Type.Ref<haxe.macro.Type.ClassType>>){
+        var glg = cls.get().superClass;
+        while(glg.t.get().module != "golgi.Api"){
+             glg = glg.t.get().superClass;
+             if (glg == null){
+                 Context.error("Class must extend golgi.Api", cls.get().pos);
+             }
+        }
+        return glg;
     }
 
     /**
@@ -194,15 +208,9 @@ class Builder {
         var routes = [];
 
         var cls = Context.getLocalClass();
-        var k = cls.get().superClass;
-        while(k.t.get().module != "golgi.Api"){
-             k = k.t.get().superClass;
-             if (k == null){
-                 Context.error("Class must extend golgi.Api", cls.get().pos);
-             }
-        }
-        var tctx = k.params[0];
-        var tret = k.params[1];
+        var glg = findGolgiSuper(cls);
+        var tctx = glg.params[0];
+        var tret = glg.params[1];
 
 
         // capture function types
@@ -211,8 +219,8 @@ class Builder {
                 case FFun(fn)  : {
                     if (f.access.indexOf(APublic) == -1) continue;
                     else if (f.access.indexOf(AStatic) != -1) continue;
-                    else if(fn.ret == null || !Context.unify(k.params[1], fn.ret.toType())){
-                        Context.error('Every route function in this class must be of the same type ${k.params[1]}', fn.expr.pos);
+                    else if(fn.ret == null || !Context.unify(glg.params[1], fn.ret.toType())){
+                        Context.error('Every route function in this class must be of the same type ${glg.params[1]}', fn.expr.pos);
                     }
                     routes.push(processFn(f,fn));
                 }
@@ -243,4 +251,14 @@ class Builder {
     }
 }
 #end
+
+
+typedef RouteInfo = {
+    route      : Field,
+    ffun       : Function,
+    subroute   : Bool,
+    params     : Bool,
+    exprs      : Array<Expr>,
+    middleware : Array<ExprDef>
+}
 

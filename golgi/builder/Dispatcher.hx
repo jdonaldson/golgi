@@ -13,7 +13,7 @@ class Dispatcher {
                 path = parts[0];
             }
             if (dict.exists(path)){
-                return dict.get(path)(parts,params,context);
+                return dict.get(path)(parts,params,request);
             } else {
                 throw golgi.Error.NotFound(parts[0]);
             }
@@ -27,7 +27,7 @@ class Dispatcher {
             kind: FFun({args : [
                 {name:"parts",   type: TPath({name : "Array", pack:[], params : [TPType(TPath({name : "String", pack : []}))] })},
                 {name:"params",  type: TPath({name : "Dynamic", pack:[]})},
-                {name:"context", type: TPath({name : "Dynamic", pack:[]})}
+                {name:"request", type: TPath({name : "Dynamic", pack:[]})}
             ], ret : tret_complex, expr : handler_macro}),
             pos: Context.currentPos()
         };

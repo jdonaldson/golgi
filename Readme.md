@@ -113,18 +113,18 @@ The ``params`` argument is *reserved*.  That is, you can only use that argument
 name to specify url parameters, and it must be typed as an anonymous object.
 Also, all param fields must be simple value types (``String``,``Bool``,``Int``, etc).
 
-# Additional Context
+# Additional request context
 Last but not least, it's common to utilize a *request* argument for route handling.
 This is often necessary for web routing, when certain routing logic involves
-checking headers, etc.  In Golgi this is called a *context* argument.  It can be
-of any type, so once again *context* is a reserved argument name:
+checking headers, etc.  In Golgi this is called a *request* argument.  It can be
+of any type, so once again *request* is a reserved argument name:
 
 ```haxe
 class Router implements golgi.Api<String,String>  {
-    public function foo(x:Int, params : {y : Int}, context : String){
+    public function foo(x:Int, params : {y : Int}, request : String){
         trace('x + 1 is  ${x + 1}');
         trace('params.y + 1 is ${params.y + 1}');
-        trace('the dummmy context is $context');
+        trace('the dummmy request is $request');
         return 'foo';
     }
 }
@@ -138,14 +138,14 @@ class Main {
 }
 ```
 
-Here we're using a string type for our context.  Web routers will typically pass
+Here we're using a string type for our request.  Web routers will typically pass
 in a structural type, or some sort of class.
 
 
 # Golgi Type Parameters Explained
 
 We can see that the type parameters of the Golgi Api ``Router<String,String>``
-include the type for the context (``String``).  The second type parameter (also
+include the type for the request (``String``).  The second type parameter (also
 ``String``) indicates the return value that *every* function in the Api must
 satisfy.  With this constraint, it's possible to get a statically typed results
 from an arbitrary route request:
@@ -170,7 +170,7 @@ routing scenarios.
 
 ```haxe
 class Router implements golgi.Api<String,String>  {
-    public function foo(x:Int, context : String, golgi : Golgi<String,String>){
+    public function foo(x:Int, request : String, golgi : Golgi<String,String>){
         golgi.
         return 'foo';
     }

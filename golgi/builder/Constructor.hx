@@ -28,22 +28,21 @@ class Constructor {
                 }
             }
 
-
             if (route.middleware.length > 0){
-                var next = macro function(context : Dynamic): Dynamic{
+                var next = macro function(request : Dynamic): Dynamic{
                     return this.$field_name($a{route.exprs});
                 };
                 for (i in 0...route.middleware.length){
                     var m = route.middleware[i];
                     var mm = {expr:m, pos: Context.currentPos()};
-                    next = macro return $mm(context, $next);
+                    next = macro return $mm(request, $next);
                 }
-                var func = macro function(parts:Array<String>, params:Dynamic, context : Dynamic){
+                var func = macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
                     return $next;
                 };
                 d.push( macro { dict.set($v{handler_name}, $func); });
             } else {
-                var func = macro function(parts:Array<String>, params:Dynamic, context : Dynamic){
+                var func = macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
                     return this.$field_name($a{route.exprs});
                 };
                 d.push( macro { dict.set($v{handler_name}, $func); });

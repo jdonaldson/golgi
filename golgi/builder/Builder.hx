@@ -8,14 +8,6 @@ import golgi.Validate;
 using haxe.macro.ComplexTypeTools;
 using haxe.macro.TypeTools;
 
-typedef CheckFn = {
-    subroute : Bool,
-    params : Bool,
-    context : Bool,
-    fn : Function
-}
-
-
 #if macro
 class Builder {
 
@@ -45,11 +37,12 @@ class Builder {
     /**
       An error message creator for argument problems
      **/
-    static function arg_error(arg : FunctionArg, ?param : String){
+    static function arg_error(arg : FunctionArg, ?param : String, ?pos : haxe.macro.Position){
         var type = arg.type.toType().toString();
+        if (pos == null) pos = Context.currentPos();
         var name = arg.name;
         var param_str = param != null ? 'on params.$param' : '';
-        Context.error('Unhandled argument type "$type" $param_str for $name.  Only types unifying with String, Float, Int, and Bool are supported as path arguments.', Context.currentPos());
+        Context.error('Unhandled argument type "$type" $param_str for $name.  Only types unifying with String, Float, Int, and Bool are supported as path arguments.', pos);
         return null;
     }
 
@@ -60,40 +53,44 @@ class Builder {
         var path_idx = idx + 1;
         var dispatch_slice = check.fn.args.length;
         if (check.params) dispatch_slice--;
-        if (check.context) dispatch_slice--;
+        if (check.request) dispatch_slice--;
         var path = macro parts[$v{path_idx++}];
         var pos = check.fn.expr.pos;
-        var reserved = ["golgi", "params", "context"];
+        var reserved = ["golgi", "params", "request"];
         return validateArg(path, arg.name, arg.type, arg.opt, true, reserved, function(c){
             return switch(arg){
                 case {name : "golgi"}: {
-                    macro new Golgi(parts.slice($v{dispatch_slice -1}), params, context);
+                    macro new Golgi(parts.slice($v{dispatch_slice -1}), params, request);
                 };
-                case {name : "context"} : {
-                    macro untyped $i{"context"};
+                case {name : "request"} : {
+                    macro untyped $i{"request"};
                 }
-                case {name : "params", type : TAnonymous(fields)} : {
+                case {name : "params"} : {
                     var arr = [];
-                    for (f in fields){
-                        switch(f.kind){
-                            case FVar(t): {
-                                var name = f.name;
-                                var pf = macro params.$name;
-                                var v = validateArg(pf, name, t, false, false, [], function(c) {
-                                    return arg_error(arg, f.name);
-                                });
-                                arr.push({field : name , expr : v});
-                            };
-                            default : arg_error(arg);
+                    var t = Context.followWithAbstracts(arg.type.toType());
+                    switch(t){
+                        case TAnonymous(fields) : {
+                            for (f in fields.get().fields){
+                                switch(f.kind){
+                                    case FVar(ft,_): {
+                                        var name = f.name;
+                                        var fct = f.type.toComplexType();
+                                        var pf = macro params.$name;
+                                        var v = validateArg(pf, name, fct, false, false, [], function(c) {
+                                            return arg_error(arg, f.name, f.pos);
+                                        });
+                                        arr.push({field : name , expr : v});
+                                    };
+                                    default : arg_error(arg, f.pos);
+                                }
+                            }
                         }
+                        default : arg_error(arg, pos);
                     }
                     {expr :EObjectDecl(arr), pos : pos};
                 }
-                case {name : "params"} : {
-                    Context.error("The 'params' argument must be an anonymous object declaration", Context.currentPos());
-                }
                 case _ : {
-                    arg_error(arg);
+                    arg_error(arg, pos);
                 }
             }
         });
@@ -105,7 +102,7 @@ class Builder {
     static function checkFn(fn:Function) : CheckFn {
         var subroute = false;
         var params = false;
-        var context = false;
+        var request = false;
         for (i in 0...fn.args.length){
             var arg = fn.args[i];
             var pos = fn.expr.pos;
@@ -117,12 +114,12 @@ class Builder {
                     subroute = true;
                 }
                 case {name : "contex"}: {
-                    context = true;
+                    request = true;
                 }
                 case _ : continue;
             }
         }
-        return {fn : fn, subroute : subroute, params : params, context : context};
+        return {fn : fn, subroute : subroute, params : params, request : request};
     }
 
 
@@ -147,7 +144,7 @@ class Builder {
     /**
       Process the function, ensuring that special named arguments are the right type, and in the right order
      **/
-    static function processFn(f : Field, fn : Function ) : RouteInfo {
+    static function processFn(f : Field, fn : Function, treq  : haxe.macro.Type ) : RouteInfo {
         var path_arg = 0;
         var path_idx = 0;
         var status = checkFn(fn);
@@ -160,11 +157,30 @@ class Builder {
                     Context.error("golgi argument must be of Golgi type", fn.expr.pos);
                 }
             }
+            if (arg.name == "request"){
+                if (!Context.unify(arg.type.toType(), treq)){
+                    Context.error('request argument must be of ${treq} type', fn.expr.pos);
+                }
+            }
+            if (arg.name == "params"){
+                var t = Context.follow(arg.type.toType());
+                var anon = switch(t){
+                    case TAnonymous(_)  : true;
+                    default : {
+                        trace("waaat");
+                        false;
+                    }
+                }
+                if (!anon){
+                    Context.error('params argument must be of Anonymous type', fn.expr.pos);
+                }
+            }
+
             m.set(arg.name, i);
             var arg_expr = processArg(arg, i, status);
             exprs.push(arg_expr);
         }
-        ensureOrder(m, ["params", "context", "golgi"], fn.expr);
+        ensureOrder(m, ["params", "request", "golgi"], fn.expr);
 
         var mw_idx = -1;
         var mw = [];
@@ -209,20 +225,21 @@ class Builder {
 
         var cls = Context.getLocalClass();
         var glg = findGolgiSuper(cls);
-        var tctx = glg.params[0];
+        var treq = glg.params[0];
         var tret = glg.params[1];
 
-
-        // capture function types
+        // capture routes
         for (f in fields){
             switch(f.kind){
                 case FFun(fn)  : {
+                    var tfnret = fn.ret.toType();
                     if (f.access.indexOf(APublic) == -1) continue;
                     else if (f.access.indexOf(AStatic) != -1) continue;
-                    else if(fn.ret == null || !Context.unify(glg.params[1], fn.ret.toType())){
-                        Context.error('Every route function in this class must be of the same type ${glg.params[1]}', fn.expr.pos);
+                    else if(fn.ret == null || !Context.unify(tret, tfnret)){
+                        Context.error('Every route function in this class must be of type ${tret}', fn.expr.pos);
                     }
-                    routes.push(processFn(f,fn));
+                    var route_fn = processFn(f,fn, treq);
+                    routes.push(route_fn);
                 }
                 default : continue;
             }
@@ -262,3 +279,10 @@ typedef RouteInfo = {
     middleware : Array<ExprDef>
 }
 
+
+typedef CheckFn = {
+    subroute : Bool,
+    params   : Bool,
+    request  : Bool,
+    fn       : Function
+}

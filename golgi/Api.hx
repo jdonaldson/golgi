@@ -2,8 +2,8 @@ package golgi;
 
 @:allow(golgi.Golgi)
 @:autoBuild(golgi.builder.Builder.build())
-class Api<TCtx,TRet> {
-    function __golgi__(parts : Array<String>, params: Dynamic, context : TCtx)  : TRet { 
+class Api<TReq,TRet> {
+    function __golgi__(parts : Array<String>, params: Dynamic, request : TReq)  : TRet {
         return null;
-    } 
+    }
 }

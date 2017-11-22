@@ -19,7 +19,7 @@ class Builder {
         var leftover = false;
         arg.type = Context.followWithAbstracts(arg.type.toType()).toComplexType();
         if (reserved.indexOf(arg.name) != -1){
-            return arg.leftovers(arg.type);
+            return arg.leftovers(arg);
         }
         var res = if (unify(arg.type,"Int")) {
             macro golgi.Validate.int(${arg.expr} , $v{arg.optional}, $v{arg.name});
@@ -30,7 +30,7 @@ class Builder {
         } else if (unify(arg.type, "Bool")){
             macro golgi.Validate.bool(${arg.expr} , $v{arg.optional}, $v{arg.name});
         } else {
-            macro arg.leftovers(arg.type);
+            macro arg.leftovers(arg);
         }
         return res;
     }
@@ -38,7 +38,7 @@ class Builder {
     /**
       An error message creator for argument problems
      **/
-    static function arg_error(arg : FunctionArg, ?param : String, ?pos : haxe.macro.Position){
+    static function arg_error(arg : Arg, ?param : String, ?pos : haxe.macro.Position){
         var type = arg.type.toType().toString();
         if (pos == null) pos = Context.currentPos();
         var name = arg.name;
@@ -47,6 +47,8 @@ class Builder {
         return null;
     }
 
+    static function argLeftovers(arg : FunctionArg) {
+    }
     /**
       Process the args, wrapping them in validators and constructors where appropriate.
      **/
@@ -64,13 +66,13 @@ class Builder {
             optional : arg.opt,
             validate_name : true,
             reserved : Builder.reserved,
-            leftovers : function(c){
-                return switch(arg){
-                    case {name : "golgi"}: {
+            leftovers : function(arg : Arg){
+                return switch(arg.name){
+                    case "golgi": {
                         macro new Golgi(parts.slice($v{dispatch_slice -1}), params, request);
                     };
-                    case {name : "request"} : macro untyped $i{"request"};
-                    case {name : "params"} : {
+                    case "request" : macro untyped $i{"request"};
+                    case "params" : {
                         var arr = [];
                         var t = Context.followWithAbstracts(arg.type.toType());
                         switch(t){
@@ -110,7 +112,7 @@ class Builder {
     }
 
     /**
-      Check the function to ensure that it is valid for a route
+      Check for special params that may be present in the function
      **/
     static function checkFn(fn:Function) : CheckFn {
         var subroute = false;
@@ -120,10 +122,10 @@ class Builder {
             var arg = fn.args[i];
             var pos = fn.expr.pos;
             switch(arg){
-                case {name : "params", type : TAnonymous(fields)} : {
+                case {name : "params"} : {
                     params = true;
                 };
-                case {type : TPath({name : "Golgi", pack : ["golgi"]})}: {
+                case {name : "golgi"}: {
                     subroute = true;
                 }
                 case {name : "request"}: {
@@ -307,5 +309,5 @@ typedef Arg = {
     optional      : Bool,
     reserved      : Array<String>,
     validate_name : Bool,
-    leftovers : haxe.macro.ComplexType->haxe.macro.Expr
+    leftovers : Arg->haxe.macro.Expr
 }

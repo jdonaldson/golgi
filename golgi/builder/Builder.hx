@@ -12,26 +12,30 @@ using haxe.macro.TypeTools;
 class Builder {
     static var reserved = ["params", "request", "golgi"];
 
-    static function unify(t:haxe.macro.ComplexType, str:String){
-        return Context.unify(t.toType(), Context.getType(str));
+    static function unify(t:haxe.macro.ComplexType, target : haxe.macro.ComplexType){
+        return Context.unify(t.toType(), target.toType());
+
     }
+
     static function validateArg(arg : Arg) : Expr {
         var leftover = false;
         arg.type = Context.followWithAbstracts(arg.type.toType()).toComplexType();
         if (reserved.indexOf(arg.name) != -1){
             return arg.leftovers(arg);
         }
-        var res = if (unify(arg.type,"Int")) {
+
+        var res = if (unify(arg.type, macro : Int)) {
             macro golgi.Validate.int(${arg.expr} , $v{arg.optional}, $v{arg.name});
-        } else if (unify(arg.type, "String")){
+        } else if (unify(arg.type, macro : String)){
             macro golgi.Validate.string(${arg.expr} , $v{arg.optional}, $v{arg.name});
-        } else if (unify(arg.type, "Float")){
+        } else if (unify(arg.type, macro : Float)){
             macro golgi.Validate.float(${arg.expr} , $v{arg.optional}, $v{arg.name});
-        } else if (unify(arg.type, "Bool")){
+        } else if (unify(arg.type, macro : Bool)){
             macro golgi.Validate.bool(${arg.expr} , $v{arg.optional}, $v{arg.name});
         } else {
-            macro arg.leftovers(arg);
+            arg.leftovers(arg);
         }
+
         return res;
     }
 

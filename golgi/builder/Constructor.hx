@@ -52,12 +52,12 @@ class Constructor {
         var block = macro $b{d};
 
         return {
-            name: "new",
-            doc: null,
-            meta: [],
-            access: [APublic],
-            kind: FFun({args : [], ret : null , expr : block}),
-            pos: Context.currentPos()
+            name   : "new",
+            doc    : null,
+            meta   : [],
+            access : [APublic],
+            kind   : FFun({args : [], ret : null , expr : block}),
+            pos    : Context.currentPos()
         };
     }
 }

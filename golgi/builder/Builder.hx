@@ -10,26 +10,27 @@ using haxe.macro.TypeTools;
 
 #if macro
 class Builder {
+    static var reserved = ["params", "request", "golgi"];
 
     static function unify(t:haxe.macro.ComplexType, str:String){
         return Context.unify(t.toType(), Context.getType(str));
     }
-    static function validateArg(arg_expr : Expr, arg_name : String, arg_type : ComplexType, optional : Bool, validate_name : Bool, reserved : Array<String>, leftovers : ComplexType->Expr){
+    static function validateArg(arg : Arg) : Expr {
         var leftover = false;
-        arg_type = Context.followWithAbstracts(arg_type.toType()).toComplexType();
-        if (reserved.indexOf(arg_name) != -1){
-            return leftovers(arg_type);
+        arg.type = Context.followWithAbstracts(arg.type.toType()).toComplexType();
+        if (reserved.indexOf(arg.name) != -1){
+            return arg.leftovers(arg.type);
         }
-        var res = if (unify(arg_type,"Int")) {
-            macro golgi.Validate.int(${arg_expr} , $v{optional}, $v{arg_name});
-        } else if (unify(arg_type, "String")){
-            macro golgi.Validate.string(${arg_expr} , $v{optional}, $v{arg_name});
-        } else if (unify(arg_type, "Float")){
-            macro golgi.Validate.float(${arg_expr} , $v{optional}, $v{arg_name});
-        } else if (unify(arg_type, "Bool")){
-            macro golgi.Validate.bool(${arg_expr} , $v{optional}, $v{arg_name});
+        var res = if (unify(arg.type,"Int")) {
+            macro golgi.Validate.int(${arg.expr} , $v{arg.optional}, $v{arg.name});
+        } else if (unify(arg.type, "String")){
+            macro golgi.Validate.string(${arg.expr} , $v{arg.optional}, $v{arg.name});
+        } else if (unify(arg.type, "Float")){
+            macro golgi.Validate.float(${arg.expr} , $v{arg.optional}, $v{arg.name});
+        } else if (unify(arg.type, "Bool")){
+            macro golgi.Validate.bool(${arg.expr} , $v{arg.optional}, $v{arg.name});
         } else {
-            leftovers(arg_type);
+            macro arg.leftovers(arg.type);
         }
         return res;
     }
@@ -56,44 +57,56 @@ class Builder {
         if (check.request) dispatch_slice--;
         var path = macro parts[$v{path_idx++}];
         var pos = check.fn.expr.pos;
-        var reserved = ["golgi", "params", "request"];
-        return validateArg(path, arg.name, arg.type, arg.opt, true, reserved, function(c){
-            return switch(arg){
-                case {name : "golgi"}: {
-                    macro new Golgi(parts.slice($v{dispatch_slice -1}), params, request);
-                };
-                case {name : "request"} : {
-                    macro untyped $i{"request"};
-                }
-                case {name : "params"} : {
-                    var arr = [];
-                    var t = Context.followWithAbstracts(arg.type.toType());
-                    switch(t){
-                        case TAnonymous(fields) : {
-                            for (f in fields.get().fields){
-                                switch(f.kind){
-                                    case FVar(ft,_): {
-                                        var name = f.name;
-                                        var fct = f.type.toComplexType();
-                                        var pf = macro params.$name;
-                                        var v = validateArg(pf, name, fct, false, false, [], function(c) {
-                                            return arg_error(arg, f.name, f.pos);
-                                        });
-                                        arr.push({field : name , expr : v});
-                                    };
-                                    default : arg_error(arg, f.pos);
+        return validateArg({
+            name : arg.name,
+            expr : path,
+            type : arg.type,
+            optional : arg.opt,
+            validate_name : true,
+            reserved : Builder.reserved,
+            leftovers : function(c){
+                return switch(arg){
+                    case {name : "golgi"}: {
+                        macro new Golgi(parts.slice($v{dispatch_slice -1}), params, request);
+                    };
+                    case {name : "request"} : macro untyped $i{"request"};
+                    case {name : "params"} : {
+                        var arr = [];
+                        var t = Context.followWithAbstracts(arg.type.toType());
+                        switch(t){
+                            case TAnonymous(fields) : {
+                                for (f in fields.get().fields){
+                                    switch(f.kind){
+                                        case FVar(ft,_): {
+                                            var name = f.name;
+                                            var fct = f.type.toComplexType();
+                                            var pf = macro params.$name;
+                                            var v = validateArg({
+                                                name : name,
+                                                expr : pf,
+                                                type : fct,
+                                                optional : false,
+                                                reserved : [],
+                                                validate_name : false,
+                                                leftovers : function(c) {
+                                                    return arg_error(arg, f.name, f.pos);
+                                                }
+                                            });
+                                            arr.push({field : name , expr : v});
+                                        };
+                                        default : arg_error(arg, f.pos);
+                                    }
                                 }
                             }
+                            default : arg_error(arg, pos);
                         }
-                        default : arg_error(arg, pos);
+                        {expr :EObjectDecl(arr), pos : pos};
                     }
-                    {expr :EObjectDecl(arr), pos : pos};
+                    case _ : {
+                        arg_error(arg, pos);
+                    }
                 }
-                case _ : {
-                    arg_error(arg, pos);
-                }
-            }
-        });
+            }});
     }
 
     /**
@@ -113,7 +126,7 @@ class Builder {
                 case {type : TPath({name : "Golgi", pack : ["golgi"]})}: {
                     subroute = true;
                 }
-                case {name : "contex"}: {
+                case {name : "request"}: {
                     request = true;
                 }
                 case _ : continue;
@@ -285,4 +298,14 @@ typedef CheckFn = {
     params   : Bool,
     request  : Bool,
     fn       : Function
+}
+
+typedef Arg = {
+    name          : String,
+    expr          : Expr,
+    type          : ComplexType,
+    optional      : Bool,
+    reserved      : Array<String>,
+    validate_name : Bool,
+    leftovers : haxe.macro.ComplexType->haxe.macro.Expr
 }

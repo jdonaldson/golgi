@@ -17,6 +17,9 @@ class Builder {
 
     }
 
+    /**
+      Validate the given arg
+    **/
     static function validateArg(arg : Arg) : Expr {
         var leftover = false;
         arg.type = Context.followWithAbstracts(arg.type.toType()).toComplexType();
@@ -51,8 +54,55 @@ class Builder {
         return null;
     }
 
-    static function argLeftovers(arg : FunctionArg) {
+    /**
+      Process leftover params that occur in base arguments
+    **/
+    static function processLeftoverParamArg(arg : Arg) : Expr {
+        return switch(arg.name){
+            case "golgi": {
+                macro new Golgi(parts.slice($v{arg.dispatch_slice -1}), params, request);
+            };
+            case "request" : macro untyped $i{"request"};
+            case "params" : {
+                var arr = [];
+                var t = Context.followWithAbstracts(arg.type.toType());
+                switch(t){
+                    case TAnonymous(fields) : {
+                        for (f in fields.get().fields){
+                            switch(f.kind){
+                                case FVar(ft,_): {
+                                    var name = f.name;
+                                    var fct = f.type.toComplexType();
+                                    var pf = macro params.$name;
+                                    var v = validateArg({
+                                        name : name,
+                                        expr : pf,
+                                        type : fct,
+                                        optional : false,
+                                        reserved : [],
+                                        validate_name : false,
+                                        dispatch_slice : arg.dispatch_slice,
+                                        leftovers : function(c) {
+                                            return arg_error(arg, f.name, f.pos);
+                                        }
+                                    });
+                                    arr.push({field : name , expr : v});
+                                };
+                                default : arg_error(arg, f.pos);
+                            }
+                        }
+                    }
+                    default : arg_error(arg, arg.expr.pos);
+                }
+                {expr :EObjectDecl(arr), pos : arg.expr.pos};
+            }
+            case _ : {
+                arg_error(arg, arg.expr.pos);
+            }
+        }
+
     }
+
     /**
       Process the args, wrapping them in validators and constructors where appropriate.
      **/
@@ -70,49 +120,9 @@ class Builder {
             optional : arg.opt,
             validate_name : true,
             reserved : Builder.reserved,
-            leftovers : function(arg : Arg){
-                return switch(arg.name){
-                    case "golgi": {
-                        macro new Golgi(parts.slice($v{dispatch_slice -1}), params, request);
-                    };
-                    case "request" : macro untyped $i{"request"};
-                    case "params" : {
-                        var arr = [];
-                        var t = Context.followWithAbstracts(arg.type.toType());
-                        switch(t){
-                            case TAnonymous(fields) : {
-                                for (f in fields.get().fields){
-                                    switch(f.kind){
-                                        case FVar(ft,_): {
-                                            var name = f.name;
-                                            var fct = f.type.toComplexType();
-                                            var pf = macro params.$name;
-                                            var v = validateArg({
-                                                name : name,
-                                                expr : pf,
-                                                type : fct,
-                                                optional : false,
-                                                reserved : [],
-                                                validate_name : false,
-                                                leftovers : function(c) {
-                                                    return arg_error(arg, f.name, f.pos);
-                                                }
-                                            });
-                                            arr.push({field : name , expr : v});
-                                        };
-                                        default : arg_error(arg, f.pos);
-                                    }
-                                }
-                            }
-                            default : arg_error(arg, pos);
-                        }
-                        {expr :EObjectDecl(arr), pos : pos};
-                    }
-                    case _ : {
-                        arg_error(arg, pos);
-                    }
-                }
-            }});
+            dispatch_slice : dispatch_slice,
+            leftovers : processLeftoverParamArg
+        });
     }
 
     /**
@@ -224,6 +234,9 @@ class Builder {
         };
     }
 
+    /**
+      Track down the golgi super class so we can extract the type parameters
+    **/
     static function findGolgiSuper(cls : Null<haxe.macro.Type.Ref<haxe.macro.Type.ClassType>>){
         var glg = cls.get().superClass;
         while(glg.t.get().module != "golgi.Api"){
@@ -276,7 +289,6 @@ class Builder {
             pos    : Context.currentPos()
         }
 
-
         var dispatch_func = Dispatcher.build(tret_complex);
         fields.push(dispatch_func);
         fields.push(map_field);
@@ -307,11 +319,12 @@ typedef CheckFn = {
 }
 
 typedef Arg = {
-    name          : String,
-    expr          : Expr,
-    type          : ComplexType,
-    optional      : Bool,
-    reserved      : Array<String>,
-    validate_name : Bool,
-    leftovers : Arg->haxe.macro.Expr
+    name           : String,
+    expr           : Expr,
+    type           : ComplexType,
+    optional       : Bool,
+    reserved       : Array<String>,
+    validate_name  : Bool,
+    dispatch_slice : Int,
+    leftovers      : Arg->Expr
 }

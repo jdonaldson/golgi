@@ -14,19 +14,6 @@ class Constructor {
             var handler_name = route.route.name;
             var field_name = handler_name;
             var pattern = null;
-            for (r in route.route.meta){
-                if (r.name == "pattern"){
-                    pattern = r.params[0];
-                } else if (r.name == "default"){
-                    if (default_field != null){
-                        Context.error("Only one default field per Api", Context.currentPos());
-                    }
-                    default_field = r.name;
-                    handler_name = "";
-                } else {
-                    pattern = macro $v{field_name};
-                }
-            }
 
             if (route.middleware.length > 0){
                 var next = macro function(request : Dynamic): Dynamic{

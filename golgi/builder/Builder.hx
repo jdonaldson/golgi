@@ -12,6 +12,9 @@ using haxe.macro.TypeTools;
 class Builder {
     static var reserved = ["params", "request", "golgi"];
 
+    /**
+      Shortcut for complex type unification
+    **/
     static function unify(t:haxe.macro.ComplexType, target : haxe.macro.ComplexType){
         return Context.unify(t.toType(), target.toType());
 
@@ -106,7 +109,7 @@ class Builder {
     /**
       Process the args, wrapping them in validators and constructors where appropriate.
      **/
-    static function processArg(arg : FunctionArg, idx : Int, check: CheckFn){
+    static function processArg(arg : FunctionArg, idx : Int, check: ParamConfig){
         var path_idx = idx + 1;
         var dispatch_slice = check.fn.args.length;
         if (check.params) dispatch_slice--;
@@ -126,25 +129,19 @@ class Builder {
     }
 
     /**
-      Check for special params that may be present in the function
+      Generate param configuration info for the current function.  This includes
+      info on whether special subroute, params, requests, etc. are present
      **/
-    static function checkFn(fn:Function) : CheckFn {
+    static function paramConfig(fn:Function) : ParamConfig {
         var subroute = false;
         var params = false;
         var request = false;
-        for (i in 0...fn.args.length){
-            var arg = fn.args[i];
-            var pos = fn.expr.pos;
-            switch(arg){
-                case {name : "params"} : {
-                    params = true;
-                };
-                case {name : "golgi"}: {
-                    subroute = true;
-                }
-                case {name : "request"}: {
-                    request = true;
-                }
+
+        for (arg in fn.args){
+            switch(arg.name){
+                case "params" : params = true;
+                case "golgi": subroute = true;
+                case "request": request = true;
                 case _ : continue;
             }
         }
@@ -173,12 +170,13 @@ class Builder {
     /**
       Process the function, ensuring that special named arguments are the right type, and in the right order
      **/
-    static function processFn(f : Field, fn : Function, treq  : haxe.macro.Type ) : RouteInfo {
+    static function processFFun(f : Field, fn : Function, treq  : haxe.macro.Type ) : RouteInfo {
         var path_arg = 0;
         var path_idx = 0;
-        var status = checkFn(fn);
+        var status = paramConfig(fn);
         var exprs = [];
         var m = new Map<String, Int>();
+        var pos : Int;
         for (i in 0...fn.args.length){
             var arg = fn.args[i];
             if (arg.name == "golgi"){
@@ -224,12 +222,27 @@ class Builder {
             var k = mwv.params[0].expr;
             mw.push(k);
         }
+        var pattern = macro $v{f.name};
+        var default_field = null;
+
+        for (r in f.meta){
+            if (r.name == "pattern"){
+                pattern = r.params[0];
+            } else if (r.name == "default"){
+                if (default_field != null){
+                    Context.error("Only one default field per Api", Context.currentPos());
+                }
+                default_field = r.name;
+            }
+        }
+
         return {
             route      : f,
             ffun       : fn,
             subroute   : status.subroute,
             params     : status.params,
             exprs      : exprs,
+            pattern    : pattern,
             middleware : mw
         };
     }
@@ -257,6 +270,7 @@ class Builder {
 
         var cls = Context.getLocalClass();
         var glg = findGolgiSuper(cls);
+
         var treq = glg.params[0];
         var tret = glg.params[1];
 
@@ -270,7 +284,7 @@ class Builder {
                     else if(fn.ret == null || !Context.unify(tret, tfnret)){
                         Context.error('Every route function in this class must be of type ${tret}', fn.expr.pos);
                     }
-                    var route_fn = processFn(f,fn, treq);
+                    var route_fn = processFFun(f, fn, treq);
                     routes.push(route_fn);
                 }
                 default : continue;
@@ -306,12 +320,13 @@ typedef RouteInfo = {
     ffun       : Function,
     subroute   : Bool,
     params     : Bool,
+    pattern    : Expr,
     exprs      : Array<Expr>,
     middleware : Array<ExprDef>
 }
 
 
-typedef CheckFn = {
+typedef ParamConfig = {
     subroute : Bool,
     params   : Bool,
     request  : Bool,
@@ -328,3 +343,4 @@ typedef Arg = {
     dispatch_slice : Int,
     leftovers      : Arg->Expr
 }
+

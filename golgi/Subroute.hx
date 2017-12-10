@@ -11,7 +11,7 @@ class Subroute<TReq> {
     inline public function mapRequest<TReqA>(ctxf : TReq->TReqA) : Subroute<TReqA> {
         return new Subroute(this.parts, this.params, ctxf(this.request));
     }
-    inline public function subroute<TRet>(api : Api<TReq,TRet>) : TRet {
+    inline public function run<TRet>(api : Api<TReq,TRet>) : TRet {
         return api.__golgi__(this.parts, this.params, this.request);
     }
 }

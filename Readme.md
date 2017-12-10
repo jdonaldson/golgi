@@ -170,8 +170,8 @@ routing scenarios.
 
 ```haxe
 class Router implements golgi.Api<String,String>  {
-    public function foo(x:Int, request : String, golgi : Golgi<String,String>){
-        golgi.
+    public function foo(x:Int, request : String, subroute : Subroute<String>){
+        subroute.run(new SubRouter());
         return 'foo';
     }
 }

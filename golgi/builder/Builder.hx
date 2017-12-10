@@ -1,6 +1,7 @@
 package golgi.builder;
 
 import haxe.macro.Context;
+import haxe.macro.Expr.Position;
 import golgi.builder.Constructor.build;
 import golgi.builder.Dispatcher.build;
 import haxe.macro.Expr;
@@ -10,7 +11,7 @@ using haxe.macro.TypeTools;
 
 #if macro
 class Builder {
-    static var reserved = ["params", "request", "golgi"];
+    static var reserved = ["params", "request", "subroute"];
 
     /**
       Shortcut for complex type unification
@@ -62,8 +63,8 @@ class Builder {
     **/
     static function processLeftoverParamArg(arg : Arg) : Expr {
         return switch(arg.name){
-            case "golgi": {
-                macro new Golgi(parts.slice($v{arg.dispatch_slice -1}), params, request);
+            case "subroute": {
+                macro new golgi.Subroute(parts.slice($v{arg.dispatch_slice -1}), params, request);
             };
             case "request" : macro untyped $i{"request"};
             case "params" : {
@@ -77,18 +78,21 @@ class Builder {
                                     var name = f.name;
                                     var fct = f.type.toComplexType();
                                     var pf = macro params.$name;
+
                                     var v = validateArg({
-                                        name : name,
-                                        expr : pf,
-                                        type : fct,
-                                        optional : false,
-                                        reserved : [],
-                                        validate_name : false,
+                                        name           : name,
+                                        expr           : pf,
+                                        field_pos          : f.pos,
+                                        type           : fct,
+                                        optional       : false,
+                                        reserved       : [],
+                                        validate_name  : false,
                                         dispatch_slice : arg.dispatch_slice,
-                                        leftovers : function(c) {
+                                        leftovers      : function(c) {
                                             return arg_error(arg, f.name, f.pos);
                                         }
                                     });
+
                                     arr.push({field : name , expr : v});
                                 };
                                 default : arg_error(arg, f.pos);
@@ -100,32 +104,36 @@ class Builder {
                 {expr :EObjectDecl(arr), pos : arg.expr.pos};
             }
             case _ : {
-                arg_error(arg, arg.expr.pos);
+                arg_error(arg, arg.field_pos);
             }
         }
 
     }
 
     /**
-      Process the args, wrapping them in validators and constructors where appropriate.
+      Process the args, wrapping them in validator and constructor expr where
+      appropriate.
      **/
-    static function processArg(arg : FunctionArg, idx : Int, check: ParamConfig){
+    static function processArg(arg : FunctionArg, field : Field, idx : Int, check: ParamConfig){
         var path_idx = idx + 1;
         var dispatch_slice = check.fn.args.length;
         if (check.params) dispatch_slice--;
         if (check.request) dispatch_slice--;
         var path = macro parts[$v{path_idx++}];
         var pos = check.fn.expr.pos;
+
         return validateArg({
-            name : arg.name,
-            expr : path,
-            type : arg.type,
-            optional : arg.opt,
-            validate_name : true,
-            reserved : Builder.reserved,
+            name           : arg.name,
+            expr           : path,
+            field_pos          : field.pos,
+            type           : arg.type,
+            optional       : arg.opt,
+            validate_name  : true,
+            reserved       : Builder.reserved,
             dispatch_slice : dispatch_slice,
-            leftovers : processLeftoverParamArg
+            leftovers      : processLeftoverParamArg
         });
+
     }
 
     /**
@@ -140,7 +148,7 @@ class Builder {
         for (arg in fn.args){
             switch(arg.name){
                 case "params" : params = true;
-                case "golgi": subroute = true;
+                case "subroute": subroute = true;
                 case "request": request = true;
                 case _ : continue;
             }
@@ -166,6 +174,8 @@ class Builder {
         }
     }
 
+    static function processMiddleWare(){}
+
 
     /**
       Process the function, ensuring that special named arguments are the right type, and in the right order
@@ -179,9 +189,9 @@ class Builder {
         var pos : Int;
         for (i in 0...fn.args.length){
             var arg = fn.args[i];
-            if (arg.name == "golgi"){
-                if (!Context.unify(Context.getType("golgi.Golgi"), arg.type.toType())){
-                    Context.error("golgi argument must be of Golgi type", fn.expr.pos);
+            if (arg.name == "subroute"){
+                if (!Context.unify(Context.getType("golgi.Subroute"), arg.type.toType())){
+                    Context.error("subroute argument must be of golgi.Subroute type", fn.expr.pos);
                 }
             }
             if (arg.name == "request"){
@@ -204,10 +214,10 @@ class Builder {
             }
 
             m.set(arg.name, i);
-            var arg_expr = processArg(arg, i, status);
+            var arg_expr = processArg(arg, f, i, status);
             exprs.push(arg_expr);
         }
-        ensureOrder(m, ["params", "request", "golgi"], fn.expr);
+        ensureOrder(m, ["params", "request", "subroute"], fn.expr);
 
         var mw_idx = -1;
         var mw = [];
@@ -336,11 +346,18 @@ typedef ParamConfig = {
 typedef Arg = {
     name           : String,
     expr           : Expr,
+    field_pos      : Position,
     type           : ComplexType,
     optional       : Bool,
     reserved       : Array<String>,
     validate_name  : Bool,
     dispatch_slice : Int,
     leftovers      : Arg->Expr
+}
+
+enum MetaGolgi<TReq,TRes> {
+    Middleware(fn: TReq->(TReq->TRes)->TRes);
+    RouteAlias(fn: String->Array<String>);
+    PathTransform(fn : String->String);
 }
 

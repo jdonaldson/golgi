@@ -1,5 +1,6 @@
 import golgi.Api;
 import golgi.Golgi;
+import golgi.Subroute;
 
 typedef Blah = {
     y: String,
@@ -9,7 +10,7 @@ typedef Blah = {
 class Main {
     static function main() {
         try{
-            Golgi.run("food/1", {}, {}, new Foo());
+            Golgi.run("food/1/2", {hi : 4}, {}, new Foo());
         } catch (e:Dynamic){
             trace(e + " is the value for e");
         }
@@ -17,14 +18,13 @@ class Main {
     }
 }
 
-@:context(context)
-@:params(params)
 class Foo extends Api<Req,String> {
     static function bar(context:Req, next : Req->String) : String {
         return next(context) + "!";
     }
-    @:mw(bar)
-    public function food(x  : Int, context : String, golgi : Golgi<Req>) : String {
+
+    @get @post
+    public function food(x  : Int, params : Params, request : Req, subroute : Subroute<Req>) : String {
         trace(x + " is the value for x");
         return 'o';
     }
@@ -37,3 +37,4 @@ typedef Req = {
 }
 typedef Res = {}
 
+typedef Params = { hi : Int}

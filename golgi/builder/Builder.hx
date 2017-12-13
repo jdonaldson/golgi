@@ -9,6 +9,10 @@ import golgi.Validate;
 using haxe.macro.ComplexTypeTools;
 using haxe.macro.TypeTools;
 
+typedef ClassRef = Null<haxe.macro.Type.Ref<haxe.macro.Type.ClassType>>;
+typedef SuperRef = {t : ClassRef, params :Array<haxe.macro.Type>};
+
+
 #if macro
 class Builder {
     static var reserved = ["params", "request", "subroute"];
@@ -260,13 +264,12 @@ class Builder {
     /**
       Track down the golgi API super class so we can extract the type parameters
     **/
-    static function findSuper(cls : Null<haxe.macro.Type.Ref<haxe.macro.Type.ClassType>>, class_name : String){
+    static function findSuper(cls : ClassRef, class_name : String) : SuperRef{
         var glg = cls.get();
         if (glg == null) Context.error('Class must extend $class_name', cls.get().pos);
+	var sup = glg.superClass;
 
-		var sup = glg.superClass;
-
-        while(sup.t.get().module != "golgi.Api"){
+        while(sup.t.get().module != class_name){
              sup = sup.t.get().superClass;
              if (sup == null){
                  Context.error('Class must extend $class_name', cls.get().pos);
@@ -304,10 +307,17 @@ class Builder {
                     }
                     default : Context.error("Unknown MetaGolgi type", cls.get().pos);
                 }
+            } else {
+                metagolgi_expr = meta_expr;
             }
-            trace(metagolgi_expr + " is the value for metagolgi_expr");
 
-
+            switch(metagolgi_expr.expr){
+                case TTypeExpr(TClassDecl(c)) : {
+                    findSuper(c, "golgi.meta.MetaGolgi");
+                    trace(c + " is the value for c");
+                }
+                default : null;
+            }
 
         }
 

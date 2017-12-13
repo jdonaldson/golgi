@@ -37,8 +37,9 @@ function:
 
 ```haxe
 class Main {
+    var g = new Golgi(new Router());
     static function main() {
-        Golgi.run("foo", {}, "", new Router());
+        g.run("foo", {}, "");
     }
 }
 ```
@@ -68,7 +69,8 @@ invoke it with the following call:
 ```haxe
 class Main {
     static function main() {
-        Golgi.run("foo/1", {}, "", new Router());
+        var g = new Golgi(new Router());
+        g.run("foo/1", {}, "");
     }
 }
 ```

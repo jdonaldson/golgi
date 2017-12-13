@@ -258,17 +258,21 @@ class Builder {
     }
 
     /**
-      Track down the golgi super class so we can extract the type parameters
+      Track down the golgi API super class so we can extract the type parameters
     **/
-    static function findGolgiSuper(cls : Null<haxe.macro.Type.Ref<haxe.macro.Type.ClassType>>){
-        var glg = cls.get().superClass;
-        while(glg.t.get().module != "golgi.Api"){
-             glg = glg.t.get().superClass;
-             if (glg == null){
-                 Context.error("Class must extend golgi.Api", cls.get().pos);
+    static function findSuper(cls : Null<haxe.macro.Type.Ref<haxe.macro.Type.ClassType>>, class_name : String){
+        var glg = cls.get();
+        if (glg == null) Context.error('Class must extend $class_name', cls.get().pos);
+
+		var sup = glg.superClass;
+
+        while(sup.t.get().module != "golgi.Api"){
+             sup = sup.t.get().superClass;
+             if (sup == null){
+                 Context.error('Class must extend $class_name', cls.get().pos);
              }
         }
-        return glg;
+        return sup;
     }
 
     /**
@@ -279,8 +283,38 @@ class Builder {
         var routes = [];
 
         var cls = Context.getLocalClass();
-        var glg = findGolgiSuper(cls);
 
+        var m = cls.get().meta;
+
+        if (m.has(":meta")){
+
+            var metagolgi_expr = Context.typeExpr(macro golgi.meta.MetaGolgi);
+
+            var meta = m.extract(":meta")[0];
+            var mp = meta.params[0];
+            var meta_expr = Context.typeExpr(mp);
+
+            var string_t = Context.getType("String");
+            var cur_t = metagolgi_expr;
+            if (meta_expr.t.unify(string_t)){
+                switch(mp.expr){
+                    case EConst(CString(str)) : {
+                        var parsed = Context.parse(str, cls.get().pos);
+                        metagolgi_expr = Context.typeExpr(parsed);
+                    }
+                    default : Context.error("Unknown MetaGolgi type", cls.get().pos);
+                }
+            }
+            trace(metagolgi_expr + " is the value for metagolgi_expr");
+
+
+
+        }
+
+
+
+
+        var glg = findSuper(cls, "golgi.Api");
         var treq = glg.params[0];
         var tret = glg.params[1];
 
@@ -353,11 +387,5 @@ typedef Arg = {
     validate_name  : Bool,
     dispatch_slice : Int,
     leftovers      : Arg->Expr
-}
-
-enum MetaGolgi<TReq,TRes> {
-    Middleware(fn: TReq->(TReq->TRes)->TRes);
-    RouteAlias(fn: String->Array<String>);
-    PathTransform(fn : String->String);
 }
 

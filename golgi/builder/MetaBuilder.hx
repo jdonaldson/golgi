@@ -20,7 +20,7 @@ class MetaBuilder {
     macro public static function build() : Array<Field> {
         var cls = Context.getLocalClass();
 
-        var glg = Builder.findSuper(cls, "golgi.meta.MetaGolgi");
+        var glg = cls.get().superClass;
         var treq = glg.params[0];
         var tret = glg.params[1];
         var fields = Context.getBuildFields();

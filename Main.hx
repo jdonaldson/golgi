@@ -14,8 +14,10 @@ class Main {
     }
     static function main() {
         try{
-            var k = Golgi.run("food/1/2", {hi : 4}, {a:4}, new Foo());
-            trace(k + " is the value for k");
+            // var k = Golgi.run("food/1/2", {hi : 4}, {a:4}, new Foo());
+            // trace(k + " is the value for k");
+            var o = Golgi.run("", {hi : 4}, {a:4}, new Foo());
+            trace(o + " is the value for o");
         } catch (e:Dynamic){
             trace(e + " is the value for e");
         }
@@ -28,6 +30,10 @@ class Foo extends BasicApi<Req,String> {
         return next(context) + "!";
     }
 
+    @:default
+    public function bard() : String {
+        return "HI";
+    }
     public function food(x  : Int, params : Params, request : Req, subroute : Subroute<Req>) : String {
         trace(x + " is the value for x");
         return 'o';

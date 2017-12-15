@@ -1,10 +1,10 @@
 package golgi.builder;
 
+import golgi.Validate;
+import golgi.builder.Initializer.build;
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
-import golgi.builder.Initializer.build;
 import haxe.macro.Expr;
-import golgi.Validate;
 using haxe.macro.ComplexTypeTools;
 using haxe.macro.TypeTools;
 
@@ -182,12 +182,12 @@ class Builder {
     /**
       Process the function, ensuring that special named arguments are the right type, and in the right order
      **/
-    static function processFFun(f : Field, fn : Function, treq  : haxe.macro.Type ) : RouteInfo {
+    static function processFFun(f : Field, fn : Function, treq  : haxe.macro.Type ) : Route {
         var path_arg = 0;
         var path_idx = 0;
         var status = paramConfig(fn);
         var exprs = [];
-        var m = new Map<String, Int>();
+        var map = new Map<String, Int>();
         var pos : Int;
         for (i in 0...fn.args.length){
             var arg = fn.args[i];
@@ -214,11 +214,11 @@ class Builder {
                 }
             }
 
-            m.set(arg.name, i);
+            map.set(arg.name, i);
             var arg_expr = processArg(arg, f, i, status);
             exprs.push(arg_expr);
         }
-        ensureOrder(m, ["params", "request", "subroute"], fn.expr);
+        ensureOrder(map, ["params", "request", "subroute"], fn.expr);
 
         var mw = [];
         for (m in f.meta){
@@ -240,20 +240,6 @@ class Builder {
     }
 
     /**
-      Track down the golgi API super class so we can extract the type parameters
-    **/
-    public static function findSuper(cls : ClassRef, class_name : String) : SuperRef{
-        var glg = cls.get();
-        if (glg == null) Context.error('Class must extend $class_name', cls.get().pos);
-	var sup = glg.superClass;
-
-        if (sup == null){
-            Context.error('Class must extend $class_name', cls.get().pos);
-        }
-        return sup;
-    }
-
-    /**
       The main build method for golgi api types
      **/
     macro public static function build() : Array<Field>{
@@ -262,7 +248,8 @@ class Builder {
 
         var cls = Context.getLocalClass();
 
-        var glg = findSuper(cls, "golgi.Api");
+
+        var glg = cls.get().superClass;
         var treq = glg.params[0];
         var tret = glg.params[1];
         var tmet = glg.params[2];
@@ -279,7 +266,7 @@ class Builder {
                     else if(fn.ret == null || !Context.unify(tret, tfnret)){
                         var ret = tret.toString();
                         var k = tret.toString();
-                        Context.error('Every route function in this class must be of type $ret', fn.expr.pos);
+                        Context.error('Every route function in this class must be of type $ret according to the golgi API.', fn.expr.pos);
                     }
                     var route_fn = processFFun(f, fn, treq);
                     routes.push(route_fn);
@@ -301,17 +288,6 @@ class Builder {
     }
 }
 #end
-
-
-typedef RouteInfo = {
-    route      : Field,
-    ffun       : Function,
-    subroute   : Bool,
-    params     : Bool,
-    exprs      : Array<Expr>,
-    middleware : Array<ExprDef>
-}
-
 
 typedef ParamConfig = {
     subroute : Bool,

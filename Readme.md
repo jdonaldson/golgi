@@ -179,10 +179,38 @@ class Router implements golgi.BasicApi<String,String>  {
 
 # Extra Features
 
+## Path Metadata
+
+It's common for certain paths to include characters and words that are not
+valid function names.  Golgi handles this with special path metadata which can
+be applied to a route:
+
+```haxe
+class Router implements golgi.BasicApi<String,String>  {
+    @:default
+    public function foo(){
+        return 'foo';
+    }
+}
+```
+
+In this case, the `foo` class is activated for an empty path.  Here's the full
+list of path metadata:
+
+1. `@:default` : This route is triggered *only* for an empty path.
+2. `@:alias('additional_path', 'additional_path2')` : The following paths will also trigger
+   the given route, in addition to the route name.
+3. `@:route('route_path1', 'route_path2')` : The following list of paths trigger
+   the route, but not the route name (unless the route name is manually
+   included).
+
+Any additional route paths given in `@:alias` or `@:route` should be given as
+anonymous strings.
+
 ## MetaGolgi
 
-It's common for certain routes to share common pattern.  E.g., some routes are
-authenticated, others are only applicable for certain Http methods.
+It's common for certain routes to share common filtering patterns.  E.g., some
+routes are authenticated, others are only applicable for certain Http methods.
 
 It's painful to have to manage these pattern manually on a per-route basis.
 Golgi addresses this with a powerful metadata-driven middleware system.
@@ -227,6 +255,7 @@ throw an error.
 Using MetaGolgi for middleware lets you flexibly define complex shared
 behaviors, while adhering to the same request and return types as defined by
 your Api.
+
 
 
 

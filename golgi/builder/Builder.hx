@@ -178,8 +178,6 @@ class Builder {
         }
     }
 
-    static function processMiddleWare(){}
-
 
     /**
       Process the function, ensuring that special named arguments are the right type, and in the right order
@@ -224,6 +222,7 @@ class Builder {
 
         var mw = [];
         for (m in f.meta){
+            if (!~/\[a-zA-Z]\w*/.match(m.name)) continue;
             var name = m.name;
             var expr = macro __meta__.$name;
             mw.push(expr.expr);

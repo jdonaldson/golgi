@@ -24,7 +24,7 @@ Haxe >3 now provides.
 Here's a small example of a small route class:
 
 ```haxe
-class Router implements golgi.Api<String,String, Any>  {
+class Router extends golgi.BasicApi<String,String>  {
     public function foo() : String {
         trace('hi');
         return 'foo';
@@ -37,9 +37,8 @@ function:
 
 ```haxe
 class Main {
-    var g = new Golgi(new Router());
     static function main() {
-        g.run("foo", {}, "");
+        Golgi.run("foo", {}, "", new Router());
     }
 }
 ```
@@ -55,7 +54,7 @@ The next step is to do something useful with the API, such as accept typed
 arguments from the parsed path:
 
 ```haxe
-class Router implements golgi.Api<String,String>  {
+class Router extends golgi.BasicApi<String,String>  {
     public function foo(x:Int){
         trace('x + 1 is  ${x + 1}');
         return 'foo';
@@ -69,8 +68,7 @@ invoke it with the following call:
 ```haxe
 class Main {
     static function main() {
-        var g = new Golgi(new Router());
-        g.run("foo/1", {}, "");
+        Golgi.run( "foo/1", {}, "", new Router());
     }
 }
 ```
@@ -92,7 +90,7 @@ available via abstract typing which is described later on*.
 We can also pass in URL parameters using a special ``params`` argument:
 
 ```haxe
-class Router implements golgi.Api<String,String>  {
+class Router implements golgi.BasicApi<String,String>  {
     public function foo(x:Int, params : {y : Int}){
         trace('x + 1 is  ${x + 1}');
         trace('params.y + 1 is ${params.y + 1}');
@@ -171,7 +169,7 @@ secondary Golgi Api to process additional url parameters, common in hierarchical
 routing scenarios.
 
 ```haxe
-class Router implements golgi.Api<String,String>  {
+class Router implements golgi.BasicApi<String,String>  {
     public function foo(x:Int, request : String, subroute : Subroute<String>){
         subroute.run(new SubRouter());
         return 'foo';
@@ -189,14 +187,46 @@ authenticated, others are only applicable for certain Http methods.
 It's painful to have to manage these pattern manually on a per-route basis.
 Golgi addresses this with a powerful metadata-driven middleware system.
 
-In order to use this system, you pass an additional MetaGolgi instance into the
-class constructor, like so:
+The MetaGolgi instance expects a signature of `TReq->(TReq->TRet)->TRet`.  This
+signature provides the request parameter, and a function that calls the next
+middleware instance.  The final default middleware instance contains the actual
+API call itself.  This enables middleware methods to intercept specific route
+traffic, and perform certain modifications (modifying headers, or pre-emptively
+returning a given response).
+
+In order to use a MetaGolgi, it's necessary to extend a base `MetaGolgi`
+instance.  This special class will ensure that every public instance method has
+the required signature.
 
 
 ```haxe
-class MetaRouter< {
-
+class MetaRouter<String,String> extends golgi.meta.MetaGolgi {
+   public function bar(req : String, next : String->String) : String {
+      return next(req) + "!";
+   }
 }
+```
+
+When you have an appropriate class declared, you may use it in your Api
+declarations:
+
+```haxe
+class Router extends Api<String,String,MetaRouter> {
+    @bar
+    public function foo(x:Int, request : String, subroute : Subroute<String>){
+        subroute.run(new SubRouter());
+        return 'foo';
+    }
+}
+```
+
+The presence of the `@bar` metadata tells Golgi to apply the corresponding
+middleware to this route. Any unknown metadata that is a valid field name will
+throw an error.
+
+Using MetaGolgi for middleware lets you flexibly define complex shared
+behaviors, while adhering to the same request and return types as defined by
+your Api.
 
 
 
@@ -207,7 +237,7 @@ possibilities for automated instantiation and reduction of boilerplate:
 
 
 ```haxe
-class Router implements golgi.Api<String,String>  {
+class Router implements golgi.BasicApi<String,String>  {
     @default
     public function foo(x:Bar) : String{
         trace(x.toString());

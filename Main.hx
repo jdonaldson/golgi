@@ -1,4 +1,4 @@
-import golgi.Api;
+import golgi.BasicApi;
 import golgi.Golgi;
 import golgi.meta.MetaGolgi;
 import golgi.Subroute;
@@ -23,12 +23,11 @@ class Main {
     }
 }
 
-class Foo extends Api<Req,String,FooMeta> {
+class Foo extends BasicApi<Req,String> {
     static function bar(context:Req, next : Req->String) : String {
         return next(context) + "!";
     }
 
-    @bar
     public function food(x  : Int, params : Params, request : Req, subroute : Subroute<Req>) : String {
         trace(x + " is the value for x");
         return 'o';

@@ -24,7 +24,7 @@ Haxe >3 now provides.
 Here's a small example of a small route class:
 
 ```haxe
-class Router implements golgi.Api<String,String>  {
+class Router implements golgi.Api<String,String, Any>  {
     public function foo() : String {
         trace('hi');
         return 'foo';
@@ -181,27 +181,24 @@ class Router implements golgi.Api<String,String>  {
 
 # Extra Features
 
-## Default
+## MetaGolgi
 
-Route functions marked with ``@default`` are handled during empty route
-requests:
+It's common for certain routes to share common pattern.  E.g., some routes are
+authenticated, others are only applicable for certain Http methods.
 
-```haxe
-class Router implements golgi.Api<String,String>  {
-    @default
-    public function foo() : String{
-        return 'foo';
-    }
-}
-```
+It's painful to have to manage these pattern manually on a per-route basis.
+Golgi addresses this with a powerful metadata-driven middleware system.
+
+In order to use this system, you pass an additional MetaGolgi instance into the
+class constructor, like so:
+
 
 ```haxe
-class Main {
-    static function main() {
-        Golgi.run("", {}, "", new Router());
-    }
+class MetaRouter< {
+
 }
-```
+
+
 
 ## Abstract type route arguments
 It's possible for routes to accept *abstract* types! The abstract type must unify

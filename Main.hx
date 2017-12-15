@@ -9,10 +9,13 @@ typedef Blah = {
 }
 
 class Main {
+    static var x = {
+        dingo : 0
+    }
     static function main() {
-        var g = new Golgi(new Foo());
         try{
-            g.run("food/1/2", {hi : 4}, {a:4});
+            var k = Golgi.run( new Foo(new FooMeta()), "food/1/2", {hi : 4}, {a:4});
+            trace(k + " is the value for k");
         } catch (e:Dynamic){
             trace(e + " is the value for e");
         }
@@ -20,12 +23,12 @@ class Main {
     }
 }
 
-@:meta(FooMeta)
-class Foo extends Api<Req,String> {
+class Foo extends Api<Req,String,FooMeta> {
     static function bar(context:Req, next : Req->String) : String {
         return next(context) + "!";
     }
 
+    @bar
     public function food(x  : Int, params : Params, request : Req, subroute : Subroute<Req>) : String {
         trace(x + " is the value for x");
         return 'o';
@@ -44,6 +47,7 @@ typedef Params = { hi : Int}
 class FooMeta extends MetaGolgi<Req,String> {
     static function burp(){
     }
-    function wat(){
+    public function bar(x:Req, next : Req->String) : String {
+        return next(x) + "!";
     }
 }

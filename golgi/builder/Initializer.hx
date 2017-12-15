@@ -5,7 +5,7 @@ import haxe.macro.Expr;
 /**
   Steps for generating the golgi instance constructor
  **/
-class Constructor {
+class Initializer {
     public static function build(routes:Array<Route>){
         var d = [];
         d.push( macro this.dict = new Map());
@@ -39,10 +39,10 @@ class Constructor {
         var block = macro $b{d};
 
         return {
-            name   : "new",
+            name   : "__init_golgi__",
             doc    : null,
             meta   : [],
-            access : [APublic],
+            access : [AOverride],
             kind   : FFun({args : [], ret : null , expr : block}),
             pos    : Context.currentPos()
         };

@@ -2,8 +2,7 @@ package golgi.builder;
 
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
-import golgi.builder.Constructor.build;
-import golgi.builder.Dispatcher.build;
+import golgi.builder.Initializer.build;
 import haxe.macro.Expr;
 import golgi.Validate;
 using haxe.macro.ComplexTypeTools;
@@ -86,7 +85,7 @@ class Builder {
                                     var v = validateArg({
                                         name           : name,
                                         expr           : pf,
-                                        field_pos          : f.pos,
+                                        field_pos      : f.pos,
                                         type           : fct,
                                         optional       : false,
                                         reserved       : [],
@@ -129,7 +128,7 @@ class Builder {
         return validateArg({
             name           : arg.name,
             expr           : path,
-            field_pos          : field.pos,
+            field_pos      : field.pos,
             type           : arg.type,
             optional       : arg.opt,
             validate_name  : true,
@@ -151,12 +150,13 @@ class Builder {
 
         for (arg in fn.args){
             switch(arg.name){
-                case "params" : params = true;
-                case "subroute": subroute = true;
-                case "request": request = true;
-                case _ : continue;
+                case "params"   : params = true;
+                case "subroute" : subroute = true;
+                case "request"  : request = true;
+                case _          : continue;
             }
         }
+
         return {fn : fn, subroute : subroute, params : params, request : request};
     }
 
@@ -208,7 +208,6 @@ class Builder {
                 var anon = switch(t){
                     case TAnonymous(_)  : true;
                     default : {
-                        trace("waaat");
                         false;
                     }
                 }
@@ -223,32 +222,13 @@ class Builder {
         }
         ensureOrder(m, ["params", "request", "subroute"], fn.expr);
 
-        var mw_idx = -1;
         var mw = [];
-        for (i in 0...f.meta.length){
-            var m = f.meta[i];
-            if (m.name == ":mw"){
-                mw_idx = i;
-            }
+        for (m in f.meta){
+            var name = m.name;
+            var expr = macro __meta__.$name;
+            mw.push(expr.expr);
         }
-        if (mw_idx != -1){
-            var mwv = f.meta[mw_idx];
-            var k = mwv.params[0].expr;
-            mw.push(k);
-        }
-        var pattern = macro $v{f.name};
-        var default_field = null;
 
-        for (r in f.meta){
-            if (r.name == "pattern"){
-                pattern = r.params[0];
-            } else if (r.name == "default"){
-                if (default_field != null){
-                    Context.error("Only one default field per Api", Context.currentPos());
-                }
-                default_field = r.name;
-            }
-        }
 
         return {
             route      : f,
@@ -256,7 +236,6 @@ class Builder {
             subroute   : status.subroute,
             params     : status.params,
             exprs      : exprs,
-            pattern    : pattern,
             middleware : mw
         };
     }
@@ -264,7 +243,7 @@ class Builder {
     /**
       Track down the golgi API super class so we can extract the type parameters
     **/
-    static function findSuper(cls : ClassRef, class_name : String) : SuperRef{
+    public static function findSuper(cls : ClassRef, class_name : String) : SuperRef{
         var glg = cls.get();
         if (glg == null) Context.error('Class must extend $class_name', cls.get().pos);
 	var sup = glg.superClass;
@@ -287,46 +266,10 @@ class Builder {
 
         var cls = Context.getLocalClass();
 
-        var m = cls.get().meta;
-
-        if (m.has(":meta")){
-
-            var metagolgi_expr = Context.typeExpr(macro golgi.meta.MetaGolgi);
-
-            var meta = m.extract(":meta")[0];
-            var mp = meta.params[0];
-            var meta_expr = Context.typeExpr(mp);
-
-            var string_t = Context.getType("String");
-            var cur_t = metagolgi_expr;
-            if (meta_expr.t.unify(string_t)){
-                switch(mp.expr){
-                    case EConst(CString(str)) : {
-                        var parsed = Context.parse(str, cls.get().pos);
-                        metagolgi_expr = Context.typeExpr(parsed);
-                    }
-                    default : Context.error("Unknown MetaGolgi type", cls.get().pos);
-                }
-            } else {
-                metagolgi_expr = meta_expr;
-            }
-
-            switch(metagolgi_expr.expr){
-                case TTypeExpr(TClassDecl(c)) : {
-                    findSuper(c, "golgi.meta.MetaGolgi");
-                    trace(c + " is the value for c");
-                }
-                default : null;
-            }
-
-        }
-
-
-
-
         var glg = findSuper(cls, "golgi.Api");
         var treq = glg.params[0];
         var tret = glg.params[1];
+        var tmet = glg.params[2];
 
         // capture routes
         for (f in fields){
@@ -360,7 +303,7 @@ class Builder {
         var dispatch_func = Dispatcher.build(tret_complex);
         fields.push(dispatch_func);
         fields.push(map_field);
-        var new_field = Constructor.build(routes);
+        var new_field = Initializer.build(routes);
         fields.push(new_field);
 
         return fields;
@@ -374,7 +317,6 @@ typedef RouteInfo = {
     ffun       : Function,
     subroute   : Bool,
     params     : Bool,
-    pattern    : Expr,
     exprs      : Array<Expr>,
     middleware : Array<ExprDef>
 }

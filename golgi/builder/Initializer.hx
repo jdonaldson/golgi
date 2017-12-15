@@ -8,7 +8,7 @@ import haxe.macro.Expr;
 class Initializer {
     public static function build(routes:Array<Route>){
         var d = [];
-        d.push( macro this.dict = new Map());
+        d.push( macro this.__dict__ = new Map());
         var default_field = null;
         for (route in routes){
             var handler_name = route.route.name;
@@ -32,7 +32,7 @@ class Initializer {
                 var func = macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
                     return this.$field_name($a{route.exprs});
                 };
-                d.push( macro { dict.set($v{handler_name}, $func); });
+                d.push( macro { __dict__.set($v{handler_name}, $func); });
             }
         };
 

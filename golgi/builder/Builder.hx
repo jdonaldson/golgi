@@ -248,11 +248,8 @@ class Builder {
         if (glg == null) Context.error('Class must extend $class_name', cls.get().pos);
 	var sup = glg.superClass;
 
-        while(sup.t.get().module != class_name){
-             sup = sup.t.get().superClass;
-             if (sup == null){
-                 Context.error('Class must extend $class_name', cls.get().pos);
-             }
+        if (sup == null){
+            Context.error('Class must extend $class_name', cls.get().pos);
         }
         return sup;
     }
@@ -271,15 +268,19 @@ class Builder {
         var tret = glg.params[1];
         var tmet = glg.params[2];
 
+
         // capture routes
         for (f in fields){
+            if (f.name == "new") continue;
             switch(f.kind){
                 case FFun(fn)  : {
                     var tfnret = fn.ret.toType();
                     if (f.access.indexOf(APublic) == -1) continue;
                     else if (f.access.indexOf(AStatic) != -1) continue;
                     else if(fn.ret == null || !Context.unify(tret, tfnret)){
-                        Context.error('Every route function in this class must be of type ${tret}', fn.expr.pos);
+                        var ret = tret.toString();
+                        var k = tret.toString();
+                        Context.error('Every route function in this class must be of type $ret', fn.expr.pos);
                     }
                     var route_fn = processFFun(f, fn, treq);
                     routes.push(route_fn);
@@ -291,18 +292,9 @@ class Builder {
 
         var tret_complex = tret.toComplexType();
 
-        var map_field = {
-            name   : "dict",
-            doc    : null,
-            meta   : [],
-            access : [],
-            kind   : FVar(macro:Map<String, Array<String>->Dynamic->Dynamic->$tret_complex> ),
-            pos    : Context.currentPos()
-        }
 
         var dispatch_func = Dispatcher.build(tret_complex);
         fields.push(dispatch_func);
-        fields.push(map_field);
         var new_field = Initializer.build(routes);
         fields.push(new_field);
 

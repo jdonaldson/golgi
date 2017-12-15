@@ -5,6 +5,7 @@ import golgi.meta.MetaGolgi;
 @:autoBuild(golgi.builder.Builder.build())
 class Api<TReq,TRet,TMeta:MetaGolgi<TReq,TRet>> {
     var __meta__ : TMeta;
+    var __dict__ : Map<String, Array<String>->Dynamic->Dynamic->TRet>;
     function __init_golgi__(){};
     public function new(meta : TMeta){
         __meta__ = meta;

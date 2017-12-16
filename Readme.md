@@ -171,8 +171,9 @@ routing scenarios.
 ```haxe
 class Router implements golgi.BasicApi<String,String>  {
     public function foo(x:Int, request : String, subroute : Subroute<String>){
-        subroute.run(new SubRouter());
-        return 'foo';
+        var result = subroute.run(new SubRouter());
+
+        return result != null ? result : 'foo';
     }
 }
 ```
@@ -217,7 +218,7 @@ Golgi addresses this with a powerful metadata-driven middleware system.
 
 The MetaGolgi instance expects a signature of `TReq->(TReq->TRet)->TRet`.  This
 signature provides the request parameter, and a function that calls the next
-middleware instance.  The final default middleware instance contains the actual
+middleware method.  The final default middleware method contains the actual
 API call itself.  This enables middleware methods to intercept specific route
 traffic, and perform certain modifications (modifying headers, or pre-emptively
 returning a given response).
@@ -236,7 +237,7 @@ class MetaRouter<String,String> extends golgi.meta.MetaGolgi {
 ```
 
 When you have an appropriate class declared, you may use it in your Api
-declarations:
+declarations.  Just use it as simple metadata, with no colon:
 
 ```haxe
 class Router extends Api<String,String,MetaRouter> {
@@ -249,8 +250,11 @@ class Router extends Api<String,String,MetaRouter> {
 ```
 
 The presence of the `@bar` metadata tells Golgi to apply the corresponding
-middleware to this route. Any unknown metadata that is a valid field name will
-throw an error.
+middleware to this route.
+
+Any unknown simple metadata that is not handled by the MetaGolgi instance will
+throw a compile error, ensuring that your middleware behavior is completely
+understood by the compiler.
 
 Using MetaGolgi for middleware lets you flexibly define complex shared
 behaviors, while adhering to the same request and return types as defined by

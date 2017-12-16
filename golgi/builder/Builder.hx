@@ -222,7 +222,8 @@ class Builder {
 
         var mw = [];
         for (m in f.meta){
-            if (!~/\[a-zA-Z]\w*/.match(m.name)) continue;
+            trace(m.name + " is the value for m.name");
+            if (!~/^[a-zA-Z]\w*/.match(m.name)) continue;
             var name = m.name;
             var expr = macro __meta__.$name;
             mw.push(expr.expr);

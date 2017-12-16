@@ -64,31 +64,32 @@ class Initializer {
                     }
                 }
 
-                for (path_name in paths){
-                    if (observed_paths.exists(path_name)){
-                        Context.error('Path name $path_name already exists in Api', route.route.pos);
-                    } else {
-                        observed_paths.set(path_name, true);
+            }
+
+            for (path_name in paths){
+                if (observed_paths.exists(path_name)){
+                    Context.error('Path name $path_name already exists in Api', route.route.pos);
+                } else {
+                    observed_paths.set(path_name, true);
+                }
+                if (route.middleware.length > 0){
+                    var next = macro function(request : Dynamic): Dynamic{
+                        return this.$field_name($a{route.exprs});
+                    };
+                    for (i in 0...route.middleware.length){
+                        var m = route.middleware[i];
+                        var mm = {expr:m, pos: Context.currentPos()};
+                        next = macro return $mm(request, $next);
                     }
-                    if (route.middleware.length > 0){
-                        var next = macro function(request : Dynamic): Dynamic{
-                            return this.$path_name($a{route.exprs});
-                        };
-                        for (i in 0...route.middleware.length){
-                            var m = route.middleware[i];
-                            var mm = {expr:m, pos: Context.currentPos()};
-                            next = macro return $mm(request, $next);
-                        }
-                        var func = macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
-                            return $next;
-                        };
-                        d.push( macro { dict.set($v{path_name}, $func); });
-                    } else {
-                        var func = macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
-                            return this.$field_name($a{route.exprs});
-                        };
-                        d.push( macro { __dict__.set($v{path_name}, $func); });
-                    }
+                    var func = macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
+                        return $next;
+                    };
+                    d.push( macro { __dict__.set($v{path_name}, $func); });
+                } else {
+                    var func = macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
+                        return this.$field_name($a{route.exprs});
+                    };
+                    d.push( macro { __dict__.set($v{path_name}, $func); });
                 }
             }
 

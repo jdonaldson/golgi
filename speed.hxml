@@ -5,7 +5,7 @@
 -cmd echo "*** neko"
 -main SpeedTest
 -cp ../hx3compat/std/
--x out
+-x bin/out
 
 
 # --next
@@ -18,15 +18,29 @@
 
 --next
 -cmd echo "*** lua"
--lua out.lua
+-lua bin/out.lua
 -main SpeedTest
 -cp ../hx3compat/std/
--cmd lua out.lua
+-cmd lua bin/out.lua
 
 --next
 -cmd echo "*** node"
 -main SpeedTest
 -cp ../hx3compat/std/
--js out.js
--cmd node out.js
+-js bin/out.js
+-cmd node bin/out.js
 
+
+--next
+-cmd echo "*** java"
+-main SpeedTest
+-cp ../hx3compat/std/
+-java bin/SpeedJava
+-cmd java -jar ./bin/SpeedJava/SpeedTest.jar
+
+--next
+-cmd echo "*** cpp"
+-main SpeedTest
+-cp ../hx3compat/std/
+-cpp bin/SpeedCPP
+-cmd ./bin/SpeedCPP/SpeedTest

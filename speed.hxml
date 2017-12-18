@@ -2,10 +2,10 @@
 
 # --next
 
-# -cmd echo "*** neko"
-# -main SpeedTest
-# -cp ../hx3compat/std/
-# -x out
+-cmd echo "*** neko"
+-main SpeedTest
+-cp ../hx3compat/std/
+-x out
 
 
 # --next
@@ -16,17 +16,17 @@
 # -cmd php outphp/Index.php
 
 
+--next
+-cmd echo "*** lua"
+-lua out.lua
+-main SpeedTest
+-cp ../hx3compat/std/
+-cmd lua out.lua
 
-
+--next
 -cmd echo "*** node"
 -main SpeedTest
 -cp ../hx3compat/std/
 -js out.js
 -cmd node out.js
---next 
 
--cmd echo "*** lua"
--lua out.lua
--main SpeedTest
--cmd lua out.lua
--cp ../hx3compat/std/

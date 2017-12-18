@@ -1,5 +1,4 @@
-import golgi.Api;
-import golgi.Builder;
+import golgi.BasicApi;
 import golgi.Golgi;
 
 class SpeedTest {
@@ -7,7 +6,7 @@ class SpeedTest {
         var n = 100000;
         trace(n + " is the value for n");
         var t = haxe.Timer.stamp();
-        var routes = ["blah1/1/2","blah2/1/5","blah3/1/2","blah4/1/8","blah5/1/2","blah6/1/2"]; 
+        var routes = ["blah1/1","blah2/5","blah3/2","blah4/8","blah5/3","blah6/8"];
         var sum = 0.0;
         var b = new Blaher();
         var o = {};
@@ -24,7 +23,6 @@ class SpeedTest {
         var time = (haxe.Timer.stamp() - t);
         var rps = n/time;
         var spr = time/n;
-        trace("[golgi] " + b.count + " is the value for b.count");
         trace("[golgi] " + time + " is the value for time");
         trace("[golgi] " + spr + " is the value for spr");
         trace("[golgi] " + rps + " is the value for rps");
@@ -41,7 +39,6 @@ class SpeedTest {
         var time = haxe.Timer.stamp() - t;
         var rps = n/time;
         trace("-----------");
-        trace("[Dispatch] " + o.count + " is the value for o.count");
         trace("[Dispatch] " + time + " is the value for time");
         trace("[Dispatch] " + spr + " is the value for spr");
         trace("[Dispatch] " + rps + " is the value for rps");
@@ -54,25 +51,25 @@ class SpeedTest {
 class Old {
     public var count = 0;
     public function new(){}
-    function doBlah(){ count = count + Std.random(10); }
-    function doBlah1(x:Int, y:Int){ count = count + Std.random(10); }
-    function doBlah2(x:Int, y:Int){ count = count + Std.random(10); }
-    function doBlah3(x:Int, y:Int){ count = count + Std.random(10); }
-    function doBlah4(x:Int, y:Int){ count = count + Std.random(10); }
-    function doBlah5(x:Int, y:Int){ count = count + Std.random(10); }
-    function doBlah6(x:Int, y:Int){ count = count + Std.random(10); }
+    function doBlah(){ return 'hi'; }
+    function doBlah1(x:Int){return 'hi'; }
+    function doBlah2(x:Int){return 'hi'; }
+    function doBlah3(x:Int){return 'hi'; }
+    function doBlah4(x:Int){return 'hi'; }
+    function doBlah5(x:Int){return 'hi'; }
+    function doBlah6(x:Int){return 'hi'; }
 }
 
 
 
-class Blaher extends Api<{}, String> {
-    public var count = 0;
-    public function blah(){ count = count + Std.random(10); }
-    public function blah1(x:Int, y:Int){ count = count + Std.random(10); return 'hi'; }
-    public function blah2(x:Int, y:Int){ count = count + Std.random(10); return 'hi'; }
-    public function blah3(x:Int, y:Int){ count = count + Std.random(10); return 'hi'; }
-    public function blah4(x:Int, y:Int){ count = count + Std.random(10); return 'hi'; }
-    public function blah5(x:Int, y:Int){ count = count + Std.random(10); return 'hi'; }
-    public function blah6(x:Int, y:Int){ count = count + Std.random(10); return 'hi'; }
+class Blaher extends BasicApi<{}, String> {
+    public var count : Int = 0;
+    public function blah() : String{ return 'hi';}
+    public function blah1(x:Int): String{ return 'hi'; }
+    public function blah2(x:Int): String{ return 'hi'; }
+    public function blah3(x:Int): String{ return 'hi'; }
+    public function blah4(x:Int): String{ return 'hi'; }
+    public function blah5(x:Int): String{ return 'hi'; }
+    public function blah6(x:Int): String{ return 'hi'; }
 }
 

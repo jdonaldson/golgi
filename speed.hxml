@@ -2,14 +2,12 @@
 
 # --next
 
--cmd echo "*** neko"
 -main SpeedTest
 -cp ../hx3compat/std/
 -x bin/out
 
 
 # --next
-# -cmd echo "*** php"
 # -main SpeedTest
 # -cp ../hx3compat/std/
 # -php outphp
@@ -17,14 +15,12 @@
 
 
 --next
--cmd echo "*** lua"
 -lua bin/out.lua
 -main SpeedTest
 -cp ../hx3compat/std/
 -cmd lua bin/out.lua
 
 --next
--cmd echo "*** node"
 -main SpeedTest
 -cp ../hx3compat/std/
 -js bin/out.js
@@ -32,15 +28,20 @@
 
 
 --next
--cmd echo "*** java"
 -main SpeedTest
 -cp ../hx3compat/std/
 -java bin/SpeedJava
 -cmd java -jar ./bin/SpeedJava/SpeedTest.jar
 
 --next
--cmd echo "*** cpp"
 -main SpeedTest
 -cp ../hx3compat/std/
 -cpp bin/SpeedCPP
 -cmd ./bin/SpeedCPP/SpeedTest
+
+--next
+-main SpeedTest
+-cp ../hx3compat/std/
+-hl bin/out.hl
+-cmd hl bin/out.hl
+

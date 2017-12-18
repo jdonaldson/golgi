@@ -4,7 +4,6 @@ import golgi.Golgi;
 class SpeedTest {
     static function main() {
         var n = 100000;
-        trace(n + " is the value for n");
         var t = haxe.Timer.stamp();
         var routes = ["blah1/1","blah2/5","blah3/2","blah4/8","blah5/3","blah6/8"];
         var sum = 0.0;
@@ -23,9 +22,23 @@ class SpeedTest {
         var time = (haxe.Timer.stamp() - t);
         var rps = n/time;
         var spr = time/n;
-        trace("[golgi] " + time + " is the value for time");
-        trace("[golgi] " + spr + " is the value for spr");
-        trace("[golgi] " + rps + " is the value for rps");
+        var target =
+#if js
+            'js'
+#elseif java
+            'java'
+#elseif cpp
+            'cpp'
+#elseif neko
+            'neko'
+#elseif lua
+            'lua'
+#elseif hl
+            'hl'
+#end
+            ;
+
+        trace(', $target, golgi, ' + rps);
 
         var t= haxe.Timer.stamp();
         var o = new Old();
@@ -38,10 +51,7 @@ class SpeedTest {
         }
         var time = haxe.Timer.stamp() - t;
         var rps = n/time;
-        trace("-----------");
-        trace("[Dispatch] " + time + " is the value for time");
-        trace("[Dispatch] " + spr + " is the value for spr");
-        trace("[Dispatch] " + rps + " is the value for rps");
+        trace(', $target, dispatch, ' + rps);
 
     }
     static function main2(){

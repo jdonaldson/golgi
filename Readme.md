@@ -19,6 +19,11 @@ Golgi is based heavily off of
 Dispatch is older and couldn't utilize many of the modern macro features that
 Haxe >3 now provides.
 
+## Golgi Speed
+A brief speed comparison of Golgi vs. haxe.web.Dispatch for equivalent routing
+asks.  Metrics are given in 1000 requests per second.
+![plot](https://i.imgur.com/e0sukhU.png)
+
 
 # Intro
 Here's a small example of a small route class:
@@ -271,7 +276,6 @@ possibilities for automated instantiation and reduction of boilerplate:
 
 ```haxe
 class Router implements golgi.BasicApi<String,String>  {
-    @default
     public function foo(x:Bar) : String{
         trace(x.toString());
         return 'foo';

@@ -67,7 +67,7 @@ class Builder {
     static function processLeftoverParamArg(arg : Arg) : Expr {
         return switch(arg.name){
             case "subroute": {
-                macro new golgi.Subroute(parts.slice($v{arg.dispatch_slice -1}), params, request);
+                macro new golgi.Subroute(untyped parts.slice($v{arg.dispatch_slice -1}), untyped params, untyped request);
             };
             case "request" : macro untyped $i{"request"};
             case "params" : {
@@ -80,7 +80,7 @@ class Builder {
                                 case FVar(ft,_): {
                                     var name = f.name;
                                     var fct = f.type.toComplexType();
-                                    var pf = macro params.$name;
+                                    var pf = macro untyped params.$name;
 
                                     var v = validateArg({
                                         name           : name,
@@ -122,7 +122,7 @@ class Builder {
         var dispatch_slice = check.fn.args.length;
         if (check.params) dispatch_slice--;
         if (check.request) dispatch_slice--;
-        var path = macro parts[$v{path_idx++}];
+        var path = macro untyped parts[$v{path_idx++}];
         var pos = check.fn.expr.pos;
 
         return validateArg({
@@ -222,7 +222,6 @@ class Builder {
 
         var mw = [];
         for (m in f.meta){
-            trace(m.name + " is the value for m.name");
             if (!~/^[a-zA-Z]\w*/.match(m.name)) continue;
             var name = m.name;
             var expr = macro __meta__.$name;

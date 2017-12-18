@@ -28,9 +28,9 @@ class Main {
 }
 
 class Foo extends Api<Req,String, FooMeta> {
-    static function bar(context:Req, next : Req->String) : String {
-        return next(context) + "!";
-    }
+    // static function bar(context:Req, next : Req->String) : String {
+    //     return next(context) + "!";
+    // }
 
     @:default
     public function bard() : String {
@@ -52,8 +52,6 @@ typedef Res = {}
 typedef Params = { hi : Int}
 
 class FooMeta extends MetaGolgi<Req,String> {
-    static function burp(){
-    }
     public function bar(x:Req, next : Req->String) : String {
         return next(x) + "!";
     }

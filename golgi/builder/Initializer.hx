@@ -11,6 +11,30 @@ class Initializer {
             Context.error("Only one path-based metadata per route", pos);
         }
     }
+
+    /*
+       Generate a chained middleware call
+     */
+    static function mw_gen(field_name : String, route : Route) : Expr {
+        return macro function(parts : Array<String>, params : Dynamic, request : Dynamic) {
+            return ${mw_gen_recur(route.middleware, field_name, route)};
+        }
+    }
+
+    /*
+       Recursive helper for middleware call
+     */
+    static function mw_gen_recur(mw : Array<ExprDef>, field_name : String, route : Route) : Expr{
+        if (mw.length == 0){
+            return macro this.$field_name($a{route.exprs});
+        } else {
+            var mwc = mw.copy();
+            var m = mwc.shift();
+            var mm = {expr:m, pos: Context.currentPos()};
+            return macro $mm(request , function(x) return ${mw_gen_recur(mwc, field_name, route)});
+        }
+    }
+
     public static function build(routes:Array<Route>){
         var d = [];
         d.push( macro this.__dict__ = new Map());
@@ -73,23 +97,13 @@ class Initializer {
                     observed_paths.set(path_name, true);
                 }
                 if (route.middleware.length > 0){
-                    var next = macro function(request : Dynamic): Dynamic{
-                        return this.$field_name($a{route.exprs});
-                    };
-                    for (i in 0...route.middleware.length){
-                        var m = route.middleware[i];
-                        var mm = {expr:m, pos: Context.currentPos()};
-                        next = macro return $mm(request, $next);
-                    }
-                    var func = macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
-                        return $next;
-                    };
-                    d.push( macro { __dict__.set($v{path_name}, $func); });
+                    var func = mw_gen(field_name, route);
+                    d.push( macro  __dict__.set($v{path_name}, $func));
                 } else {
                     var func = macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
                         return this.$field_name($a{route.exprs});
                     };
-                    d.push( macro { __dict__.set($v{path_name}, $func); });
+                    d.push( macro __dict__.set($v{path_name}, $func));
                 }
             }
 

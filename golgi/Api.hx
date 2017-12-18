@@ -6,7 +6,7 @@ import golgi.meta.MetaGolgi;
 class Api<TReq,TRet,TMeta:MetaGolgi<TReq,TRet>> {
     var __meta__ : TMeta;
     var __dict__ : Map<String, Array<String>->Dynamic->Dynamic->TRet>;
-    function __init_golgi__(){};
+    function __init_golgi__() : Void {};
     public function new(meta : TMeta){
         __meta__ = meta;
         __init_golgi__();

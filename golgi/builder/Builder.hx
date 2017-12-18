@@ -265,8 +265,7 @@ class Builder {
                     else if (f.access.indexOf(AStatic) != -1) continue;
                     else if(fn.ret == null || !Context.unify(tret, tfnret)){
                         var ret = tret.toString();
-                        var k = tret.toString();
-                        Context.error('Every route function in this class must be of type $ret according to the golgi API.', fn.expr.pos);
+                        Context.error('Function "${f.name}" violates the golgi.API : Every route function in this class must have a declared return type of "$ret".', fn.expr.pos);
                     }
                     var route_fn = processFFun(f, fn, treq);
                     routes.push(route_fn);

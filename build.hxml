@@ -2,6 +2,7 @@
 -python bin/main.py
 -cp ../hx3compat/std/
 -cp src
+-cp test
 -cmd python3 bin/main.py
 
 # -main Main

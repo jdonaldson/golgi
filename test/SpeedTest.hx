@@ -37,6 +37,8 @@ class SpeedTest {
             'hl'
 #elseif python
             'py'
+#elseif php
+            'php'
 #end
             ;
 

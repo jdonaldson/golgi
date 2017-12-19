@@ -18,11 +18,13 @@
 -lua bin/out.lua
 -main SpeedTest
 -cp ../hx3compat/std/
+-cp src
 -cmd lua bin/out.lua
 
 --next
 -main SpeedTest
 -cp ../hx3compat/std/
+-cp src
 -js bin/out.js
 -cmd node bin/out.js
 
@@ -30,24 +32,28 @@
 --next
 -main SpeedTest
 -cp ../hx3compat/std/
+-cp src
 -java bin/SpeedJava
 -cmd java -jar ./bin/SpeedJava/SpeedTest.jar
 
 --next
 -main SpeedTest
 -cp ../hx3compat/std/
+-cp src
 -cpp bin/SpeedCPP
 -cmd ./bin/SpeedCPP/SpeedTest
 
 --next
 -main SpeedTest
 -cp ../hx3compat/std/
+-cp src
 -hl bin/out.hl
 -cmd hl bin/out.hl
 
 --next
 -main SpeedTest
 -cp ../hx3compat/std/
+-cp src
 -python bin/out.py
 -cmd python3 bin/out.py
 

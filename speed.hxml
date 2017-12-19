@@ -2,9 +2,11 @@
 
 # --next
 
-# -main SpeedTest
-# -cp ../hx3compat/std/
-# -x bin/out
+-main SpeedTest
+-cp ../hx3compat/std/
+-cp test
+-cp src
+-x bin/out
 
 
 # --next
@@ -47,13 +49,13 @@
 -cpp bin/SpeedCPP
 -cmd ./bin/SpeedCPP/SpeedTest
 
---next
--main SpeedTest
--cp ../hx3compat/std/
--cp src
--cp test
--hl bin/out.hl
--cmd hl bin/out.hl
+# --next
+# -main SpeedTest
+# -cp ../hx3compat/std/
+# -cp src
+# -cp test
+# -hl bin/out.hl
+# -cmd hl bin/out.hl
 
 --next
 -main SpeedTest

@@ -25,7 +25,7 @@ reflection overhead required in other routing libraries.  Raw
 throughput can reach 1 Million requests per second on some targets.
 
 A brief speed comparison of Golgi vs. haxe.web.Dispatch for equivalent routing
-tasks.  Metrics are given in 1000 requests per second.
+tasks.  Metrics are given in 1000 requests per second (higher is better).
 ![plot](https://i.imgur.com/86SXl2U.png)
 
 

@@ -15,6 +15,7 @@ typedef SuperRef = {t : ClassRef, params :Array<haxe.macro.Type>};
 #if macro
 class Builder {
     static var reserved = ["params", "request", "subroute"];
+    static var path_meta = [":default", ":alias", ":route"];
 
     /**
       Shortcut for complex type unification
@@ -182,7 +183,7 @@ class Builder {
     /**
       Process the function, ensuring that special named arguments are the right type, and in the right order
      **/
-    static function processFFun(f : Field, fn : Function, treq  : haxe.macro.Type ) : Route {
+    static function processFFun(f : Field, fn : Function, treq  : haxe.macro.Type , class_meta : Metadata) : Route {
         var path_arg = 0;
         var path_idx = 0;
         var status = paramConfig(fn);
@@ -221,11 +222,18 @@ class Builder {
         ensureOrder(map, ["params", "request", "subroute"], fn.expr);
 
         var mw = [];
-        for (m in f.meta){
-            if (!~/^[a-zA-Z]\w*/.match(m.name)) continue;
+        var add_meta = function(m : MetadataEntry, mw : Array<ExprDef>){
+            if (!~/^[a-zA-Z]\w*/.match(m.name)) return;
             var name = m.name;
             var expr = macro __golgi_meta__.$name;
             mw.push(expr.expr);
+        }
+        for (m in f.meta){
+            add_meta(m, mw);
+        }
+
+        for (m in class_meta){
+            add_meta(m, mw);
         }
 
 
@@ -248,6 +256,12 @@ class Builder {
 
         var cls = Context.getLocalClass();
 
+        var meta = cls.get().meta;
+        for (m in path_meta){
+            if (meta.has(m)) {
+                Context.error('$m is path level metadata applicable for routes only', cls.get().pos);
+            }
+        }
 
         var glg = cls.get().superClass;
         var treq = glg.params[0];
@@ -267,7 +281,7 @@ class Builder {
                         var ret = tret.toString();
                         Context.error('Function "${f.name}" violates the golgi.API : Every route function in this class must have a declared return type of "$ret".', fn.expr.pos);
                     }
-                    var route_fn = processFFun(f, fn, treq);
+                    var route_fn = processFFun(f, fn, treq, meta.get());
                     routes.push(route_fn);
                 }
                 default : continue;
@@ -280,6 +294,7 @@ class Builder {
 
         var dispatch_func = Dispatcher.build(tret_complex);
         fields.push(dispatch_func);
+
         var new_field = Initializer.build(routes);
         fields.push(new_field);
 

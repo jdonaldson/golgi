@@ -261,6 +261,21 @@ Any unknown simple metadata that is not handled by the MetaGolgi instance will
 throw a compile error, ensuring that your middleware behavior is completely
 understood by the compiler.
 
+You may also apply metadata at a class level, which will apply the metadata to
+all routes defined by the API:
+
+```haxe
+@bar
+class Router extends Api<String,String,MetaRouter> {
+    public function foo(x:Int, request : String, subroute : Subroute<String>){
+        subroute.run(new SubRouter());
+        return 'foo';
+    }
+}
+```
+
+
+
 Using MetaGolgi for middleware lets you flexibly define complex shared
 behaviors, while adhering to the same request and return types as defined by
 your Api.

@@ -27,6 +27,7 @@ class Main {
     }
 }
 
+@bing @bar
 class Foo extends Api<Req,String, FooMeta> {
     // static function bar(context:Req, next : Req->String) : String {
     //     return next(context) + "!";
@@ -36,7 +37,6 @@ class Foo extends Api<Req,String, FooMeta> {
     public function bard() : String {
         return "HI";
     }
-    @bing @bar
     public function food(x  : Int, params : Params, request : Req, subroute : Subroute<Req>) : String {
         return 'o';
     }

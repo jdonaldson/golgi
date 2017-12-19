@@ -2,9 +2,9 @@
 
 # --next
 
--main SpeedTest
--cp ../hx3compat/std/
--x bin/out
+# -main SpeedTest
+# -cp ../hx3compat/std/
+# -x bin/out
 
 
 # --next
@@ -44,4 +44,10 @@
 -cp ../hx3compat/std/
 -hl bin/out.hl
 -cmd hl bin/out.hl
+
+--next
+-main SpeedTest
+-cp ../hx3compat/std/
+-python bin/out.py
+-cmd python3 bin/out.py
 

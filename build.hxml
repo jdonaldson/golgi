@@ -1,5 +1,10 @@
 -main Main
--lua bin/main.lua
--cmd lua bin/main.lua
+-python bin/main.py
 -cp ../hx3compat/std/
+-cmd python3 bin/main.py
+
+# -main Main
+# -lua bin/main.lua
+# -cmd lua bin/main.lua
+# -cp ../hx3compat/std/
 

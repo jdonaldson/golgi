@@ -35,6 +35,8 @@ class SpeedTest {
             'lua'
 #elseif hl
             'hl'
+#elseif python
+            'py'
 #end
             ;
 

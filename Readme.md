@@ -20,9 +20,13 @@ Dispatch is older and couldn't utilize many of the modern macro features that
 Haxe >3 now provides.
 
 ## Golgi Speed
+Golgi is *fast*.  The macro-based route generation eliminates common runtime and
+reflection overhead required in other routing libraries.  Raw
+throughput can reach 1 Million requests per second on some targets.
+
 A brief speed comparison of Golgi vs. haxe.web.Dispatch for equivalent routing
-asks.  Metrics are given in 1000 requests per second.
-![plot](https://i.imgur.com/e0sukhU.png)
+tasks.  Metrics are given in 1000 requests per second.
+![plot](https://i.imgur.com/86SXl2U.png)
 
 
 # Intro

@@ -37,7 +37,6 @@ class Initializer {
 
     public static function build(routes:Array<Route>){
         var d = [];
-        d.push( macro this.__dict__ = new Map());
         var observed_paths = new Map<String,Bool>();
         for (route in routes){
             var field_name=  route.route.name;
@@ -98,12 +97,12 @@ class Initializer {
                 }
                 if (route.middleware.length > 0){
                     var func = mw_gen(field_name, route);
-                    d.push( macro  __dict__.set($v{path_name}, $func));
+                    d.push( macro  __golgi_dict__.set($v{path_name}, $func));
                 } else {
                     var func = macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
                         return this.$field_name($a{route.exprs});
                     };
-                    d.push( macro __dict__.set($v{path_name}, $func));
+                    d.push( macro __golgi_dict__.set($v{path_name}, $func));
                 }
             }
 
@@ -112,7 +111,7 @@ class Initializer {
         var block = macro $b{d};
 
         return {
-            name   : "__init_golgi__",
+            name   : "__golgi_init__",
             doc    : null,
             meta   : [],
             access : [AOverride],

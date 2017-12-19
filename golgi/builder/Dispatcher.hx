@@ -12,8 +12,8 @@ class Dispatcher {
             } else {
                 path = parts[0];
             }
-            if (__dict__.exists(path)){
-                return __dict__.get(path)(parts,params,request);
+            if (__golgi_dict__.exists(path)){
+                return __golgi_dict__.get(path)(parts,params,request);
             } else {
                 throw golgi.Error.NotFound(parts[0]);
             }

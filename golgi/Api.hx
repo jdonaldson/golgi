@@ -4,12 +4,13 @@ import golgi.meta.MetaGolgi;
 @:allow(golgi.Subroute, golgi.Golgi)
 @:autoBuild(golgi.builder.Builder.build())
 class Api<TReq,TRet,TMeta:MetaGolgi<TReq,TRet>> {
-    var __meta__ : TMeta;
-    var __dict__ : Map<String, Array<String>->Dynamic->Dynamic->TRet>;
-    function __init_golgi__() : Void {};
+    var __golgi_meta__ : TMeta;
+    var __golgi_dict__ : Map<String, Array<String>->Dynamic->Dynamic->TRet>;
+    function __golgi_init__() : Void {};
     public function new(meta : TMeta){
-        __meta__ = meta;
-        __init_golgi__();
+        __golgi_meta__ = meta;
+        __golgi_dict__ = new Map();
+        __golgi_init__();
     }
     function __golgi__(parts : Array<String>, params: Dynamic, request : TReq)  : TRet {
         return null;

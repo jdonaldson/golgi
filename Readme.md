@@ -6,18 +6,14 @@ routing library on its own, but can be used as the basis for one.
 
 It follows design decisions based on these priorities:
 
-1. Route resolution should be simple, fast, and composable.  (e.g. regular expression matches are
-   slower, rely on complex resolution ordering, and typically are applied
-   globally).
-3. Route handling should support common cases, but be adaptable
-to others. (web url routing is possible, but not supported specifically)
-4. Routes should avoid annoying duplication. (Where possible, use idioms and
-   typing features to inform common functionality)
+1. Routes should be simple, fast, and composable.
+2. Route handling shouldn't presuppose a specific implementation (e.g. Http).
+3. Routes should avoid duplication.
 
 Golgi is based heavily off of
 [haxe.web.Dispatch](http://api.haxe.org/haxe/web/Dispatch.html).  However,
-Dispatch is older and couldn't utilize many of the modern macro features that
-Haxe >3 now provides.
+Dispatch is older and therefore didn't utilize many of the modern macro features
+that Haxe >3 now provides.
 
 ## Golgi Speed
 Golgi is *fast*.  The macro-based route generation eliminates common runtime and
@@ -52,14 +48,14 @@ class Main {
 }
 ```
 
-Here we're running the Golgi router on the path ``"foo"``, using the Api defined
-by ``Router``.  This method manages the lookup of the right function on Router,
+Here we're running the Golgi router on the path `foo`, using the Api defined
+by `Router`.  This method manages the lookup of the right function on Router,
 and invokes the function there.  *The Golgi "run" method requires some other
 parameters which we'll get in to soon.*
 
 # Fully Typed Path Arguments
 
-The next step is to do something useful with the API, such as accept typed
+The next step is to do something useful with the API, such as accepting typed
 arguments from the parsed path:
 
 ```haxe
@@ -125,8 +121,8 @@ Also, all param fields must be simple value types (``String``,``Bool``,``Int``, 
 # Additional request context
 Last but not least, it's common to utilize a *request* argument for route handling.
 This is often necessary for web routing, when certain routing logic involves
-checking headers, etc.  In Golgi this is called a *request* argument.  It can be
-of any type, so once again *request* is a reserved argument name:
+checking headers, etc.  In Golgi this is called the `request` argument.  It can be
+of any type, so once again `request` is a reserved argument name:
 
 ```haxe
 class Router implements golgi.Api<String,String>  {
@@ -209,9 +205,9 @@ list of path metadata:
 
 1. `@:default` : This route is triggered *only* for an empty path.
 2. `@:alias('additional_path', 'additional_path2')` : The following paths will also trigger
-   the given route, in addition to the route name.
+   the given route, in addition to the function name.
 3. `@:route('route_path1', 'route_path2')` : The following list of paths trigger
-   the route, but not the route name (unless the route name is manually
+   the route, but not the function name (unless the function name is manually
    included).
 
 Any additional route paths given in `@:alias` or `@:route` should be given as
@@ -227,10 +223,10 @@ Golgi addresses this with a powerful metadata-driven middleware system.
 
 The MetaGolgi instance expects a signature of `TReq->(TReq->TRet)->TRet`.  This
 signature provides the request parameter, and a function that calls the next
-middleware method.  The final default middleware method contains the actual
-API call itself.  This enables middleware methods to intercept specific route
-traffic, and perform certain modifications (modifying headers, or pre-emptively
-returning a given response).
+middleware method.  Eventually, the route function itself is called.  This
+enables middleware methods to intercept specific route traffic, and perform
+certain modifications (modifying headers, or pre-emptively returning a given
+response).
 
 In order to use a MetaGolgi, it's necessary to extend a base `MetaGolgi`
 instance.  This special class will ensure that every public instance method has
@@ -273,7 +269,7 @@ your Api.
 
 
 ## Abstract type route arguments
-It's possible for routes to accept *abstract* types! The abstract type must unify
+It's possible for routes to accept *abstract* types(!) The abstract type must unify
 with one of the four basic value types.  This opens up a lot of
 possibilities for automated instantiation and reduction of boilerplate:
 

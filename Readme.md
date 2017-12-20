@@ -54,8 +54,8 @@ and invokes the function there.  *The Golgi "run" method requires some other
 parameters which we'll get in to soon.*
 
 Note that we passed the path in as a plain string.  We constructed the Router
-instance, but that is only done once at initialization.  No other allocations
-were necessary.
+ instance, but this is only done once on initialization.  No further allocations
+ are required.
 
 # Fully Typed Path Arguments
 

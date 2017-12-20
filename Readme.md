@@ -1,19 +1,18 @@
 # ![golgi logo](https://vectr.com/omgjjd/aabjEN2Z9.png?width=64&height=64&select=aabjEN2Z9page0) golgi
 A composable routing library for Haxe.
 
-Golgi is an opinionated routing library for Haxe. It does not try to be a web
+Golgi is a generic routing library for Haxe. It does not try to be a web
 routing library on its own, but can be used as the basis for one.
 
 It follows design decisions based on these priorities:
 
 1. Routes should be simple, fast, and composable.
 2. Route handling shouldn't presuppose a specific implementation (e.g. Http).
-3. Routes should avoid duplication.
+3. Routing should avoid duplication and instantiation overhead.
 
-Golgi is based heavily off of
-[haxe.web.Dispatch](http://api.haxe.org/haxe/web/Dispatch.html).  However,
-Dispatch is older and therefore didn't utilize many of the modern macro features
-that Haxe >3 now provides.
+See the Misc section below for more details.
+
+
 
 ## Golgi Speed
 Golgi is *fast*.  The macro-based route generation eliminates common runtime and
@@ -21,8 +20,8 @@ reflection overhead required in other routing libraries.  Raw
 throughput can reach 1 Million requests per second on some targets.
 
 A brief speed comparison of Golgi vs. haxe.web.Dispatch for equivalent routing
-tasks.  Metrics are given in 1000 requests per second (higher is better).
-![plot](https://i.imgur.com/W8j9WIx.png)
+tasks on a sample of Haxe targets.  Metrics are given in 1000 requests per
+second (higher is better).  ![plot](https://i.imgur.com/W8j9WIx.png)
 
 
 # Intro
@@ -310,4 +309,31 @@ abstract Bar(String){
     }
 }
 ```
+
+
+# Misc
+
+## What the heck is a Golgi?
+
+The Golgi apparatus is an
+[organelle](https://en.wikipedia.org/wiki/Golgi_apparatus), or specialized
+subunit within a biological cell.  It's involved with packaging proteins and
+routing them to destinations within the cell's nucleus.  As important as the
+Golgi apparatus is, it is still just part of a cell.  It doesn't stand on its
+own.
+
+A Golgi API is involved with packaging content and routing it to the appropriate
+API.  As critical as this job is, Golgi doesn't stand on its own as a web
+framework.  Instead, it seeks to serve as a flexible basis for numerous other
+routing tasks.
+
+
+Golgi is based heavily off of
+[haxe.web.Dispatch](http://api.haxe.org/haxe/web/Dispatch.html).  Dispatch is
+well loved, but it's older and its design was driven in part due to limitations
+in the macro features of the time.  While certain Dispatch patterns will be
+familiar, enough of the API and feature set has changed to merit a new name
+rather than a new version.
+
+
 

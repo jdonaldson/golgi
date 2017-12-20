@@ -7,14 +7,13 @@ routing library on its own, but can be used as the basis for one.
 It follows design decisions based on these priorities:
 
 1. Routes should be simple, fast, and composable.
-2. Route handling shouldn't presuppose a specific implementation (e.g. Http).
-3. Routing should avoid duplication and instantiation overhead.
+2. Routing should avoid allocation and unnecessary overhead.
+3. Route handling shouldn't presuppose a specific implementation (e.g. Http).
+4. Routing should avoid boilerplate and excessive code duplication.
 
 See the Misc section below for more details.
 
-
-
-## Golgi Speed
+# Golgi Speed
 Golgi is *fast*.  The macro-based route generation eliminates common runtime and
 reflection overhead required in other routing libraries.  Raw
 throughput can reach 1 Million requests per second on some targets.
@@ -42,7 +41,8 @@ function:
 ```haxe
 class Main {
     static function main() {
-        Golgi.run("foo", {}, "", new Router());
+        var rt  = new Router();
+        Golgi.run("foo", {}, "", rt);
     }
 }
 ```
@@ -51,6 +51,10 @@ Here we're running the Golgi router on the path `foo`, using the Api defined
 by `Router`.  This method manages the lookup of the right function on Router,
 and invokes the function there.  *The Golgi "run" method requires some other
 parameters which we'll get in to soon.*
+
+Note that we passed the path in as a plain string.  We constructed the Router
+instance, but that is only done once at initialization.  No other allocations
+were necessary.
 
 # Fully Typed Path Arguments
 
@@ -335,5 +339,6 @@ in the macro features of the time.  While certain Dispatch patterns will be
 familiar, enough of the API and feature set has changed to merit a new name
 rather than a new version.
 
+##
 
 

@@ -20,7 +20,7 @@ throughput can reach 1 Million requests per second on some targets.
 
 A brief speed comparison of Golgi vs. haxe.web.Dispatch for equivalent routing
 tasks on a sample of Haxe targets.  Metrics are given in 1000 requests per
-second (higher is better).  ![plot](https://i.imgur.com/W8j9WIx.png)
+second (higher is better).  ![plot](https://i.imgur.com/erHufxP.png)
 
 
 # Intro

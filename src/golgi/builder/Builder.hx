@@ -179,6 +179,24 @@ class Builder {
         }
     }
 
+    static function genFieldMiddleware(field_meta : Metadata, class_meta : Metadata) : Array<ExprDef>{
+        var mw = [];
+        var add_meta = function(m : MetadataEntry, mw : Array<ExprDef>){
+            if (!~/^[a-zA-Z]\w*/.match(m.name)) return;
+            var name = m.name;
+            var expr = macro __golgi_meta__.$name;
+            mw.push(expr.expr);
+        }
+        for (m in field_meta){
+            add_meta(m, mw);
+        }
+
+        for (m in class_meta){
+            add_meta(m, mw);
+        }
+        return mw;
+    }
+
 
     /**
       Process the function, ensuring that special named arguments are the right type, and in the right order
@@ -221,21 +239,7 @@ class Builder {
         }
         ensureOrder(map, ["params", "request", "subroute"], fn.expr);
 
-        var mw = [];
-        var add_meta = function(m : MetadataEntry, mw : Array<ExprDef>){
-            if (!~/^[a-zA-Z]\w*/.match(m.name)) return;
-            var name = m.name;
-            var expr = macro __golgi_meta__.$name;
-            mw.push(expr.expr);
-        }
-        for (m in f.meta){
-            add_meta(m, mw);
-        }
-
-        for (m in class_meta){
-            add_meta(m, mw);
-        }
-
+        var mw = genFieldMiddleware(f.meta, class_meta);
 
         return {
             route      : f,

@@ -5,7 +5,7 @@ class SpeedTest {
     static function main() {
         var n = 100000;
         var t = haxe.Timer.stamp();
-        var routes = ["blah1/1","blah2/5","blah3/2","blah4/8","blah5/3","blah6/8"];
+        var paths = ["blah1/1","blah2/5","blah3/2","blah4/8","blah5/3","blah6/8"];
         var sum = 0.0;
         var b = new Blaher();
         var o = {};
@@ -13,7 +13,7 @@ class SpeedTest {
         var t = haxe.Timer.stamp();
         for (i in 0...n){
             try{
-                Golgi.run(routes[Std.random(routes.length)], o, null, b);
+                Golgi.run(paths[Std.random(paths.length)].split('/'), o, null, b);
             } catch (e : Dynamic) {
                 trace(e + " is the value for e");
             }
@@ -48,7 +48,7 @@ class SpeedTest {
         var o = new Old();
         for (i in 0...n){
             try{
-                haxe.web.Dispatch.run(routes[Std.random(routes.length)], new Map(), o);
+                haxe.web.Dispatch.run(paths[Std.random(paths.length)], new Map(), o);
             } catch(e:Dynamic){
                 trace(e + " is the value for e");
             }

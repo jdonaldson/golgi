@@ -1,17 +1,18 @@
 # ![golgi logo](https://vectr.com/omgjjd/aabjEN2Z9.png?width=64&height=64&select=aabjEN2Z9page0) golgi
 A composable routing library for Haxe.
 
-Golgi is a generic routing library for Haxe. It does not try to be a web
-routing library on its own, but can be used as the basis for one.
+Golgi is a generic routing library for Haxe. Golgi does not try to be a web
+routing library on its own, but it can be used as the basis for one.
 
-It follows design decisions based on these priorities:
+It follows these design guidelines:
 
 1. Routes should be simple, fast, and composable.
 2. Routing should avoid allocation and unnecessary overhead.
 3. Route handling shouldn't presuppose a specific implementation (e.g. Http).
 4. Routing should avoid boilerplate and excessive code duplication.
 
-See the Misc section below for more details.
+Despite these restrictions, Golgi makes very few tradeoffs for common feature
+support.
 
 # Golgi Speed
 Golgi is *fast*.  The macro-based route generation eliminates common runtime and
@@ -23,14 +24,14 @@ tasks on a sample of Haxe targets.
 
 ![plot](https://i.imgur.com/erHufxP.png)
 
-
 # Intro
 Here's a small example of a small route class:
 
 ```haxe
-class Router extends golgi.BasicApi<String,String>  {
+import golgi.Api;
+
+class Router extends Api<String>  {
     public function foo() : String {
-        trace('hi');
         return 'foo';
     }
 }
@@ -48,14 +49,16 @@ class Main {
 }
 ```
 
-Here we're running the Golgi router on the path `foo`, using the Api defined
+Here we're running the Golgi router on the path "foo", using the Api defined
 by `Router`.  This method manages the lookup of the right function on Router,
-and invokes the function there.  *The Golgi "run" method requires some other
-parameters which we'll get in to soon.*
+and invokes the function there.
 
-Note that we passed the path in as a plain string.  We constructed the Router
- instance, but this is only done once on initialization.  No further allocations
- are required.
+Note that we passed the path in as an array.  Golgi requires the path to be
+split into component parts and passed manually.  This step is done to avoid
+duplication (some platforms provide this info automatically), and to provide
+flexibility (Path delimiter specification and tokenization is left to upstream
+libraries).
+
 
 # Fully Typed Path Arguments
 
@@ -63,7 +66,7 @@ The next step is to do something useful with the API, such as accepting typed
 arguments from the parsed path:
 
 ```haxe
-class Router extends golgi.BasicApi<String,String>  {
+class Router extends Api<String>  {
     public function foo(x:Int){
         trace('x + 1 is  ${x + 1}');
         return 'foo';
@@ -83,11 +86,10 @@ class Main {
 ```
 
 Note that the argument ``x`` inside the function body is typed as an ``Int``.
-Golgi splits the paths into chunks, reads the type information on the``Router``
-method interface, and then makes the appropriate conversion.  If the ``x``
-argument is missing, a ``NotFound(path:String)`` error is thrown.  If the
-argument can not be converted to an ``Int``, then a ``InvalidValue`` error is
-thrown.
+Golgi reads the type information on the``Router`` method interface, and then
+makes the appropriate conversion.  If the ``x`` argument is missing, a
+``NotFound(path:String)`` error is thrown.  If the argument can not be converted
+to an ``Int``, then a ``InvalidValue`` error is thrown.
 
 We can add as many typed arguments as we want, but the argument types are
 somewhat limited.  They can only be value types that are able to be converted
@@ -99,7 +101,7 @@ available via abstract typing which is described later on*.
 We can also pass in URL parameters using a special ``params`` argument:
 
 ```haxe
-class Router implements golgi.BasicApi<String,String>  {
+class Router implements Api<String>  {
     public function foo(x:Int, params : {y : Int}){
         trace('x + 1 is  ${x + 1}');
         trace('params.y + 1 is ${params.y + 1}');
@@ -129,7 +131,7 @@ checking headers, etc.  In Golgi this is called the `request` argument.  It can 
 of any type, so once again `request` is a reserved argument name:
 
 ```haxe
-class Router implements golgi.Api<String,String>  {
+class Router implements Api<String>  {
     public function foo(x:Int, params : {y : Int}, request : String){
         trace('x + 1 is  ${x + 1}');
         trace('params.y + 1 is ${params.y + 1}');
@@ -215,11 +217,11 @@ list of path metadata:
    included).
 
 Any additional route paths given in `@:alias` or `@:route` should be given as
-anonymous strings.
+anonymous strings.  Only one type of path metadata is allowed per route.
 
 ## MetaGolgi
 
-It's common for certain routes to share common filtering patterns.  E.g., some
+It's common for certain routes to share common handling patterns.  E.g., some
 routes are authenticated, others are only applicable for certain Http methods.
 
 It's painful to have to manage these pattern manually on a per-route basis.
@@ -278,14 +280,9 @@ class Router extends Api<String,String,MetaRouter> {
 }
 ```
 
-
-
 Using MetaGolgi for middleware lets you flexibly define complex shared
 behaviors, while adhering to the same request and return types as defined by
 your Api.
-
-
-
 
 ## Abstract type route arguments
 It's possible for routes to accept *abstract* types(!) The abstract type must unify
@@ -314,6 +311,19 @@ abstract Bar(String){
     }
 }
 ```
+## Pre-tokenized paths
+
+Golgi tokenizes paths by splitting on forward slash characters.  It's possible
+to route on pre-tokenized paths.  Simply pass an array of tokenized strings,
+rather than a single string path.
+
+```haxe
+
+        Golgi.run( ["foo","1"], {}, "", new Router());
+```
+
+This is useful in situations where the path is already tokenized, or when a
+specific tokenization is required.
 
 
 # Misc
@@ -339,7 +349,4 @@ well loved, but it's older and its design was driven in part due to limitations
 in the macro features of the time.  While certain Dispatch patterns will be
 familiar, enough of the API and feature set has changed to merit a new name
 rather than a new version.
-
-##
-
 

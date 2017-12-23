@@ -28,7 +28,7 @@ class Builder {
     /**
       Validate the given arg
     **/
-    static function validateArg(arg : Arg) : Expr {
+    static function validateArg(arg : GolgiArg) : Expr {
         var leftover = false;
         arg.type = Context.followWithAbstracts(arg.type.toType()).toComplexType();
         if (reserved.indexOf(arg.name) != -1){
@@ -53,7 +53,7 @@ class Builder {
     /**
       An error message creator for argument problems
      **/
-    static function arg_error(arg : Arg, ?param : String, ?pos : haxe.macro.Position){
+    static function arg_error(arg : GolgiArg, ?param : String, ?pos : haxe.macro.Position){
         var type = arg.type.toType().toString();
         if (pos == null) pos = Context.currentPos();
         var name = arg.name;
@@ -65,7 +65,7 @@ class Builder {
     /**
       Process leftover params that occur in base arguments
     **/
-    static function processLeftoverParamArg(arg : Arg) : Expr {
+    static function processLeftoverParamArg(arg : GolgiArg) : Expr {
         return switch(arg.name){
             case "subroute": {
                 macro new golgi.Subroute(parts.slice($v{arg.dispatch_slice -1}), params, request);
@@ -314,7 +314,7 @@ typedef ParamConfig = {
     fn       : Function
 }
 
-typedef Arg = {
+typedef GolgiArg = {
     name           : String,
     expr           : Expr,
     field_pos      : Position,
@@ -323,6 +323,6 @@ typedef Arg = {
     reserved       : Array<String>,
     validate_name  : Bool,
     dispatch_slice : Int,
-    leftovers      : Arg->Expr
+    leftovers      : GolgiArg->Expr
 }
 

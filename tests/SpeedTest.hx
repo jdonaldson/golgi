@@ -1,4 +1,4 @@
-import golgi.BasicApi;
+import golgi.Api;
 import golgi.Golgi;
 
 class SpeedTest {
@@ -7,7 +7,7 @@ class SpeedTest {
         var t = haxe.Timer.stamp();
         var paths = ["blah1/1","blah2/5","blah3/2","blah4/8","blah5/3","blah6/8"];
         var sum = 0.0;
-        var b = new Blaher();
+        var b = new Blaher(null);
         var o = {};
         var foo = 0;
         var t = haxe.Timer.stamp();
@@ -76,7 +76,7 @@ class Old {
 
 
 
-class Blaher extends BasicApi<{}, String> {
+class Blaher extends Api<{}, String, Dynamic> {
     public var count : Int = 0;
     public function blah() : String{ return 'hi';}
     public function blah1(x:Int): String{ return 'hi'; }

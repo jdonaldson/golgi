@@ -1,0 +1,17 @@
+{
+  "name": "golgi",
+  "license": "MIT",
+  "tags": [
+    "router",
+    "web",
+    "dispatch"
+  ],
+  "classPath": "src",
+  "contributors": [
+    "jdonaldson"
+  ],
+  "releasenote": "initial release",
+  "version": "0.0.0",
+  "url": "https://github.com/jdonaldson/golgi/",
+  "dependencies": {}
+}

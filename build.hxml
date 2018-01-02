@@ -9,6 +9,6 @@
 -lua bin/main.lua
 -cmd lua bin/main.lua
 -cp src
--cp test
+-cp tests
 -cp ../hx3compat/std/
 

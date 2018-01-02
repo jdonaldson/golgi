@@ -4,7 +4,7 @@
 
 # -main SpeedTest
 # -cp ../hx3compat/std/
-# -cp test
+# -cp tests
 # -cp src
 # -x bin/out
 
@@ -21,31 +21,22 @@
 -main SpeedTest
 -cp ../hx3compat/std/
 -cp src
--cp test
+-cp tests
 -cmd lua bin/out.lua
 
 --next
 -main SpeedTest
 -cp ../hx3compat/std/
 -cp src
--cp test
+-cp tests
 -js bin/out.js
 -cmd node bin/out.js
 
-
 --next
 -main SpeedTest
 -cp ../hx3compat/std/
 -cp src
--cp test
--java bin/SpeedJava
--cmd java -jar ./bin/SpeedJava/SpeedTest.jar
-
---next
--main SpeedTest
--cp ../hx3compat/std/
--cp src
--cp test
+-cp tests
 -cpp bin/SpeedCPP
 -cmd ./bin/SpeedCPP/SpeedTest
 
@@ -53,7 +44,7 @@
 # -main SpeedTest
 # -cp ../hx3compat/std/
 # -cp src
-# -cp test
+# -cp tests
 # -hl bin/out.hl
 # -cmd hl bin/out.hl
 
@@ -61,7 +52,7 @@
 -main SpeedTest
 -cp ../hx3compat/std/
 -cp src
--cp test
+-cp tests
 -python bin/out.py
 -cmd python3 bin/out.py
 
@@ -69,7 +60,15 @@
 -main SpeedTest
 -cp ../hx3compat/std/
 -cp src
--cp test
+-cp tests
 -php bin/outphp
 -cmd php bin/outphp/index.php
 
+
+--next
+-main SpeedTest
+-cp ../hx3compat/std/
+-cp src
+-cp tests
+-java bin/SpeedJava
+-cmd java -jar ./bin/SpeedJava/SpeedTest.jar

@@ -15,23 +15,41 @@ class Initializer {
     /*
        Generate a chained middleware call
      */
-    static function mw_gen(field_name : String, route : Route) : Expr {
+    static function mw_gen(field_name : String, route : Route, path_default : Bool) : Expr {
         return macro function(parts : Array<String>, params : Dynamic, request : Dynamic) {
-            return ${mw_gen_recur(route.middleware, field_name, route)};
+            return ${mw_gen_recur(route.middleware, field_name, route, path_default)};
         }
     }
 
+    static function route_arg_count(route : Route, path_default : Bool) : Int {
+        return if (path_default){
+            1;
+        } else {
+            var arg_count = route.exprs.length;
+            if (route.params) arg_count--;
+            if (route.subroute) arg_count--;
+            arg_count;
+        }
+    }
     /*
        Recursive helper for middleware call
      */
-    static function mw_gen_recur(mw : Array<ExprDef>, field_name : String, route : Route) : Expr{
+    static function mw_gen_recur(mw : Array<ExprDef>, field_name : String, route : Route, path_default : Bool) : Expr{
         if (mw.length == 0){
-            return macro this.$field_name($a{route.exprs});
+            var route_args = route_arg_count(route, path_default);
+            return macro {
+                trace(parts + " is the value for parts");
+                trace(parts.length + " is the value for parts.length");
+                if (parts.length > $v{route_args}){
+                    throw golgi.Error.TooManyValues;
+                }
+                return this.$field_name($a{route.exprs});
+            }
         } else {
             var mwc = mw.copy();
             var m = mwc.shift();
             var mm = {expr:m, pos: Context.currentPos()};
-            return macro $mm(request , function(x) return ${mw_gen_recur(mwc, field_name, route)});
+            return macro return $mm(request , function(x) ${mw_gen_recur(mwc, field_name, route, path_default)});
         }
     }
 
@@ -43,14 +61,17 @@ class Initializer {
             var paths = [field_name];
             var path_altered = false;
 
+            var path_default = false;
             for (m in route.route.meta){
                 switch(m.name){
                     case ":default" : {
-                        paths = [""];
                         alteration_check(path_altered,route.route.pos);
+                        paths = [""];
                         path_altered = true;
+                        path_default = true;
                     };
                     case ":alias" : {
+                        alteration_check(path_altered, route.route.pos);
                         var alias_paths = [];
                         for (p in m.params){
                             switch(p.expr){
@@ -64,10 +85,10 @@ class Initializer {
                             }
                         }
                         paths = paths.concat(alias_paths);
-                        alteration_check(path_altered, route.route.pos);
                         path_altered = true;
                     }
                     case ":route" : {
+                        alteration_check(path_altered, route.route.pos);
                         var route_paths = [];
                         for (p in m.params){
                             switch(p.expr){
@@ -81,7 +102,6 @@ class Initializer {
                             }
                         }
                         paths = route_paths;
-                        alteration_check(path_altered, route.route.pos);
                         path_altered = true;
 
                     }
@@ -96,10 +116,14 @@ class Initializer {
                     observed_paths.set(path_name, true);
                 }
                 if (route.middleware.length > 0){
-                    var func = mw_gen(field_name, route);
+                    var func = mw_gen(field_name, route, path_default);
                     d.push( macro  __golgi_dict__.set($v{path_name}, $func));
                 } else {
+                    var route_args = route_arg_count(route, path_default);
                     var func = macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
+                        if (parts.length > $v{route_args}){
+                            throw TooManyValues;
+                        }
                         return this.$field_name($a{route.exprs});
                     };
                     d.push( macro __golgi_dict__.set($v{path_name}, $func));

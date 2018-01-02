@@ -53,13 +53,6 @@ Here we're running the Golgi router on the path "foo", using the Api defined
 by `Router`.  This method manages the lookup of the right function on Router,
 and invokes the function there.
 
-Note that we passed the path in as an array.  Golgi requires the path to be
-split into component parts and passed manually.  This step is done to avoid
-duplication (some platforms provide this info automatically), and to provide
-flexibility (Path delimiter specification and tokenization is left to upstream
-libraries).
-
-
 # Fully Typed Path Arguments
 
 The next step is to do something useful with the API, such as accepting typed
@@ -229,14 +222,14 @@ Golgi addresses this with a powerful metadata-driven middleware system.
 
 The MetaGolgi instance expects a signature of `TReq->(TReq->TRet)->TRet`.  This
 signature provides the request parameter, and a function that calls the next
-middleware method.  Eventually, the route function itself is called.  This
-enables middleware methods to intercept specific route traffic, and perform
-certain modifications (modifying headers, or pre-emptively returning a given
-response).
+middleware method.  Eventually, either a middlware function returns a `TRet`
+type, or the route function itself is called.  This enables middleware methods
+to intercept specific route traffic, and perform certain modifications
+(modifying headers, or pre-emptively returning a given response).
 
 In order to use a MetaGolgi, it's necessary to extend a base `MetaGolgi`
 instance.  This special class will ensure that every public instance method has
-the required signature.
+the required signatures for its methods.
 
 
 ```haxe
@@ -307,7 +300,7 @@ abstract Bar(String){
     }
     @:from
     static public function fromString(str:String){
-        return new Wat(str);
+        return new Bar(str);
     }
 }
 ```
@@ -323,7 +316,7 @@ rather than a single string path.
 ```
 
 This is useful in situations where the path is already tokenized, or when a
-specific tokenization is required.
+specific non-standard delimiter is required.
 
 
 # Misc

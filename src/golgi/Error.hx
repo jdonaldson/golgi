@@ -1,5 +1,8 @@
 package golgi;
 
+/**
+  Error states for incorrect paths.
+ **/
 enum Error {
 	NotFound( path : String );
 	InvalidValue;

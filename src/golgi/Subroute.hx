@@ -1,4 +1,8 @@
 package golgi;
+
+/**
+  A class for containing leftover path parts from a partial route request.
+ **/
 class Subroute<TReq> {
     var parts : Array<String>;
     var params : Dynamic<Dynamic>;

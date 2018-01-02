@@ -35,7 +35,7 @@ class Builder {
             return arg.leftovers(arg);
         }
 
-        var res = if (unify(arg.type, macro : Int)) {
+        var res = if (unify(arg.type, macro : Int)){
             macro golgi.Validate.int(${arg.expr} , $v{arg.optional}, $v{arg.name});
         } else if (unify(arg.type, macro : String)){
             macro golgi.Validate.string(${arg.expr} , $v{arg.optional}, $v{arg.name});

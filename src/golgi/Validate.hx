@@ -2,6 +2,9 @@ package golgi;
 import golgi.Error;
 
 
+/**
+  String conversion and validation utilities
+ **/
 class Validate {
     public static function string(str:String, optional=false, name : String) : String {
         if (str == null){

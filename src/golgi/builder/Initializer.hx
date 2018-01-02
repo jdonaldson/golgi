@@ -25,7 +25,7 @@ class Initializer {
         return if (path_default){
             1;
         } else {
-            var arg_count = route.exprs.length;
+            var arg_count = route.exprs.length + 1;
             if (route.params) arg_count--;
             if (route.subroute) arg_count--;
             arg_count;
@@ -38,8 +38,6 @@ class Initializer {
         if (mw.length == 0){
             var route_args = route_arg_count(route, path_default);
             return macro {
-                trace(parts + " is the value for parts");
-                trace(parts.length + " is the value for parts.length");
                 if (parts.length > $v{route_args}){
                     throw golgi.Error.TooManyValues;
                 }
@@ -122,7 +120,7 @@ class Initializer {
                     var route_args = route_arg_count(route, path_default);
                     var func = macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
                         if (parts.length > $v{route_args}){
-                            throw TooManyValues;
+                            throw golgi.Error.TooManyValues;
                         }
                         return this.$field_name($a{route.exprs});
                     };

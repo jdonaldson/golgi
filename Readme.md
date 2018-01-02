@@ -1,4 +1,6 @@
 # ![golgi logo](https://vectr.com/omgjjd/aabjEN2Z9.png?width=64&height=64&select=aabjEN2Z9page0) golgi
+![travis status](https://travis-ci.org/jdonaldson/golgi.svg?branch=master)
+
 A composable routing library for Haxe.
 
 Golgi is a generic routing library for Haxe. Golgi does not try to be a web

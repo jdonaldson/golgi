@@ -1,6 +1,6 @@
 package golgi;
 import golgi.meta.MetaGolgi;
-import golgi.Api;
+import golgi.api.Api;
 
 /**
   The main class that is used to invoke each individual api's private routing

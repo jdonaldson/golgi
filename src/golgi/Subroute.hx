@@ -1,4 +1,5 @@
 package golgi;
+import golgi.api.Api;
 
 /**
   A class for containing leftover path parts from a partial route request.

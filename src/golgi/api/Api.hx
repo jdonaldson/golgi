@@ -1,7 +1,7 @@
-package golgi;
+package golgi.api;
 import golgi.meta.MetaGolgi;
 
-typedef TMap<TReq,TRet> = #if lua LuaMap<TReq,TRet> #else Map<TReq,TRet> #end
+typedef TMap<TReq,TRet> = #if lua TableMap<TReq,TRet> #else Map<TReq,TRet> #end
 
 /**
   The base subclass for a Golgi Api.  Classes inheriting this class will get a
@@ -38,7 +38,11 @@ class Api<TReq,TRet,TMeta:MetaGolgi<TReq,TRet>> {
 }
 
 #if lua
-class LuaMap<K,V> {
+/**
+  Faster Map implementation for Lua.  Loses references to keys if the values
+  are null.
+ **/
+class TableMap<K,V> {
     var t : lua.Table<K,V>;
     public function new(){
         t = lua.Table.create();

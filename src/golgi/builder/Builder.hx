@@ -251,6 +251,15 @@ class Builder {
         };
     }
 
+    static function checkForInvalidPathMetadata(meta:
+            haxe.macro.Type.MetaAccess, pos : Position ){
+        for (m in path_meta){
+            if (meta.has(m)) {
+                Context.error('$m is path level metadata applicable for routes only', pos);
+            }
+        }
+    }
+
     /**
       The main build method for golgi api types
      **/
@@ -261,11 +270,8 @@ class Builder {
         var cls = Context.getLocalClass();
 
         var meta = cls.get().meta;
-        for (m in path_meta){
-            if (meta.has(m)) {
-                Context.error('$m is path level metadata applicable for routes only', cls.get().pos);
-            }
-        }
+
+        checkForInvalidPathMetadata(meta,cls.get().pos);
 
         var glg = cls.get().superClass;
         var treq = glg.params[0];

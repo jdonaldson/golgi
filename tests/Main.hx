@@ -12,8 +12,8 @@ class Main {
     static function main() {
         var fm = new FooMeta();
         try {
-            // var k = Golgi.run("food/1", {hi : 4}, {a:4}, new Foo(fm));
-            // trace(k + " is the value for k");
+            var k = Golgi.run("food/1", {hi : 4}, {a:4}, new Foo(fm));
+            trace(k + " is the value for k");
             var o = Golgi.run("", {hi : 4}, {a:4}, new Foo(fm));
             trace(o + " is the value for o");
         } catch (e:Dynamic){

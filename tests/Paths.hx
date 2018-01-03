@@ -14,6 +14,10 @@ class Paths extends haxe.unit.TestCase {
         var res = Golgi.run("singlearg/1", {}, dummy_req, api);
         assertEquals(res, "1");
     }
+    public function testMultipleArgs(){
+        var res = Golgi.run("multiarg/1/2", {}, dummy_req, api);
+        assertEquals(res, "12");
+    }
 }
 
 typedef Req = {msg : String};
@@ -30,6 +34,9 @@ class TestApi extends golgi.Api<Req,Ret,TMeta> {
     }
     public function singlearg(x:Int) : Ret {
         return '$x';
+    }
+    public function multiarg(x:Int,y:Int) : Ret {
+        return '$x$y';
     }
     public function interceptRoute(x : Int, y: String) : Ret {
         return '$x and $y were passed to me';

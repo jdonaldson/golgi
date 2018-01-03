@@ -210,26 +210,26 @@ class Builder {
         var pos : Int;
         for (i in 0...fn.args.length){
             var arg = fn.args[i];
-            if (arg.name == "subroute"){
-                if (!Context.unify(Context.getType("golgi.Subroute"), arg.type.toType())){
-                    Context.error("subroute argument must be of golgi.Subroute type", fn.expr.pos);
-                }
-            }
-            if (arg.name == "request"){
-                if (!Context.unify(arg.type.toType(), treq)){
-                    Context.error('request argument must be of ${treq} type', fn.expr.pos);
-                }
-            }
-            if (arg.name == "params"){
-                var t = Context.follow(arg.type.toType());
-                var anon = switch(t){
-                    case TAnonymous(_)  : true;
-                    default : {
-                        false;
+            switch(arg.name){
+                case "subroute" : {
+                    if (!Context.unify(Context.getType("golgi.Subroute"), arg.type.toType())){
+                        Context.error("subroute argument must be of golgi.Subroute type", fn.expr.pos);
                     }
                 }
-                if (!anon){
-                    Context.error('params argument must be of Anonymous type', fn.expr.pos);
+                case "request" : {
+                    if (!Context.unify(arg.type.toType(), treq)){
+                        Context.error('request argument must be of ${treq} type', fn.expr.pos);
+                    }
+                }
+                case "params" : {
+                    var t = Context.follow(arg.type.toType());
+                    var anon = switch(t){
+                        case TAnonymous(_)  : true;
+                        default : false;
+                    }
+                    if (!anon){
+                        Context.error('params argument must be of Anonymous type', fn.expr.pos);
+                    }
                 }
             }
 

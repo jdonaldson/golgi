@@ -13,6 +13,7 @@ It follows these design guidelines:
 3. Route handling shouldn't presuppose a specific implementation (e.g. Http).
 4. Routing should avoid boilerplate and excessive code duplication.
 
+
 Despite these restrictions, Golgi makes very few tradeoffs for common feature
 support.
 

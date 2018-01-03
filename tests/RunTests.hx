@@ -1,10 +1,16 @@
 package ;
+import haxe.unit.*;
+
 
 class RunTests {
+  static var tests:Array<TestCase> = [
+    new Paths(),
+  ];
 
   static function main() {
-    travix.Logger.println('it works');
-    travix.Logger.exit(0); // make sure we exit properly, which is necessary on some targets, e.g. flash & (phantom)js
+    var r = new TestRunner();
+    for (t in tests) r.add(t);
+    Sys.exit(r.run() ? 0 : 500);
   }
 
 }

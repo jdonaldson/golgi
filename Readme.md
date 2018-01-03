@@ -58,7 +58,7 @@ and invokes the function there.
 
 # Fully Typed Path Arguments
 
-The next step is to do something useful with the API, such as accepting typed
+The next step is to do something useful with the API, such as accepting
 arguments from the parsed path:
 
 ```haxe
@@ -83,9 +83,10 @@ class Main {
 
 Note that the argument ``x`` inside the function body is typed as an ``Int``.
 Golgi reads the type information on the``Router`` method interface, and then
-makes the appropriate conversion.  If the ``x`` argument is missing, a
-``NotFound(path:String)`` error is thrown.  If the argument can not be converted
-to an ``Int``, then a ``InvalidValue`` error is thrown.
+makes the appropriate conversion on the corresponding path segment.  If the
+``x`` argument is missing, a ``NotFound(path:String)`` error is thrown.  If the
+argument can not be converted to an ``Int``, then an ``InvalidValue`` error is
+thrown.
 
 We can add as many typed arguments as we want, but the argument types are
 somewhat limited.  They can only be value types that are able to be converted
@@ -94,7 +95,7 @@ available via abstract typing which is described later on*.
 
 # Route Parameter Support
 
-We can also pass in URL parameters using a special ``params`` argument:
+We can also pass in query parameters using a special ``params`` argument:
 
 ```haxe
 class Router implements Api<String>  {
@@ -116,12 +117,16 @@ class Main {
 }
 ```
 
-The ``params`` argument is *reserved*.  That is, you can only use that argument
-name to specify url parameters, and it must be typed as an anonymous object.
-Also, all param fields must be simple value types (``String``,``Bool``,``Int``, etc).
+The ``params`` argument name is *reserved*.  That is, you can only use that
+argument name to specify url parameters, and it must be typed as an anonymous
+object.  Also, all param fields must be simple value types
+(``String``,``Bool``,``Int``, etc).
+
+Note that params are not automatically parsed from the path.  They must be
+provided separately, or omitted.
 
 # Additional request context
-Last but not least, it's common to utilize a *request* argument for route handling.
+It's common to utilize a *request* argument for route handling.
 This is often necessary for web routing, when certain routing logic involves
 checking headers, etc.  In Golgi this is called the `request` argument.  It can be
 of any type, so once again `request` is a reserved argument name:
@@ -148,6 +153,23 @@ class Main {
 Here we're using a string type for our request.  Web routers will typically pass
 in a structural type, or some sort of class.
 
+# Sub-Routing
+
+It's also possible to do sub-routing in Golgi.  This process involves using a
+secondary Golgi Api to process additional url parameters, common in hierarchical
+routing scenarios.
+
+```haxe
+class Router implements golgi.BasicApi<String,String>  {
+    public function foo(x:Int, request : String, subroute : Subroute<String>){
+        var result = subroute.run(new SubRouter());
+
+        return result != null ? result : 'foo';
+    }
+}
+```
+
+Like the params and request argument, subroute is a reserved argument name.
 
 # Golgi Type Parameters Explained
 
@@ -169,25 +191,9 @@ class Main {
 With a consistent return value type retrieved from the route request, it becomes
 easier to write a flexible response.
 
-# Sub-Routing
 
-It's also possible to do sub-routing in Golgi.  This process involves using a
-secondary Golgi Api to process additional url parameters, common in hierarchical
-routing scenarios.
 
-```haxe
-class Router implements golgi.BasicApi<String,String>  {
-    public function foo(x:Int, request : String, subroute : Subroute<String>){
-        var result = subroute.run(new SubRouter());
-
-        return result != null ? result : 'foo';
-    }
-}
-```
-
-# Extra Features
-
-## Path Metadata
+# Path Metadata
 
 It's common for certain paths to include characters and words that are not
 valid function names.  Golgi handles this with special path metadata which can
@@ -215,7 +221,7 @@ list of path metadata:
 Any additional route paths given in `@:alias` or `@:route` should be given as
 anonymous strings.  Only one type of path metadata is allowed per route.
 
-## MetaGolgi
+# MetaGolgi
 
 It's common for certain routes to share common handling patterns.  E.g., some
 routes are authenticated, others are only applicable for certain Http methods.
@@ -280,6 +286,8 @@ Using MetaGolgi for middleware lets you flexibly define complex shared
 behaviors, while adhering to the same request and return types as defined by
 your Api.
 
+# Additional features
+
 ## Abstract type route arguments
 It's possible for routes to accept *abstract* types(!) The abstract type must unify
 with one of the four basic value types.  This opens up a lot of
@@ -307,10 +315,10 @@ abstract Bar(String){
     }
 }
 ```
-## Pre-tokenized paths
+## Pre-segmented paths
 
-Golgi tokenizes paths by splitting on forward slash characters.  It's possible
-to route on pre-tokenized paths.  Simply pass an array of tokenized strings,
+Golgi segments paths by splitting on forward slash characters.  It's possible
+to route on pre-segmented paths.  Simply pass an array of strings,
 rather than a single string path.
 
 ```haxe
@@ -318,7 +326,7 @@ rather than a single string path.
         Golgi.run( ["foo","1"], {}, "", new Router());
 ```
 
-This is useful in situations where the path is already tokenized, or when a
+This is useful in situations where the path is already segmented, or when a
 specific non-standard delimiter is required.
 
 

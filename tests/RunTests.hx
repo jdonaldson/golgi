@@ -10,7 +10,9 @@ class RunTests {
   static function main() {
     var r = new TestRunner();
     for (t in tests) r.add(t);
+#if !js
     Sys.exit(r.run() ? 0 : 500);
+#end
   }
 
 }

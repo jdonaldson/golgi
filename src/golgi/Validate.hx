@@ -20,7 +20,7 @@ class Validate {
             return 0;
         } else {
             var res = Std.parseInt(str);
-#if (!java && !cpp && !hl)
+#if (!java && !cpp && !hl && !cs)
             if (res == null) throw InvalidValue;
 #end
             return res;
@@ -32,7 +32,7 @@ class Validate {
             else return 0.0;
         } else {
             var res = Std.parseFloat(str);
-#if (!java && !cpp && !hl)
+#if (!java && !cpp && !hl && !cs)
             if (res == null) throw InvalidValue;
 #end
             return res;

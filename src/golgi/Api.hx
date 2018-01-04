@@ -1,4 +1,4 @@
-package golgi.api;
+package golgi;
 import golgi.meta.MetaGolgi;
 
 typedef TMap<TReq,TRet> = #if lua TableMap<TReq,TRet> #else Map<TReq,TRet> #end

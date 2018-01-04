@@ -1,5 +1,4 @@
-import golgi.Api;
-import golgi.Golgi;
+import golgi.*;
 
 class SpeedTest {
     static function main() {

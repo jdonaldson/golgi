@@ -1,4 +1,6 @@
+import golgi.api.*;
 import golgi.*;
+
 class Paths extends haxe.unit.TestCase {
     var api  : TestApi;
     static var dummy_req = { msg : "dummy"};
@@ -28,7 +30,7 @@ class TMeta extends golgi.meta.MetaGolgi<Req,Ret> {
     }
 }
 
-class TestApi extends golgi.Api<Req,Ret,TMeta> {
+class TestApi extends Api<Req,Ret,TMeta> {
     public function vanilla() : Ret {
         return 'vanilla';
     }

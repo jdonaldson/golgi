@@ -26,7 +26,7 @@ class Builder {
     }
 
     /**
-      Validate the given arg
+      Generates a expression that validates the arg expression.
     **/
     static function validateArg(arg : GolgiArg) : Expr {
         var leftover = false;
@@ -165,20 +165,24 @@ class Builder {
     /**
       Make sure that the special named arguments happen in the right order
      **/
-    static function ensureOrder(m:Map<String,Int>, names : Array<String>, expr : Expr){
+    static function ensureOrder(m:Map<String,Int>, names : Array<String>, pos : Position){
         for (i in 0...names.length){
             var name = names[i];
             for (j in (i+1)...names.length){
                 var other = names[j];
                 if (m.exists(name) && m.exists(other)){
                     if (m.get(name) > m.get(other)){
-                        Context.error('$name must come before $other in the argument order', expr.pos);
+                        Context.error('$name must come before $other in the argument order', pos);
                     }
                 }
             }
         }
     }
 
+    /**
+      Generate a series of expresssions that instantiates the route's middleware
+      handlers.
+     **/
     static function genFieldMiddleware(field_meta : Metadata, class_meta : Metadata) : Array<ExprDef>{
         var mw = [];
         var add_meta = function(m : MetadataEntry, mw : Array<ExprDef>){
@@ -199,7 +203,8 @@ class Builder {
 
 
     /**
-      Process the function, ensuring that special named arguments are the right type, and in the right order
+      Process the  FFun function, ensuring that special named arguments are the
+      right type, and in the right order
      **/
     static function processFFun(f : Field, fn : Function, treq  : haxe.macro.Type , class_meta : Metadata) : Route {
         var path_arg = 0;
@@ -237,7 +242,7 @@ class Builder {
             var arg_expr = processArg(arg, f, i, status);
             exprs.push(arg_expr);
         }
-        ensureOrder(map, ["params", "request", "subroute"], fn.expr);
+        ensureOrder(map, ["params", "request", "subroute"], fn.expr.pos);
 
         var mw = genFieldMiddleware(f.meta, class_meta);
 

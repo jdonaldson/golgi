@@ -34,16 +34,16 @@ class Builder {
         if (reserved.indexOf(arg.name) != -1){
             return arg.leftovers(arg);
         }
-        // var missing = arg.params ?  golgi.Error.Missing(arg.name) : golgi.Error.MissingParam(arg.name);
+        var missing = arg.param ? macro golgi.Validate.missingParam : macro golgi.Validate.missing;
 
         var res = if (unify(arg.type, macro : Int)){
-            macro golgi.Validate.int(${arg.expr} , $v{arg.optional}, $v{arg.name}, $v{arg.param});
+            macro golgi.Validate.int(${arg.expr} , $v{arg.optional}, $v{arg.name}, $missing);
         } else if (unify(arg.type, macro : String)){
-            macro golgi.Validate.string(${arg.expr} , $v{arg.optional}, $v{arg.name}, $v{arg.param});
+            macro golgi.Validate.string(${arg.expr} , $v{arg.optional}, $v{arg.name}, $missing);
         } else if (unify(arg.type, macro : Float)){
-            macro golgi.Validate.float(${arg.expr} , $v{arg.optional}, $v{arg.name}, $v{arg.param});
+            macro golgi.Validate.float(${arg.expr} , $v{arg.optional}, $v{arg.name}, $missing);
         } else if (unify(arg.type, macro : Bool)){
-            macro golgi.Validate.bool(${arg.expr} , $v{arg.optional}, $v{arg.name}, $v{arg.param});
+            macro golgi.Validate.bool(${arg.expr} , $v{arg.optional}, $v{arg.name}, $missing);
         } else {
             arg.leftovers(arg);
         }

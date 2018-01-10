@@ -33,7 +33,6 @@ class Paths extends haxe.unit.TestCase {
         try{
             var res = Golgi.run("singlearg/blah", {}, dummy_req, api);
         } catch (e : Error){
-            trace(e + " is the value for e");
             var res = switch(e){
                 case InvalidValue("x") : true;
                 default : false;

@@ -38,9 +38,7 @@ class Initializer {
         if (mw.length == 0){
             var route_args = route_arg_count(route, path_default);
             return macro {
-                if (parts.length > $v{route_args}){
-                    throw golgi.Error.TooManyValues;
-                }
+                if (parts.length > $v{route_args}) throw golgi.Error.TooManyValues;
                 return this.$field_name($a{route.exprs});
             }
         } else {
@@ -119,9 +117,7 @@ class Initializer {
                 } else {
                     var route_args = route_arg_count(route, path_default);
                     var func = macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
-                        if (parts.length > $v{route_args}){
-                            throw golgi.Error.TooManyValues;
-                        }
+                        if (parts.length > $v{route_args}) throw golgi.Error.TooManyValues;
                         return this.$field_name($a{route.exprs});
                     };
                     d.push( macro __golgi_dict__.set($v{path_name}, $func));

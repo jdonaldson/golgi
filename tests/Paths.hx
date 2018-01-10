@@ -12,13 +12,45 @@ class Paths extends haxe.unit.TestCase {
         var res = Golgi.run("vanilla", {}, dummy_req, api);
         assertEquals(res, "vanilla");
     }
+    public function testFailInvalidPath(){
+        try{
+            var res = Golgi.run("chocolate", {}, dummy_req, api);
+            assertEquals(res, "vanilla");
+        } catch (e : Error) {
+            var res = switch(e){
+                case NotFound("chocolate") : true;
+                default : false;
+            }
+            assertTrue(res);
+
+        }
+    }
     public function testSingleArg(){
         var res = Golgi.run("singlearg/1", {}, dummy_req, api);
         assertEquals(res, "1");
     }
+    public function testFailSingleArg(){
+        try{
+            var res = Golgi.run("singlearg/blah", {}, dummy_req, api);
+        } catch (e : Error){
+            var res = switch(e){
+                case InvalidValue("x") : true;
+                default : false;
+            }
+            assertTrue(res);
+        }
+    }
     public function testMultipleArgs(){
         var res = Golgi.run("multiarg/1/2", {}, dummy_req, api);
         assertEquals(res, "12");
+    }
+    public function testParamArgString() {
+        var res = Golgi.run("paramArgString", {msg:"received"}, dummy_req, api);
+        assertEquals(res, "received");
+    }
+    public function testParamArgInt() {
+        var res = Golgi.run("paramArgInt", {msg:1}, dummy_req, api);
+        assertEquals(res, "1");
     }
 }
 
@@ -42,5 +74,11 @@ class TestApi extends Api<Req,Ret,TMeta> {
     }
     public function interceptRoute(x : Int, y: String) : Ret {
         return '$x and $y were passed to me';
+    }
+    public function paramArgString(params : { msg : String} ) : Ret {
+        return params.msg;
+    }
+    public function paramArgInt(params : { msg : Int} ) : Ret {
+        return params.msg + '';
     }
 }

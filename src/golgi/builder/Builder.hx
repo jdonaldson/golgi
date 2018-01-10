@@ -34,15 +34,16 @@ class Builder {
         if (reserved.indexOf(arg.name) != -1){
             return arg.leftovers(arg);
         }
+        // var missing = arg.params ?  golgi.Error.Missing(arg.name) : golgi.Error.MissingParam(arg.name);
 
         var res = if (unify(arg.type, macro : Int)){
-            macro golgi.Validate.int(${arg.expr} , $v{arg.optional}, $v{arg.name});
+            macro golgi.Validate.int(${arg.expr} , $v{arg.optional}, $v{arg.name}, $v{arg.param});
         } else if (unify(arg.type, macro : String)){
-            macro golgi.Validate.string(${arg.expr} , $v{arg.optional}, $v{arg.name});
+            macro golgi.Validate.string(${arg.expr} , $v{arg.optional}, $v{arg.name}, $v{arg.param});
         } else if (unify(arg.type, macro : Float)){
-            macro golgi.Validate.float(${arg.expr} , $v{arg.optional}, $v{arg.name});
+            macro golgi.Validate.float(${arg.expr} , $v{arg.optional}, $v{arg.name}, $v{arg.param});
         } else if (unify(arg.type, macro : Bool)){
-            macro golgi.Validate.bool(${arg.expr} , $v{arg.optional}, $v{arg.name});
+            macro golgi.Validate.bool(${arg.expr} , $v{arg.optional}, $v{arg.name}, $v{arg.param});
         } else {
             arg.leftovers(arg);
         }
@@ -90,7 +91,7 @@ class Builder {
                                         type           : fct,
                                         optional       : false,
                                         reserved       : [],
-                                        validate_name  : false,
+                                        param          : false,
                                         dispatch_slice : arg.dispatch_slice,
                                         leftovers      : function(c) {
                                             return arg_error(arg, f.name, f.pos);
@@ -132,7 +133,7 @@ class Builder {
             field_pos      : field.pos,
             type           : arg.type,
             optional       : arg.opt,
-            validate_name  : true,
+            param          : true,
             reserved       : Builder.reserved,
             dispatch_slice : dispatch_slice,
             leftovers      : processLeftoverParamArg
@@ -332,7 +333,7 @@ typedef GolgiArg = {
     type           : ComplexType,
     optional       : Bool,
     reserved       : Array<String>,
-    validate_name  : Bool,
+    param          : Bool,
     dispatch_slice : Int,
     leftovers      : GolgiArg->Expr
 }

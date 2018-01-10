@@ -23,6 +23,12 @@ class Main {
     }
 }
 
+class Dood extends golgi.basic.Api<Any,Any> {
+    public function bar() : Any {
+        return 'hi';
+    }
+}
+
 @bing @bar
 class Foo extends Api<Req,String, FooMeta> {
     static function bar(context:Req, next : Req->String) : String {

@@ -35,13 +35,14 @@ class Builder {
             return arg.leftovers(arg);
         }
         var missing = arg.param ? macro golgi.Validate.missingParam : macro golgi.Validate.missing;
+        var invalid = arg.param ? macro golgi.Validate.invalidParam : macro golgi.Validate.invalid;
 
         var res = if (unify(arg.type, macro : Int)){
-            macro golgi.Validate.int(${arg.expr} , $v{arg.optional}, $v{arg.name}, $missing);
+            macro golgi.Validate.int(${arg.expr} , $v{arg.optional}, $v{arg.name}, $missing, $invalid);
         } else if (unify(arg.type, macro : String)){
             macro golgi.Validate.string(${arg.expr} , $v{arg.optional}, $v{arg.name}, $missing);
         } else if (unify(arg.type, macro : Float)){
-            macro golgi.Validate.float(${arg.expr} , $v{arg.optional}, $v{arg.name}, $missing);
+            macro golgi.Validate.float(${arg.expr} , $v{arg.optional}, $v{arg.name}, $missing, $invalid);
         } else if (unify(arg.type, macro : Bool)){
             macro golgi.Validate.bool(${arg.expr} , $v{arg.optional}, $v{arg.name}, $missing);
         } else {
@@ -91,7 +92,7 @@ class Builder {
                                         type           : fct,
                                         optional       : false,
                                         reserved       : [],
-                                        param          : false,
+                                        param          : true,
                                         dispatch_slice : arg.dispatch_slice,
                                         leftovers      : function(c) {
                                             return arg_error(arg, f.name, f.pos);
@@ -133,7 +134,7 @@ class Builder {
             field_pos      : field.pos,
             type           : arg.type,
             optional       : arg.opt,
-            param          : true,
+            param          : false,
             reserved       : Builder.reserved,
             dispatch_slice : dispatch_slice,
             leftovers      : processLeftoverParamArg

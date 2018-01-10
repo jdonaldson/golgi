@@ -6,6 +6,7 @@ package golgi;
 enum Error {
 	NotFound( path : String );
 	InvalidValue(name : String);
+	InvalidValueParam(name : String);
 	Missing( name : String);
 	MissingParam( name : String);
 	TooManyValues;

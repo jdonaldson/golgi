@@ -33,6 +33,7 @@ class Paths extends haxe.unit.TestCase {
         try{
             var res = Golgi.run("singlearg/blah", {}, dummy_req, api);
         } catch (e : Error){
+            trace(e + " is the value for e");
             var res = switch(e){
                 case InvalidValue("x") : true;
                 default : false;
@@ -51,6 +52,17 @@ class Paths extends haxe.unit.TestCase {
     public function testParamArgInt() {
         var res = Golgi.run("paramArgInt", {msg:1}, dummy_req, api);
         assertEquals(res, "1");
+    }
+    public function testFailParamArgInt() {
+        try {
+            var res = Golgi.run("paramArgInt", {msg:'no'}, dummy_req, api);
+        } catch (e : Error){
+            var res = switch(e){
+                case InvalidValueParam("msg") : true;
+                default : false;
+            }
+            assertTrue(res);
+        }
     }
 }
 

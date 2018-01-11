@@ -63,13 +63,25 @@ class Paths extends haxe.unit.TestCase {
             assertTrue(res);
         }
     }
+    public function testMetaGolgi(){
+        var res = Golgi.run("metagolgi", {}, dummy_req, api);
+        assertEquals(res, "intercepted");
+    }
+    public function testChain(){
+        var res = Golgi.run("bang", {}, dummy_req, api);
+        assertEquals(res, "intercepted!");
+    }
 }
 
 typedef Req = {msg : String};
 typedef Ret = String;
+
 class TMeta extends golgi.meta.MetaGolgi<Req,Ret> {
     public function intercept(req : Req, next : Req->Ret) : Ret {
         return "intercepted";
+    }
+    public function bang(req : Req, next : Req->Ret) : Ret{
+        return next(req) + "!";
     }
 }
 
@@ -92,4 +104,15 @@ class TestApi extends Api<Req,Ret,TMeta> {
     public function paramArgInt(params : { msg : Int} ) : Ret {
         return params.msg + '';
     }
+
+    @intercept
+    public function metagolgi() : Ret {
+        return 'not intercepted';
+    }
+
+    @bang @intercept
+    public function bang() : Ret {
+        return 'not intercepted';
+    }
 }
+

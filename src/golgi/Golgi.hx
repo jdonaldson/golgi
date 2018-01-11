@@ -11,12 +11,8 @@ class Golgi{
 #if cs
         return _runcs(path, params, request, api);
 #else
-        return _run(path, params, request, api);
-#end
-    }
-
-    inline public static function _run<TReq, TRet>(path : Path, params : Any, request : TReq, api : Api<TReq,TRet,Dynamic>)  : TRet {
         return api.__golgi__(path, params, request);
+#end
     }
 
 #if cs

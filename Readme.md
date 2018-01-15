@@ -288,6 +288,10 @@ understood by the compiler.
 You may also apply metadata at a class level, which will apply the metadata to
 all routes defined by the API:
 
+Finally, the base MetaGolgi instance comes with a pass through middleware called
+`_golgi_pass`.  You can use this metadata to pass runtime information without
+triggering a middleware function.
+
 ```haxe
 @bar
 class Router extends Api<Request,String,MetaRouter> {

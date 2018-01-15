@@ -12,15 +12,6 @@ class Initializer {
         }
     }
 
-    /*
-       Generate a chained middleware call
-     */
-    static function mw_gen(field_name : String, route : Route, path_default : Bool) : Expr {
-        return macro function(parts : Array<String>, params : Dynamic, request : Dynamic) {
-            return ${mw_gen_recur(route.middleware, field_name, route, path_default)};
-        }
-    }
-
     static function route_arg_count(route : Route, path_default : Bool) : Int {
         return if (path_default){
             1;
@@ -31,6 +22,16 @@ class Initializer {
             arg_count;
         }
     }
+
+    /*
+       Generate a chained middleware call
+     */
+    static function mw_gen(field_name : String, route : Route, path_default : Bool) : Expr {
+        return macro function(parts : Array<String>, params : Dynamic, request : Dynamic) {
+            return ${mw_gen_recur(route.middleware, field_name, route, path_default)};
+        }
+    }
+
     /*
        Recursive helper for middleware call
      */

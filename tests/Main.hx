@@ -11,10 +11,13 @@ typedef Blah = {
 class Main {
     static function main() {
         var fm = new FooMeta();
+        var f = new Foo(fm);
+        var x = haxe.rtti.Meta.getType(Foo);
+        trace(x + " is the value for x");
         try {
-            var k = Golgi.run("food/1", {hi : 4}, {a:4}, new Foo(fm));
+            var k = Golgi.run("food/1", {hi : 4}, {a:4},f);
             trace(k + " is the value for k");
-            var o = Golgi.run("", {hi : 4}, {a:4}, new Foo(fm));
+            var o = Golgi.run("", {hi : 4}, {a:4}, f);
             trace(o + " is the value for o");
         } catch (e:Dynamic){
             trace(e + " is the value for e");
@@ -39,6 +42,8 @@ class Foo extends Api<Req,String, FooMeta> {
     public function bard() : String {
         return "HI";
     }
+
+    @_golgi_pass
     public function food(x  : Int, params : Params, request : Req, subroute : Subroute<Req>) : String {
         trace(x + " is the value for x");
         return 'o';
@@ -57,6 +62,9 @@ typedef Params = { hi : Int}
 class FooMeta extends MetaGolgi<Req,String> {
     public function bar(x:Req, next : Req->String) : String {
         return next(x) + "!";
+    }
+    public function _golgi_pass(x : Req, next : Req->String) : String{
+        return next(x);
     }
     public function bing(x:Req, next : Req->String) : String {
         return next(x) + "?";

@@ -1,0 +1,1019 @@
+2018/01/15 14:34:56 [error] 6698#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to call global 'str_split' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 14:34:56 [error] 6698#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to call global 'str_split' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 14:58:55 [error] 23704#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to call global 'str_split' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 14:58:55 [error] 23704#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to call global 'str_split' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 14:59:29 [error] 24061#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to call global 'str_split' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 14:59:29 [error] 24061#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to call global 'str_split' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 14:59:30 [error] 24061#0: *3 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to call global 'str_split' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 14:59:30 [error] 24061#0: *4 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to call global 'str_split' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 14:59:30 [error] 24061#0: *5 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to call global 'str_split' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 14:59:30 [error] 24061#0: *6 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to call global 'str_split' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 14:59:30 [error] 24061#0: *7 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to call global 'str_split' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 14:59:30 [error] 24061#0: *8 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to call global 'str_split' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:02:54 [error] 25406#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to index global 'module' (a function value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:02:54 [error] 25406#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to index global 'module' (a function value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:03:29 [error] 25743#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to call global 'split' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:03:29 [error] 25743#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to call global 'split' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:07:07 [error] 26784#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to call global 'split' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:07:07 [error] 26784#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):2: attempt to call global 'split' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:08:26 [error] 27496#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:08:26 [error] 27496#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:08:26 [error] 27496#0: *3 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:08:27 [error] 27496#0: *4 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:08:27 [error] 27496#0: *5 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:08:27 [error] 27496#0: *6 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:08:27 [error] 27496#0: *7 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:08:27 [error] 27496#0: *8 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:10:16 [error] 28142#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:10:16 [error] 28142#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:10:17 [error] 28142#0: *3 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:10:17 [error] 28142#0: *4 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:10:17 [error] 28142#0: *5 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:10:17 [error] 28142#0: *6 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:11:27 [error] 29479#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:11:28 [error] 29479#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:11:28 [error] 29479#0: *3 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:11:28 [error] 29479#0: *4 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:11:28 [error] 29479#0: *5 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:11:29 [error] 29479#0: *6 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:18:53 [error] 31633#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:18:53 [error] 31633#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:18:54 [error] 31633#0: *3 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:18:54 [error] 31633#0: *4 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to call global '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:19:23 [error] 32032#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to index global 'gx' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:19:23 [error] 32032#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to index global 'gx' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:19:24 [error] 32032#0: *3 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to index global 'gx' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:19:24 [error] 32032#0: *4 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to index global 'gx' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:19:24 [error] 32032#0: *5 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to index global 'gx' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:19:24 [error] 32032#0: *6 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to index global 'gx' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:19:49 [error] 32377#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:19:49 [error] 32377#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:19:50 [error] 32377#0: *3 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:19:50 [error] 32377#0: *4 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:19:50 [error] 32377#0: *5 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:19:51 [error] 32377#0: *6 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:36:46 [error] 35528#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:36:46 [error] 35528#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:36:47 [error] 35528#0: *3 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:36:47 [error] 35528#0: *4 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:36:48 [error] 35528#0: *5 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:36:48 [error] 35528#0: *6 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:36:48 [error] 35528#0: *7 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:36:48 [error] 35528#0: *8 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:36:48 [error] 35528#0: *9 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:36:49 [error] 35528#0: *10 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:39:25 [error] 37522#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to index field 'api' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:39:25 [error] 37522#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to index field 'api' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:39:25 [error] 37522#0: *3 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to index field 'api' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:39:25 [error] 37522#0: *4 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to index field 'api' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:39:26 [error] 37522#0: *5 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to index field 'api' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:39:26 [error] 37522#0: *6 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to index field 'api' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:39:26 [error] 37522#0: *7 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to index field 'api' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:39:26 [error] 37522#0: *8 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to index field 'api' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:40:04 [error] 38128#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call field '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:40:04 [error] 38128#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call field '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:40:05 [error] 38128#0: *3 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call field '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:40:05 [error] 38128#0: *4 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call field '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:40:05 [error] 38128#0: *5 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call field '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:40:05 [error] 38128#0: *6 lua entry thread aborted: runtime error: content_by_lua(locations.conf:4):2: attempt to call field '_golgi_' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:4): in function <content_by_lua(locations.conf:4):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:41:04 [error] 38617#0: *1 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:41:04 [error] 38617#0: *2 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:41:04 [error] 38617#0: *3 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:41:04 [error] 38617#0: *4 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:41:05 [error] 38617#0: *5 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:41:05 [error] 38617#0: *6 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:41:05 [error] 38617#0: *7 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:41:05 [error] 38617#0: *8 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:42:52 [error] 39175#0: *1 failed to load inlined Lua code: content_by_lua(locations.conf:4):2: unexpected symbol near ']', client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:42:53 [error] 39175#0: *2 failed to load inlined Lua code: content_by_lua(locations.conf:4):2: unexpected symbol near ']', client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:42:53 [error] 39175#0: *3 failed to load inlined Lua code: content_by_lua(locations.conf:4):2: unexpected symbol near ']', client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:42:53 [error] 39175#0: *4 failed to load inlined Lua code: content_by_lua(locations.conf:4):2: unexpected symbol near ']', client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:42:53 [error] 39175#0: *5 failed to load inlined Lua code: content_by_lua(locations.conf:4):2: unexpected symbol near ']', client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:42:53 [error] 39175#0: *6 failed to load inlined Lua code: content_by_lua(locations.conf:4):2: unexpected symbol near ']', client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:44:25 [error] 40107#0: *1 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:44:26 [error] 40107#0: *2 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:44:26 [error] 40107#0: *3 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:44:26 [error] 40107#0: *4 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:44:26 [error] 40107#0: *5 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:44:26 [error] 40107#0: *6 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:44:26 [error] 40107#0: *7 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:44:26 [error] 40107#0: *8 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:44:27 [error] 40107#0: *9 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:44:27 [error] 40107#0: *10 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:516: attempt to index local 'self' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:45:38 [error] 40743#0: *1 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:511: attempt to index local 'parts' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:45:38 [error] 40743#0: *2 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:511: attempt to index local 'parts' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:45:38 [error] 40743#0: *3 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:511: attempt to index local 'parts' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:45:38 [error] 40743#0: *4 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:511: attempt to index local 'parts' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:45:38 [error] 40743#0: *5 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:511: attempt to index local 'parts' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:45:38 [error] 40743#0: *6 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:511: attempt to index local 'parts' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:47:24 [error] 41482#0: *1 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:519: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:47:24 [error] 41482#0: *2 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:519: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:47:24 [error] 41482#0: *3 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:519: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:47:24 [error] 41482#0: *4 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:519: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:47:25 [error] 41482#0: *5 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:519: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:47:25 [error] 41482#0: *6 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:519: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:47:25 [error] 41482#0: *7 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:519: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:47:25 [error] 41482#0: *8 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:519: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:47:51 [error] 41782#0: *1 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:519: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:47:51 [error] 41782#0: *2 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:519: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:509>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:50:58 [error] 43126#0: *1 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:492: attempt to get length of upvalue 'sep' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:490>
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:496: in function 'split_path'
+	content_by_lua(locations.conf:5):2: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:50:58 [error] 43126#0: *2 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:492: attempt to get length of upvalue 'sep' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:490>
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:496: in function 'split_path'
+	content_by_lua(locations.conf:5):2: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:50:59 [error] 43126#0: *3 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:492: attempt to get length of upvalue 'sep' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:490>
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:496: in function 'split_path'
+	content_by_lua(locations.conf:5):2: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:50:59 [error] 43126#0: *4 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:492: attempt to get length of upvalue 'sep' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:490>
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:496: in function 'split_path'
+	content_by_lua(locations.conf:5):2: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:50:59 [error] 43126#0: *5 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:492: attempt to get length of upvalue 'sep' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:490>
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:496: in function 'split_path'
+	content_by_lua(locations.conf:5):2: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:50:59 [error] 43126#0: *6 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:492: attempt to get length of upvalue 'sep' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:490>
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:496: in function 'split_path'
+	content_by_lua(locations.conf:5):2: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:51:18 [error] 43350#0: *1 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:492: attempt to get length of upvalue 'sep' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:490>
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:496: in function 'split_path'
+	content_by_lua(locations.conf:5):2: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:51:19 [error] 43350#0: *2 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:492: attempt to get length of upvalue 'sep' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:490>
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:496: in function 'split_path'
+	content_by_lua(locations.conf:5):2: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:51:19 [error] 43350#0: *3 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:492: attempt to get length of upvalue 'sep' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:490>
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:496: in function 'split_path'
+	content_by_lua(locations.conf:5):2: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:51:19 [error] 43350#0: *4 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:492: attempt to get length of upvalue 'sep' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:490>
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:496: in function 'split_path'
+	content_by_lua(locations.conf:5):2: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:51:19 [error] 43350#0: *5 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:492: attempt to get length of upvalue 'sep' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:490>
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:496: in function 'split_path'
+	content_by_lua(locations.conf:5):2: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:51:19 [error] 43350#0: *6 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:492: attempt to get length of upvalue 'sep' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:490>
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:496: in function 'split_path'
+	content_by_lua(locations.conf:5):2: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:51:19 [error] 43350#0: *7 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:492: attempt to get length of upvalue 'sep' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:490>
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:496: in function 'split_path'
+	content_by_lua(locations.conf:5):2: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:51:19 [error] 43350#0: *8 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:492: attempt to get length of upvalue 'sep' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:490>
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:496: in function 'split_path'
+	content_by_lua(locations.conf:5):2: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:51:20 [error] 43350#0: *9 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:492: attempt to get length of upvalue 'sep' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:490>
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:496: in function 'split_path'
+	content_by_lua(locations.conf:5):2: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:51:20 [error] 43350#0: *10 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:492: attempt to get length of upvalue 'sep' (a nil value)
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:490>
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:496: in function 'split_path'
+	content_by_lua(locations.conf:5):2: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:55:24 [error] 46289#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:55:24 [error] 46289#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:55:25 [error] 46289#0: *3 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:55:25 [error] 46289#0: *4 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:55:25 [error] 46289#0: *5 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:55:25 [error] 46289#0: *6 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: bad argument #1 to 'say' (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	content_by_lua(locations.conf:5):3: in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:56:53 [error] 47471#0: *1 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:537: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:527>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:56:53 [error] 47471#0: *2 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:537: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:527>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:56:53 [error] 47471#0: *3 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:537: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:527>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:56:54 [error] 47471#0: *4 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:537: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:527>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:56:54 [error] 47471#0: *5 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:537: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:527>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:56:54 [error] 47471#0: *6 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:537: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:527>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:56:54 [error] 47471#0: *7 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:537: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:527>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:56:54 [error] 47471#0: *8 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:537: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:527>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:56:55 [error] 47471#0: *9 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:537: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:527>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:56:55 [error] 47471#0: *10 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:537: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:527>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:56:56 [error] 47471#0: *11 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:537: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:527>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:56:56 [error] 47471#0: *12 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:537: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:527>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:56:56 [error] 47471#0: *13 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:537: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:527>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:56:56 [error] 47471#0: *14 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:537: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:527>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:57:10 [error] 47655#0: *1 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:537: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:527>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:57:11 [error] 47655#0: *2 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:537: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:527>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:57:11 [error] 47655#0: *3 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:537: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:527>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:58:12 [error] 48055#0: *1 failed to load inlined Lua code: content_by_lua(locations.conf:5):3: unexpected symbol near ']', client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:58:12 [error] 48055#0: *2 failed to load inlined Lua code: content_by_lua(locations.conf:5):3: unexpected symbol near ']', client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:58:12 [error] 48055#0: *3 failed to load inlined Lua code: content_by_lua(locations.conf:5):3: unexpected symbol near ']', client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:58:13 [error] 48055#0: *4 failed to load inlined Lua code: content_by_lua(locations.conf:5):3: unexpected symbol near ']', client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:58:13 [error] 48055#0: *5 failed to load inlined Lua code: content_by_lua(locations.conf:5):3: unexpected symbol near ']', client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:58:13 [error] 48055#0: *6 failed to load inlined Lua code: content_by_lua(locations.conf:5):3: unexpected symbol near ']', client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:58:13 [error] 48055#0: *7 failed to load inlined Lua code: content_by_lua(locations.conf:5):3: unexpected symbol near ']', client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:58:13 [error] 48055#0: *8 failed to load inlined Lua code: content_by_lua(locations.conf:5):3: unexpected symbol near ']', client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:58:13 [error] 48055#0: *9 failed to load inlined Lua code: content_by_lua(locations.conf:5):3: unexpected symbol near ']', client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:58:13 [error] 48055#0: *10 failed to load inlined Lua code: content_by_lua(locations.conf:5):3: unexpected symbol near ']', client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:58:33 [error] 48345#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to index field '__golgi__' (a function value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:58:33 [error] 48345#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to index field '__golgi__' (a function value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:58:34 [error] 48345#0: *3 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to index field '__golgi__' (a function value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:58:34 [error] 48345#0: *4 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to index field '__golgi__' (a function value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:58:34 [error] 48345#0: *5 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to index field '__golgi__' (a function value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:58:34 [error] 48345#0: *6 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to index field '__golgi__' (a function value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:58:34 [error] 48345#0: *7 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to index field '__golgi__' (a function value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:58:35 [error] 48345#0: *8 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to index field '__golgi__' (a function value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 15:58:35 [error] 48345#0: *9 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to index field '__golgi__' (a function value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 15:58:35 [error] 48345#0: *10 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to index field '__golgi__' (a function value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 16:01:27 [error] 49387#0: *1 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:545: attempt to compare number with nil
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:421: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:424: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:423>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:01:27 [error] 49387#0: *2 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:545: attempt to compare number with nil
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:421: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:424: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:423>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 16:01:27 [error] 49387#0: *3 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:545: attempt to compare number with nil
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:421: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:424: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:423>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:01:27 [error] 49387#0: *4 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:545: attempt to compare number with nil
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:421: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:424: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:423>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 16:01:28 [error] 49387#0: *5 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:545: attempt to compare number with nil
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:421: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:424: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:423>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:01:28 [error] 49387#0: *6 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:545: attempt to compare number with nil
+stack traceback:
+coroutine 0:
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:421: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:424: in function </Users/jdonaldson/Projects/golgi/bin/demo.lua:423>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 16:03:00 [error] 50324#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to call global 'say' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:03:00 [error] 50324#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to call global 'say' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 16:03:00 [error] 50324#0: *3 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to call global 'say' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:03:00 [error] 50324#0: *4 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to call global 'say' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 16:03:01 [error] 50324#0: *5 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to call global 'say' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:03:01 [error] 50324#0: *6 lua entry thread aborted: runtime error: content_by_lua(locations.conf:5):3: attempt to call global 'say' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:5): in function <content_by_lua(locations.conf:5):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 16:08:04 [error] 52529#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:11):3: attempt to call a nil value
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:11): in function <content_by_lua(locations.conf:11):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:10:54 [error] 53693#0: *1 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:982: in function 'string'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:558: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:421: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:424: in function 'food'
+	content_by_lua(locations.conf:11):3: in function <content_by_lua(locations.conf:11):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:27:16 [error] 57276#0: *1 failed to load inlined Lua code: content_by_lua(locations.conf:6):4: 'then' expected near 'module', client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:27:17 [error] 57276#0: *2 failed to load inlined Lua code: content_by_lua(locations.conf:6):4: 'then' expected near 'module', client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 16:28:19 [error] 57276#0: *4 failed to load inlined Lua code: content_by_lua(locations.conf:6):4: 'then' expected near 'module', client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:28:19 [error] 57276#0: *5 failed to load inlined Lua code: content_by_lua(locations.conf:6):4: 'then' expected near 'module', client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/"
+2018/01/15 16:29:08 [error] 58531#0: *1 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:985: in function 'string'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:561: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:421: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:424: in function 'food'
+	content_by_lua(locations.conf:13):3: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:30:52 [error] 58531#0: *4 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:985: in function 'string'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:561: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:421: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:424: in function 'food'
+	content_by_lua(locations.conf:13):3: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:30:52 [error] 58531#0: *5 lua entry thread aborted: runtime error: unknown reason
+stack traceback:
+coroutine 0:
+	[C]: in function 'error'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:985: in function 'string'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:561: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:421: in function 'next'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:424: in function 'food'
+	content_by_lua(locations.conf:13):3: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:02 [error] 60010#0: *1 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:02 [error] 60010#0: *2 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:03 [error] 60010#0: *3 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:03 [error] 60010#0: *4 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:30 [error] 60436#0: *1 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:31 [error] 60436#0: *2 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:31 [error] 60436#0: *3 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:31 [error] 60436#0: *4 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:31 [error] 60436#0: *5 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:50 [error] 60648#0: *1 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:51 [error] 60648#0: *2 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:51 [error] 60648#0: *3 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:52 [error] 60648#0: *4 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:52 [error] 60648#0: *5 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:58 [error] 60828#0: *1 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:58 [error] 60828#0: *2 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:58 [error] 60828#0: *3 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:59 [error] 60828#0: *4 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:59 [error] 60828#0: *5 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:59 [error] 60828#0: *6 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:32:59 [error] 60828#0: *7 lua entry thread aborted: runtime error: /Users/jdonaldson/Projects/golgi/bin/demo.lua:520: calling 'say' on bad self (non-array table found)
+stack traceback:
+coroutine 0:
+	[C]: in function 'say'
+	/Users/jdonaldson/Projects/golgi/bin/demo.lua:520: in function 'handle_error'
+	content_by_lua(locations.conf:13):4: in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:36:19 [error] 63062#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:13):4: attempt to call field 'handle_error' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:13): in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:36:19 [error] 63062#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:13):4: attempt to call field 'handle_error' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:13): in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:36:19 [error] 63062#0: *3 lua entry thread aborted: runtime error: content_by_lua(locations.conf:13):4: attempt to call field 'handle_error' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:13): in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:36:20 [error] 63062#0: *4 lua entry thread aborted: runtime error: content_by_lua(locations.conf:13):4: attempt to call field 'handle_error' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:13): in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:39:35 [error] 64608#0: *1 lua entry thread aborted: runtime error: content_by_lua(locations.conf:13):2: attempt to index field 'Util' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:13): in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:39:35 [error] 64608#0: *2 lua entry thread aborted: runtime error: content_by_lua(locations.conf:6):2: attempt to index field 'Util' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:6): in function <content_by_lua(locations.conf:6):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/food"
+2018/01/15 16:39:36 [error] 64608#0: *3 lua entry thread aborted: runtime error: content_by_lua(locations.conf:13):2: attempt to index field 'Util' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:13): in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:39:36 [error] 64608#0: *4 lua entry thread aborted: runtime error: content_by_lua(locations.conf:6):2: attempt to index field 'Util' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:6): in function <content_by_lua(locations.conf:6):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/food"
+2018/01/15 16:39:36 [error] 64608#0: *5 lua entry thread aborted: runtime error: content_by_lua(locations.conf:13):2: attempt to index field 'Util' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:13): in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:39:36 [error] 64608#0: *6 lua entry thread aborted: runtime error: content_by_lua(locations.conf:6):2: attempt to index field 'Util' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:6): in function <content_by_lua(locations.conf:6):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/food"
+2018/01/15 16:39:36 [error] 64608#0: *7 lua entry thread aborted: runtime error: content_by_lua(locations.conf:13):2: attempt to index field 'Util' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:13): in function <content_by_lua(locations.conf:13):1>, client: 127.0.0.1, server: , request: "GET /food HTTP/1.1", host: "localhost:8008"
+2018/01/15 16:39:36 [error] 64608#0: *8 lua entry thread aborted: runtime error: content_by_lua(locations.conf:6):2: attempt to index field 'Util' (a nil value)
+stack traceback:
+coroutine 0:
+	content_by_lua(locations.conf:6): in function <content_by_lua(locations.conf:6):1>, client: 127.0.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8008", referrer: "http://localhost:8008/food"

@@ -1,0 +1,1 @@
+2018/01/15 17:12:07 [error] 71476#0: init_by_lua_file error: cannot open ./init.lua: No such file or directory

@@ -1,4 +1,5 @@
 *.lua
 out*
 .haxelib/*
-logs/*
+tests/logs/*
+tests/nginx_error.log

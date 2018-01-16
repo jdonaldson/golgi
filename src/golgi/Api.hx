@@ -43,7 +43,7 @@ class Api<TReq,TRet,TMeta:MetaGolgi<TReq,TRet>> {
   are null.
  **/
 class TableMap<K,V> {
-    var t : lua.Table<K,V>;
+    public var t : lua.Table<K,V>;
     public function new(){
         t = lua.Table.create();
     }
@@ -55,6 +55,12 @@ class TableMap<K,V> {
     }
     inline public function exists(k:K) : Bool {
         return t[cast k] != null;
+    }
+    inline  public function toString() : String {
+        return Std.string(t);
+    }
+    inline public function keys() : Array<String> {
+        return lua.PairTools.pairsFold(t, function(x,y,z : Array<String>) {z.push(Std.string(x)); return z;}, []);
     }
 }
 #end

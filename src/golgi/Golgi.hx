@@ -12,6 +12,7 @@ class Golgi{
         return _runcs(path, params, request, api);
 #else
         return api.__golgi__(path, params, request);
+
 #end
     }
 

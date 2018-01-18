@@ -13,12 +13,13 @@ class Initializer {
     }
 
     static function route_arg_count(route : Route, path_default : Bool) : Int {
-        return if (path_default){
+        return if (route.subroute){
+            -1;
+        } else if (path_default){
             1;
         } else {
             var arg_count = route.exprs.length + 1;
             if (route.params) arg_count--;
-            if (route.subroute) arg_count--;
             arg_count;
         }
     }
@@ -32,16 +33,23 @@ class Initializer {
         }
     }
 
+    static function invoke_field(field_name : String, route : Route, path_default : Bool) : Expr {
+            var route_args = route_arg_count(route, path_default);
+            var length_check = route.subroute ? null : macro {
+                if (parts.length > $v{route_args}) throw golgi.Error.TooManyValues;
+            }
+            return macro {
+                $length_check;
+                return this.$field_name($a{route.exprs});
+            }
+    }
+
     /*
        Recursive helper for middleware call
      */
     static function mw_gen_recur(mw : Array<ExprDef>, field_name : String, route : Route, path_default : Bool) : Expr{
         if (mw.length == 0){
-            var route_args = route_arg_count(route, path_default);
-            return macro {
-                if (parts.length > $v{route_args}) throw golgi.Error.TooManyValues;
-                return this.$field_name($a{route.exprs});
-            }
+            return invoke_field(field_name, route, path_default);
         } else {
             var mwc = mw.copy();
             var m = mwc.shift();
@@ -117,11 +125,20 @@ class Initializer {
                     d.push( macro  __golgi_dict__.set($v{path_name}, $func));
                 } else {
                     var route_args = route_arg_count(route, path_default);
-                    var func = macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
-                        if (parts.length > $v{route_args}) throw golgi.Error.TooManyValues;
-                        return this.$field_name($a{route.exprs});
-                    };
+                    var func = if (route.subroute){
+                        macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
+                            return this.$field_name($a{route.exprs});
+                        };
+                    } else {
+                        macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
+                            if (parts.length > $v{route_args}) throw golgi.Error.TooManyValues;
+                            return this.$field_name($a{route.exprs});
+                        };
+                    }
                     d.push( macro __golgi_dict__.set($v{path_name}, $func));
+
+
+
                 }
             }
 

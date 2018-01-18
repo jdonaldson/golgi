@@ -5,19 +5,19 @@
 # -cp test
 # -cmd python3 bin/main.py
 
--main Generate
--cp src
--cp tests
--lua bin/gen.lua
--cmd lua bin/gen.lua
-# -cpp bin/main
-# -cmd ./bin/main/Main
+# -main Generate
+# -cp src
+# -cp tests
+# -lua bin/gen.lua
+# -cmd lua bin/gen.lua
 
---next
+# --next
+
 -cp ../hx3compat/std/
-Demo
+-main Demo
 -cp src
 -cp tests
 -lua bin/demo.lua
+-cmd lua bin/demo.lua
 
 

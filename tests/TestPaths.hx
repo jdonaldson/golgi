@@ -1,7 +1,7 @@
 import golgi.api.*;
 import golgi.*;
 
-class Paths extends haxe.unit.TestCase {
+class TestPaths extends haxe.unit.TestCase {
     var api  : TestApi;
     static var dummy_req = { msg : "dummy"};
     public function new(){
@@ -79,6 +79,18 @@ class Paths extends haxe.unit.TestCase {
         var res = Golgi.run("/", {}, dummy_req, api);
         assertEquals(res, "default");
     }
+    public function testSubRoute(){
+        var res = Golgi.run("passToSub/1/2/sub", {msg : 0}, dummy_req, api);
+        assertEquals(res, "sub");
+    }
+    public function testSubRouteAlias(){
+        var res = Golgi.run("passToSub/1/2/3", {msg : 0}, dummy_req, api);
+        assertEquals(res, "subAlias");
+    }
+    public function testSubRouteDefault(){
+        var res = Golgi.run("passToSub/1/2/", {msg : 0}, dummy_req, api);
+        assertEquals(res, "subDefault");
+    }
 }
 
 typedef Req = {msg : String};
@@ -117,6 +129,9 @@ class TestApi extends Api<Req,Ret,TMeta> {
     public function paramArgInt(params : { msg : Int} ) : Ret {
         return params.msg + '';
     }
+    public function passToSub(arg : Int, arg2 : Int, params : { msg : Int }, subroute : Subroute<Req>) : Ret {
+        return subroute.run(new SubTest(new TMeta()));
+    }
 
     @intercept
     public function metagolgi() : Ret {
@@ -129,3 +144,18 @@ class TestApi extends Api<Req,Ret,TMeta> {
     }
 }
 
+class SubTest extends Api<Req,Ret,TMeta> {
+    public function sub() : Ret {
+        return 'sub';
+    }
+
+    @:route('3')
+    public function subAlias( params : {msg : Int}, request : Req) : Ret {
+        return 'subAlias';
+    }
+
+    @:default
+    public function subDefault(request : Req) : Ret {
+        return 'subDefault';
+    }
+}

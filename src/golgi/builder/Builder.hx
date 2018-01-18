@@ -125,6 +125,7 @@ class Builder {
         var dispatch_slice = check.fn.args.length;
         if (check.params) dispatch_slice--;
         if (check.request) dispatch_slice--;
+        if (check.subroute) dispatch_slice++;
         var path = macro parts[$v{path_idx++}];
         var pos = check.fn.expr.pos;
 

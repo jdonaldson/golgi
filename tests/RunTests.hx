@@ -4,7 +4,7 @@ import haxe.unit.*;
 
 class RunTests {
   static var tests:Array<TestCase> = [
-    new Paths(),
+    new TestPaths(),
   ];
 
   static function main() {

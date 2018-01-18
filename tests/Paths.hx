@@ -71,6 +71,14 @@ class Paths extends haxe.unit.TestCase {
         var res = Golgi.run("bang", {}, dummy_req, api);
         assertEquals(res, "intercepted!");
     }
+    public function testDefault(){
+        var res = Golgi.run("", {}, dummy_req, api);
+        assertEquals(res, "default");
+    }
+    public function testDefaultRoot(){
+        var res = Golgi.run("/", {}, dummy_req, api);
+        assertEquals(res, "default");
+    }
 }
 
 typedef Req = {msg : String};
@@ -86,6 +94,11 @@ class TMeta extends golgi.meta.MetaGolgi<Req,Ret> {
 }
 
 class TestApi extends Api<Req,Ret,TMeta> {
+
+    @:default
+    public function defaultRoute() : Ret {
+        return 'default';
+    }
     public function vanilla() : Ret {
         return 'vanilla';
     }

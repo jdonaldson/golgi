@@ -9,7 +9,12 @@ abstract Path(Array<String>){
         this = parts;
     }
     @:from public static function fromString(str:String){
-        return new Path(str.split("/"));
+        if (str.charAt(0)== "/"){
+            return new Path(str.substring(1).split("/"));
+        } else {
+            return new Path(str.split("/"));
+        }
+
     }
     @:from public static function fromStringArr(arr : Array<String> ) {
         return new Path(arr);

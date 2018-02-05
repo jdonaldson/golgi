@@ -231,6 +231,8 @@ full list of path metadata:
    the given route inclusive of the function name.
 3. `@:route('route_path1', 'route_path2')` : The following list of paths trigger
    the route exclusive of the function name.
+4. `@:helper`: This function is not treated as a path (useful for public helper
+   functions).
 
 Any additional route paths given in `@:alias` or `@:route` should be given as
 anonymous strings.  Only one type of path metadata is allowed per route, so if

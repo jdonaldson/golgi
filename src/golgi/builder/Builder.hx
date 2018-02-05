@@ -191,6 +191,7 @@ class Builder {
         var add_meta = function(m : MetadataEntry, mw : Array<ExprDef>){
             if (!~/^[a-zA-Z]\w*/.match(m.name)) return;
             else if (m.name == "_golgi_pass") return;
+            else if (m.name == ":helper") return;
             var name = m.name;
             var expr = macro __golgi_meta__.$name;
             mw.push(expr.expr);

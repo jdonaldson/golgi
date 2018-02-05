@@ -8,7 +8,7 @@ class MetaGolgi<TReq, TRet> {
     public function new(){}
     /**
       This is the pass through interface, it will not generate a middleware call
-      int the resulting route table.
+      in the resulting route table.
     **/
     public function _golgi_pass(req: TReq, next : TReq->TRet) : TRet{
         return next(req);

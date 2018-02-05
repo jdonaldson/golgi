@@ -49,7 +49,7 @@ class TestPaths extends haxe.unit.TestCase {
         assertEquals(res, "received");
     }
     public function testParamArgInt() {
-        var res = Golgi.run("paramArgInt", {msg:1}, dummy_req, api);
+        var res = Golgi.run("paramArgInt", {msg:"1"}, dummy_req, api);
         assertEquals(res, "1");
     }
     public function testFailParamArgInt() {
@@ -80,15 +80,15 @@ class TestPaths extends haxe.unit.TestCase {
         assertEquals(res, "default");
     }
     public function testSubRoute(){
-        var res = Golgi.run("passToSub/1/2/sub", {msg : 0}, dummy_req, api);
+        var res = Golgi.run("passToSub/1/2/sub", {msg :"0"}, dummy_req, api);
         assertEquals(res, "sub");
     }
     public function testSubRouteAlias(){
-        var res = Golgi.run("passToSub/1/2/3", {msg : 0}, dummy_req, api);
+        var res = Golgi.run("passToSub/1/2/3", {msg : "0"}, dummy_req, api);
         assertEquals(res, "subAlias");
     }
     public function testSubRouteDefault(){
-        var res = Golgi.run("passToSub/1/2/", {msg : 0}, dummy_req, api);
+        var res = Golgi.run("passToSub/1/2/", {msg : "0"}, dummy_req, api);
         assertEquals(res, "subDefault");
     }
 }

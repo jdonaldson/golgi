@@ -7,7 +7,7 @@ import golgi.meta.MetaGolgi;
  **/
 class Golgi{
 
-    public static function run<TReq, TRet>(path : Path, params : Any, request : TReq, api : Api<TReq,TRet,Dynamic>)  : TRet {
+    public static function run<TReq, TRet>(path : Path, params : Dynamic<String>, request : TReq, api : Api<TReq,TRet,Dynamic>)  : TRet {
 #if cs
         return _runcs(path, params, request, api);
 #else
@@ -17,7 +17,7 @@ class Golgi{
     }
 
 #if cs
-    inline public static function _runcs<TReq, TRet>(path : Path, params : Any, request : TReq, api : Api<TReq,TRet,Dynamic>)  : TRet {
+    inline public static function _runcs<TReq, TRet>(path : Path, params : Dynamic<String>, request : TReq, api : Api<TReq,TRet,Dynamic>)  : TRet {
         try{
             return api.__golgi__(path, params, request);
         } catch (e : Dynamic) {

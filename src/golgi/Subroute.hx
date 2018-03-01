@@ -1,5 +1,8 @@
 package golgi;
 
+typedef GolgiRouter<TReq,TRet> = {
+    function route( path : Array<String>, params : Dynamic, req : TReq) : TRet;
+}
 /**
   A class for containing leftover path parts from a partial route request.
  **/
@@ -15,7 +18,7 @@ class Subroute<TReq> {
     inline public function mapRequest<TReqA>(ctxf : TReq->TReqA) : Subroute<TReqA> {
         return new Subroute(this.parts, this.params, ctxf(this.request));
     }
-    inline public function run<TRet>(api : Api<TReq,TRet, Dynamic>) : TRet {
-        return api.__golgi__(this.parts, this.params, this.request);
+    inline public function run<TRet>(router : GolgiRouter<TReq,TRet>) : TRet {
+        return router.route(parts, params, request);
     }
 }

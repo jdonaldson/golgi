@@ -1,6 +1,8 @@
 package golgi.builder;
 import haxe.macro.Context;
 import haxe.macro.Expr;
+using haxe.macro.ComplexTypeTools;
+using haxe.macro.TypeTools;
 
 /**
   Steps for generating the golgi instance constructor
@@ -12,6 +14,9 @@ class Initializer {
         }
     }
 
+    public static function titleCase(name : String) : String{
+        return name.charAt(0).toUpperCase() + name.substr(1);
+    }
     static function route_arg_count(route : Route, path_default : Bool) : Int {
         return if (route.subroute){
             -1;
@@ -40,7 +45,7 @@ class Initializer {
             }
             return macro {
                 $length_check;
-                return this.$field_name($a{route.exprs});
+                return  untyped api.$field_name($a{route.exprs});
             }
     }
 
@@ -58,8 +63,8 @@ class Initializer {
         }
     }
 
-    public static function build(routes:Array<Route>){
-        var d = [];
+    public static function build(routes:Array<Route>, enum_name : String) : Array<Expr>{
+        var block = [];
         var observed_paths = new Map<String,Bool>();
         for (route in routes){
             var field_name=  route.route.name;
@@ -115,6 +120,10 @@ class Initializer {
             }
 
             for (path_name in paths){
+                var api_expr = {expr : EConst(CIdent(enum_name)), pos : Context.currentPos()};
+                var enum_name = titleCase(field_name);
+                var enum_expr = macro $api_expr.$enum_name;
+
                 if (observed_paths.exists(path_name)){
                     Context.error('Path name $path_name already exists in Api', route.route.pos);
                 } else {
@@ -122,38 +131,27 @@ class Initializer {
                 }
                 if (route.middleware.length > 0){
                     var func = mw_gen(field_name, route, path_default);
-                    d.push( macro  __golgi_dict__.set($v{path_name}, $func));
+                    block.push( macro  dict.set($v{path_name}, $func));
                 } else {
                     var route_args = route_arg_count(route, path_default);
                     var func = if (route.subroute){
                         macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
-                            return this.$field_name($a{route.exprs});
+                            return $enum_expr(api.$field_name($a{route.exprs}));
                         };
                     } else {
                         macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
                             if (parts.length > $v{route_args}) throw golgi.Error.TooManyValues;
-                            return this.$field_name($a{route.exprs});
+                            return $enum_expr(api.$field_name($a{route.exprs}));
                         };
                     }
-                    d.push( macro __golgi_dict__.set($v{path_name}, $func));
-
-
+                    block.push( macro dict.set($v{path_name}, $func));
 
                 }
             }
 
         };
 
-        var block = macro $b{d};
-
-        return {
-            name   : "__golgi_init__",
-            doc    : null,
-            meta   : [],
-            access : [AOverride],
-            kind   : FFun({args : [], ret : null , expr : block}),
-            pos    : Context.currentPos()
-        };
+        return block;
     }
 }
 

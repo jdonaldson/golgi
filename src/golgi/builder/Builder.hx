@@ -1,4 +1,5 @@
 package golgi.builder;
+import haxe.macro.Type;
 
 import golgi.Validate;
 import golgi.builder.Initializer.build;
@@ -7,6 +8,7 @@ import haxe.macro.Expr.Position;
 import haxe.macro.Expr;
 using haxe.macro.ComplexTypeTools;
 using haxe.macro.TypeTools;
+using Lambda;
 
 typedef ClassRef = Null<haxe.macro.Type.Ref<haxe.macro.Type.ClassType>>;
 typedef SuperRef = {t : ClassRef, params :Array<haxe.macro.Type>};
@@ -193,7 +195,7 @@ class Builder {
             else if (m.name == "_golgi_pass") return;
             else if (m.name == ":helper") return;
             var name = m.name;
-            var expr = macro __golgi_meta__.$name;
+            var expr = macro  untyped meta.$name;
             mw.push(expr.expr);
         }
         for (m in field_meta){
@@ -261,32 +263,116 @@ class Builder {
         };
     }
 
-    static function checkForInvalidPathMetadata(meta:
-            haxe.macro.Type.MetaAccess, pos : Position ){
+    static function checkForInvalidPathMetadata(meta: haxe.macro.Type.MetaAccess, pos : Position ){
         for (m in path_meta){
             if (meta.has(m)) {
                 Context.error('$m is path level metadata applicable for routes only', pos);
             }
         }
     }
+    static function defineGolgi(golgi_name : String, pack : Array<String>, routes : Array<Route>, enum_name : String, enum_type : ComplexType, treq : Type){
+        var type = Context.getLocalType().toComplexType();
+        var new_field = Initializer.build(routes, enum_name);
+        var meta_type = Context.getType("golgi.meta.MetaGolgi");
+        var constructor : Field = {
+            name : "new",
+            access : [APublic],
+            kind : FFun({
+                args : [{
+                    name : "api",
+                    type : type
+                },
+                {
+                    name : "meta",
+                    type : meta_type.toComplexType()
+                }
+                ],
+                ret : null,
+                expr : macro $b{new_field}
+            }),
+            pos : Context.currentPos()
+        };
+
+        var handler_macro = macro {
+            var path = "";
+            if (parts.length == 0) {
+                parts = [];
+            } else {
+                path = parts[0];
+            }
+            if (dict.exists(path)){
+                return dict.get(path)(parts,params,request);
+            } else {
+                throw golgi.Error.NotFound(parts[0]);
+            }
+        };
+
+        var router = {
+            name   : "route",
+            access : [APublic],
+            kind: FFun({args : [
+                {name:"parts",   type: TPath({name : "Array", pack:[], params : [TPType(TPath({name : "String", pack : []}))] })},
+                {name:"params",  type: TPath({name : "Dynamic", pack:[]})},
+                {name:"request", type: TPath({name : "Dynamic", pack:[]})}
+            ], ret : null, expr : handler_macro}),
+            pos: Context.currentPos()
+        };
+
+
+        var map_type = macro : Map<String, Array<String>->Dynamic->Dynamic->$enum_type>;
+        var dict_init = macro new Map<String, Array<String>->Dynamic->Dynamic->$enum_type>();
+
+        var dict : Field = {
+            name : "dict",
+            access : [],
+            kind : FVar(map_type, dict_init),
+            pos : Context.currentPos()
+        }
+
+        var api_definition : TypeDefinition = {
+            fields : [constructor,router, dict],
+            isExtern : false,
+            kind : TDClass(),
+            name : golgi_name,
+            pack : pack,
+            pos : Context.currentPos()
+        }
+
+        Context.defineType(api_definition);
+    }
+
+    static function defineRouteEnum(name : String, fields : Array<Field>, pack : Array<String>){
+        var definition : TypeDefinition = {
+            fields : fields,
+            isExtern : false,
+            kind : TDEnum,
+            name : name,
+            pack : pack,
+            pos : Context.currentPos()
+        }
+
+
+        Context.defineType(definition);
+    }
 
     /**
       The main build method for golgi api types
      **/
-    macro public static function build() : Array<Field>{
+    macro public static function build() : Array<Field> {
         var fields = Context.getBuildFields();
         var routes = [];
 
-        var cls = Context.getLocalClass();
+        var cls = Context.getLocalClass().get();
 
-        var meta = cls.get().meta;
+        var meta = cls.meta;
 
-        checkForInvalidPathMetadata(meta,cls.get().pos);
+        checkForInvalidPathMetadata(meta,cls.pos);
 
-        var glg = cls.get().superClass;
+        var glg = cls.superClass;
         var treq = glg.params[0];
-        var tret = glg.params[1];
-        var tmet = glg.params[2];
+        var tmet = glg.params[1];
+
+        var enum_fields = [];
 
 
         // capture routes
@@ -297,26 +383,82 @@ class Builder {
                     var tfnret = fn.ret.toType();
                     if (f.access.indexOf(APublic) == -1) continue;
                     else if (f.access.indexOf(AStatic) != -1) continue;
-                    else if(fn.ret == null || !Context.unify(tret, tfnret)){
-                        var ret = tret.toString();
-                        Context.error('Function "${f.name}" violates the golgi.API : Every route function in this class must have a declared return type of "$ret".', fn.expr.pos);
-                    }
                     var route_fn = processFFun(f, fn, treq, meta.get());
                     routes.push(route_fn);
+                    enum_fields.push({
+                        name : Initializer.titleCase(f.name),
+                        pos : Context.currentPos(),
+                        kind : FFun({
+                            args : [{
+                                name : "api",
+                                type : tfnret.toComplexType()
+                            }],
+                            expr : null,
+                            ret : null
+                        })
+
+                    });
                 }
                 default : continue;
             }
         }
 
 
-        var tret_complex = tret.toComplexType();
+        var enum_name = cls.name + "Route";
+
+        defineRouteEnum(enum_name, enum_fields, cls.pack);
+        var enum_type = Context.getType(enum_name).toComplexType();
 
 
-        var dispatch_func = Dispatcher.build(tret_complex);
-        fields.push(dispatch_func);
+        var metagolgi_name = cls.name + "MetaGolgi";
+        var superClass : TypePath = {
+            name : "MetaGolgi",
+            pack : ["golgi", "meta"],
+            params : [TPType(treq.toComplexType()), TPType(enum_type)]
+        };
+        var definition : TypeDefinition = {
+            fields : [],
+            isExtern : false,
+            kind : TDClass(superClass),
+            name : metagolgi_name,
+            pack : cls.pack,
+            pos : Context.currentPos()
+        }
+        Context.defineType(definition);
 
-        var new_field = Initializer.build(routes);
-        fields.push(new_field);
+        var meta_type = Context.getType("golgi.meta.MetaGolgi").toComplexType();
+
+
+        var golgi_name = cls.name + "Golgi";
+        defineGolgi(golgi_name, cls.pack, routes, enum_name, enum_type, treq);
+
+
+
+
+        var golgi : TypePath= {
+            name : golgi_name,
+            pack : cls.pack
+
+        }
+        var golgi_type = Context.getType(golgi_name).toComplexType();
+        var builder : Field = {
+            name : "golgi",
+            access : [APublic, AStatic],
+            kind : FFun({
+                args : [{
+                    name : "api",
+                    type : Context.getLocalType().toComplexType()
+                },{
+                    name : "meta",
+                    type : meta_type,
+                    opt : true
+                }],
+                ret : golgi_type,
+                expr : macro return new $golgi(api,meta)
+            }),
+            pos : Context.currentPos()
+        }
+        fields.push(builder);
 
         return fields;
     }

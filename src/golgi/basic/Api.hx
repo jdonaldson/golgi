@@ -5,9 +5,9 @@ import golgi.meta.MetaGolgi;
   A basic version of the Golgi Api.  It does not accept a MetaGolgi argument.
  **/
 @:allow(golgi.Subroute, golgi.Golgi)
-class Api<TReq,TRet> extends golgi.Api<TReq,TRet,MetaGolgi<TReq,TRet>>{
+class Api<TReq> extends golgi.Api<TReq,MetaGolgi<TReq>>{
     public function new(){
-        super(new MetaGolgi<TReq,TRet>());
+        super(new MetaGolgi<TReq>());
     }
 }
 

@@ -5,12 +5,14 @@ package golgi.meta;
  **/
 @:autoBuild(golgi.builder.MetaBuilder.build())
 class MetaGolgi<TReq, TRet> {
+    var req : TReq;
+    var ret : TRet;
     public function new(){}
     /**
       This is the pass through interface, it will not generate a middleware call
       in the resulting route table.
     **/
-    public function _golgi_pass(req: TReq, next : TReq->TRet) : TRet{
+    public function _golgi_pass(req: TReq, next : TReq->TRet) : TRet {
         return next(req);
     }
 }

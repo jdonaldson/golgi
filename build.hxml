@@ -1,23 +1,10 @@
-# -main Main
-# -python bin/main.py
-# -cp ../hx3compat/std/
-# -cp src
-# -cp test
-# -cmd python3 bin/main.py
-
-# -main Generate
-# -cp src
-# -cp tests
-# -lua bin/gen.lua
-# -cmd lua bin/gen.lua
-
-# --next
-
--cp ../hx3compat/std/
--main Demo
 -cp src
 -cp tests
--lua bin/demo.lua
--cmd lua bin/demo.lua
+-main RunTests
+-lua bin/out.lua
+-lib hx3compat
+-lib travix
+-cmd lua bin/out.lua
+-D eval-stack
 
 

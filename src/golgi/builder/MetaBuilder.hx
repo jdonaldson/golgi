@@ -28,13 +28,16 @@ class MetaBuilder {
         for (f in fields){
             if (f.access.indexOf(AStatic) != -1) continue;
             if (f.access.indexOf(APublic) == -1) continue;
+            if (f.name == "new") continue;
             var pos = f.pos;
             switch(f.kind){
                 case FFun(fn)  : {
                     var arg1= fn.args[0];
                     var arg2 = fn.args[1];
                     var tfnret = fn.ret.toType();
-                    if (fn.args.length != 2) error_msg(treq, tret, pos);
+                    if (fn.args.length != 2) {
+                        error_msg(treq, tret, pos);
+                    }
                     if (f.access.indexOf(APublic) == -1) continue;
                     else if (f.access.indexOf(AStatic) != -1) continue;
                     else if(fn.ret == null || !Context.unify(tret, tfnret)){
@@ -52,12 +55,16 @@ class MetaBuilder {
                                     error_msg(treq, tret,pos);
                                 }
                             }
-                            default : error_msg(treq, tret,pos);
+                            default : {
+                                error_msg(treq, tret,pos);
+                            }
                         }
 
                     }
                 }
-                default : error_msg(treq,tret,pos);
+                default : {
+                    error_msg(treq,tret,pos);
+                }
             }
         }
 

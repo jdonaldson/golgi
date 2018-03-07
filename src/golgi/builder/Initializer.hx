@@ -122,7 +122,7 @@ class Initializer {
             for (path_name in paths){
                 var api_expr = {expr : EConst(CIdent(enum_name)), pos : Context.currentPos()};
                 var enum_name = titleCase(field_name);
-                var enum_expr = macro $api_expr.$enum_name;
+                var enum_expr = macro untyped $api_expr.$enum_name;
 
                 if (observed_paths.exists(path_name)){
                     Context.error('Path name $path_name already exists in Api', route.route.pos);

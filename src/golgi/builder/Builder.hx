@@ -10,9 +10,6 @@ using haxe.macro.ComplexTypeTools;
 using haxe.macro.TypeTools;
 using Lambda;
 
-typedef ClassRef = Null<haxe.macro.Type.Ref<haxe.macro.Type.ClassType>>;
-typedef SuperRef = {t : ClassRef, params :Array<haxe.macro.Type>};
-
 
 #if macro
 class Builder {
@@ -385,19 +382,6 @@ class Builder {
                     else if (f.access.indexOf(AStatic) != -1) continue;
                     var route_fn = processFFun(f, fn, treq, meta.get());
                     routes.push(route_fn);
-                    enum_fields.push({
-                        name : Initializer.titleCase(f.name),
-                        pos : Context.currentPos(),
-                        kind : FFun({
-                            args : [{
-                                name : "api",
-                                type : tfnret.toComplexType()
-                            }],
-                            expr : null,
-                            ret : null
-                        })
-
-                    });
                 }
                 default : continue;
             }
@@ -406,15 +390,23 @@ class Builder {
 
         var enum_name = cls.name + "Route";
 
-        defineRouteEnum(enum_name, enum_fields, cls.pack);
-        var enum_type = Context.getType(enum_name).toComplexType();
+        // var enum_type = Context.getType("TestApiRoute");
+
+
+
+        var enum_type : haxe.macro.Type;
+        var pos = Context.currentPos();
+        try{
+          enum_type = Context.getType(cls.name + "Route");
+        }catch(e:Dynamic){
+            Context.error('Type ${cls.name}Route does not exist.  Please define it as : @:build(golgi.builder.Builder.buildEnum()) enum ${cls.name}Route',pos); } var enum_ctype = enum_type.toComplexType();
 
 
         var metagolgi_name = cls.name + "MetaGolgi";
         var superClass : TypePath = {
             name : "MetaGolgi",
             pack : ["golgi", "meta"],
-            params : [TPType(treq.toComplexType()), TPType(enum_type)]
+            params : [TPType(treq.toComplexType()), TPType(enum_ctype)]
         };
         var definition : TypeDefinition = {
             fields : [],
@@ -430,7 +422,7 @@ class Builder {
 
 
         var golgi_name = cls.name + "Golgi";
-        defineGolgi(golgi_name, cls.pack, routes, enum_name, enum_type, treq);
+        defineGolgi(golgi_name, cls.pack, routes, enum_name, enum_ctype, treq);
 
 
 
@@ -461,6 +453,54 @@ class Builder {
         fields.push(builder);
 
         return fields;
+    }
+
+    public static function buildEnum() : Array<Field> {
+        var api_name = Context.getLocalModule();
+        var reg = ~/Route$/;
+        trace(api_name + " is the value for api_name");
+
+        var class_name = ~/Route$/.replace(api_name, "");
+        var class_type = Context.getType(class_name);
+        var class_inst = class_type.getClass();
+
+        var fields = class_inst.fields.get();
+        var enum_fields = [];
+
+        // capture routes
+        for (f in fields){
+            if (f.name == "new") continue;
+
+            switch(f.kind){
+                case FMethod(fn)  : {
+                    var tfnret = f.type;
+                    var wa = tfnret.toComplexType();
+                    var ret = switch(wa){
+                        case TFunction(_,ret) : ret;
+                        default : {
+                            Context.error('Method type should be function', Context.currentPos());
+                            null;
+                        }
+                    }
+                    if (!f.isPublic) continue;
+                    enum_fields.push({
+                        name : Initializer.titleCase(f.name),
+                        pos : Context.currentPos(),
+                        kind : FFun({
+                            args : [{
+                                name : "result",
+                                type : ret
+                            }],
+                            expr : null,
+                            ret : null
+                        })
+                    });
+                }
+                default : continue;
+            }
+        }
+
+        return enum_fields;
     }
 }
 #end

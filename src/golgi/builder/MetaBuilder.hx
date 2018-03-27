@@ -2,7 +2,7 @@ package golgi.builder;
 
 import haxe.macro.Expr;
 import haxe.macro.Context;
-import golgi.builder.Builder;
+import golgi.Builder;
 using haxe.macro.ComplexTypeTools;
 using haxe.macro.TypeTools;
 

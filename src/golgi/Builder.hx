@@ -1,4 +1,4 @@
-package golgi.builder;
+package golgi;
 import haxe.macro.Type;
 
 import golgi.Validate;
@@ -6,6 +6,7 @@ import golgi.builder.Initializer.build;
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
 import haxe.macro.Expr;
+import golgi.builder.*;
 using haxe.macro.ComplexTypeTools;
 using haxe.macro.TypeTools;
 using Lambda;
@@ -119,19 +120,18 @@ class Builder {
       Process the args, wrapping them in validator and constructor expr where
       appropriate.
      **/
-    static function processArg(arg : FunctionArg, field : Field, idx : Int, check: ParamConfig){
+    static function processArg(arg : FunctionArg, pos : Position, args : Array<FunctionArg>, idx : Int, check: ParamConfig){
         var path_idx = idx + 1;
-        var dispatch_slice = check.fn.args.length;
+        var dispatch_slice = args.length;
         if (check.params) dispatch_slice--;
         if (check.request) dispatch_slice--;
         if (check.subroute) dispatch_slice++;
         var path = macro parts[$v{path_idx++}];
-        var pos = check.fn.expr.pos;
 
         return validateArg({
             name           : arg.name,
             expr           : path,
-            field_pos      : field.pos,
+            field_pos      : pos,
             type           : arg.type,
             optional       : arg.opt,
             param          : false,
@@ -146,12 +146,12 @@ class Builder {
       Generate param configuration info for the current function.  This includes
       info on whether special subroute, params, requests, etc. are present
      **/
-    static function paramConfig(fn:Function) : ParamConfig {
+    static function paramConfig(args : Array<FunctionArg>) : ParamConfig {
         var subroute = false;
         var params = false;
         var request = false;
 
-        for (arg in fn.args){
+        for (arg in args){
             switch(arg.name){
                 case "params"   : params = true;
                 case "subroute" : subroute = true;
@@ -160,7 +160,7 @@ class Builder {
             }
         }
 
-        return {fn : fn, subroute : subroute, params : params, request : request};
+        return {subroute : subroute, params : params, request : request};
     }
 
 
@@ -192,15 +192,17 @@ class Builder {
             else if (m.name == "_golgi_pass") return;
             else if (m.name == ":helper") return;
             var name = m.name;
-            var expr = macro  untyped meta.$name;
+            var expr = macro meta.$name;
             mw.push(expr.expr);
         }
         for (m in field_meta){
             add_meta(m, mw);
         }
 
-        for (m in class_meta){
-            add_meta(m, mw);
+        if (class_meta != null){
+            for (m in class_meta){
+                add_meta(m, mw);
+            }
         }
         return mw;
     }
@@ -210,24 +212,23 @@ class Builder {
       Process the  FFun function, ensuring that special named arguments are the
       right type, and in the right order
      **/
-    static function processFFun(f : Field, fn : Function, treq  : haxe.macro.Type , class_meta : Metadata) : Route {
+    static function processFFun(name : String, meta : Metadata, pos : Position, args : Array<FunctionArg>, mw : Array<String>, treq  : haxe.macro.Type , class_meta : Metadata) : Route {
         var path_arg = 0;
         var path_idx = 0;
-        var status = paramConfig(fn);
+        var status = paramConfig(args);
         var exprs = [];
         var map = new Map<String, Int>();
-        var pos : Int;
-        for (i in 0...fn.args.length){
-            var arg = fn.args[i];
+        for (i in 0...args.length){
+            var arg = args[i];
             switch(arg.name){
                 case "subroute" : {
                     if (!Context.unify(Context.getType("golgi.Subroute"), arg.type.toType())){
-                        Context.error("subroute argument must be of golgi.Subroute type", fn.expr.pos);
+                        Context.error("subroute argument must be of golgi.Subroute type", pos);
                     }
                 }
                 case "request" : {
                     if (!Context.unify(arg.type.toType(), treq)){
-                        Context.error('request argument must be of ${treq} type', fn.expr.pos);
+                        Context.error('request argument must be of ${treq} type', pos);
                     }
                 }
                 case "params" : {
@@ -237,22 +238,23 @@ class Builder {
                         default : false;
                     }
                     if (!anon){
-                        Context.error('params argument must be of Anonymous type', fn.expr.pos);
+                        Context.error('params argument must be of Anonymous type', pos);
                     }
                 }
             }
 
             map.set(arg.name, i);
-            var arg_expr = processArg(arg, f, i, status);
+            var arg_expr = processArg(arg, pos, args, i, status);
             exprs.push(arg_expr);
         }
-        ensureOrder(map, ["params", "request", "subroute"], fn.expr.pos);
+        ensureOrder(map, ["params", "request", "subroute"], pos);
 
-        var mw = genFieldMiddleware(f.meta, class_meta);
+        var mw = genFieldMiddleware(meta, class_meta);
 
         return {
-            route      : f,
-            ffun       : fn,
+            name       : name,
+            meta       : meta,
+            pos        : pos,
             subroute   : status.subroute,
             params     : status.params,
             exprs      : exprs,
@@ -267,28 +269,155 @@ class Builder {
             }
         }
     }
-    static function defineGolgi(golgi_name : String, pack : Array<String>, routes : Array<Route>, enum_name : String, enum_type : ComplexType, treq : Type){
-        var type = Context.getLocalType().toComplexType();
-        var new_field = Initializer.build(routes, enum_name);
-        var meta_type = Context.getType("golgi.meta.MetaGolgi");
-        var constructor : Field = {
-            name : "new",
-            access : [APublic],
-            kind : FFun({
-                args : [{
-                    name : "api",
-                    type : type
-                },
-                {
-                    name : "meta",
-                    type : meta_type.toComplexType()
+
+
+    static function getRequestType(cls : ClassType) : Type {
+        var treq : Type = null;
+        if (cls.params.length > 0){
+            treq = cls.params[0].t;
+        }else {
+            var glg = cls.superClass;
+            while(glg.params.length <= 0){
+                glg = glg.t.get().superClass;
+            }
+            treq = glg.params[0];
+        }
+        return treq;
+    }
+
+    /**
+      The main build method for golgi api types
+     **/
+    macro public static function golgi() : Array<Field> {
+        var fields = Context.getBuildFields();
+        var cls = Context.getLocalClass().get();
+
+
+        var meta = cls.meta;
+
+        checkForInvalidPathMetadata(meta,cls.pos);
+
+        var treq = getRequestType(cls);
+
+        var routes = fields.flatMap(function(f){
+            return f.name == "new" ? [] :
+            switch(f.kind){
+                case FFun(fn)  : {
+                    var mw = [for (f in f.meta) f.name];
+                    var tfnret = fn.ret.toType();
+                    if (f.access.indexOf(APublic) == -1) [];
+                    else if (f.access.indexOf(AStatic) != -1) [];
+                    var meta =  [for (f in f.meta) f.name];
+                    var route_fn = processFFun(f.name, f.meta, f.pos, fn.args, meta, treq, null);
+                    [route_fn];
                 }
-                ],
-                ret : null,
-                expr : macro $b{new_field}
-            }),
-            pos : Context.currentPos()
-        };
+                default : [];
+            }
+        });
+
+        return fields;
+    }
+
+
+    static function pos() {
+        return Context.currentPos();
+    }
+    static function getType(arg : Expr) {
+        var class_name = switch(arg){
+            case {expr : EConst(CIdent(str) | CString(str))} : str;
+            default : {
+                Context.error("Argument should be a Class name", pos());
+                null;
+            }
+        }
+        return Context.getType(class_name);
+    }
+    static function getClass(arg : Expr) {
+        var type = getType(arg);
+        var cls = type.getClass();
+        if (cls == null){
+            Context.error('Class ${type.getName()} does not exist', pos());
+        }
+        return cls;
+    }
+    static function getEnum(arg : Expr) {
+        var type = getType(arg);
+        var enm = type.getEnum();
+        if (enm == null){
+            Context.error('Enum ${type.getName()} does not exist', pos());
+        }
+        return enm;
+
+    };
+
+    static function buildGolgi(?api : Expr, ?route : Expr, ?meta : Expr) : Array<Field> {
+        var cls = Context.getLocalClass().get();
+
+        var api_class = getClass(api);
+        var fields = api_class.fields.get();
+
+        var meta_class = getClass(meta);
+        var meta_type = Context.getType(meta_class.name);
+
+
+        var route_enum = getEnum(route);
+
+
+        var routes = [];
+
+        var param : Type;
+        var sup = api_class.superClass;
+        if (api_class.params.length > 0){
+            param = api_class.params[0].t;
+        } else {
+            while (sup != null){
+                if (sup.params.length > 0){
+                    param = sup.params[0];
+                    break;
+                }
+                sup = sup.t.get().superClass;
+            }
+            if (param == null){
+                Context.error("No suitable request parameter found", pos());
+            }
+        }
+
+
+        var treq = param;
+
+
+        var api_type = Context.getType(api_class.name);
+
+        var enum_ctype = Context.getType(route_enum.name).toComplexType();
+
+        var api_meta = api_type.getClass().meta.get();
+
+
+        for (f in fields){
+            if (f.name == "new") continue;
+            if (!f.isPublic) continue;
+            switch(f.kind){
+                case FMethod(MethNormal) : {
+                    switch(f.type) {
+                        case TFun(args, t) : {
+                            var tfnret = t;
+                            var fn_args = [for (a in  args) {
+                                meta : null,
+                                name : a.name,
+                                opt : a.opt,
+                                type : a.t.toComplexType(),
+                                value : null
+                            }];
+                            var mw = [for (m in f.meta.get()) m.name];
+                            var route_fn = processFFun(f.name, f.meta.get(), f.pos, fn_args, mw, treq, api_meta);
+                            routes.push(route_fn);
+                        }
+                        default : Context.error("Illegal api field type", pos());
+                    }
+                }
+                default : continue;
+            }
+        }
 
         var handler_macro = macro {
             var path = "";
@@ -308,16 +437,36 @@ class Builder {
             name   : "route",
             access : [APublic],
             kind: FFun({args : [
-                {name:"parts",   type: TPath({name : "Array", pack:[], params : [TPType(TPath({name : "String", pack : []}))] })},
+                {name:"parts",   type: TPath({name : "Path", pack:["golgi"]})},
                 {name:"params",  type: TPath({name : "Dynamic", pack:[]})},
                 {name:"request", type: TPath({name : "Dynamic", pack:[]})}
-            ], ret : null, expr : handler_macro}),
+            ], ret : enum_ctype, expr : handler_macro}),
             pos: Context.currentPos()
         };
 
 
-        var map_type = macro : Map<String, Array<String>->Dynamic->Dynamic->$enum_type>;
-        var dict_init = macro new Map<String, Array<String>->Dynamic->Dynamic->$enum_type>();
+        var new_field = Initializer.build(routes, route_enum.name);
+
+        var constructor : Field = {
+            name : "new",
+            access : [APublic],
+            kind : FFun({
+                args : [{
+                    name : "api",
+                    type : api_type.toComplexType(),
+                },
+                {
+                    name : "meta",
+                    type : meta_type.toComplexType(),
+                    opt  : true
+                }],
+                ret : null,
+                expr : macro $b{new_field}
+            }),
+            pos : Context.currentPos()
+        };
+        var map_type = macro : Map<String, Array<String>->Dynamic->Dynamic->$enum_ctype>;
+        var dict_init = macro new Map<String, Array<String>->Dynamic->Dynamic->$enum_ctype>();
 
         var dict : Field = {
             name : "dict",
@@ -326,140 +475,29 @@ class Builder {
             pos : Context.currentPos()
         }
 
-        var api_definition : TypeDefinition = {
-            fields : [constructor,router, dict],
-            isExtern : false,
-            kind : TDClass(),
-            name : golgi_name,
-            pack : pack,
+        var api : Field = {
+            name : "api",
+            access : [],
+            kind : FVar(api_type.toComplexType(), null),
             pos : Context.currentPos()
         }
 
-        Context.defineType(api_definition);
+        var meta : Field = {
+            name : "meta",
+            access : [],
+            kind : FVar(meta_type.toComplexType(), null),
+            pos : Context.currentPos()
+        }
+
+
+
+        return [constructor, router, dict, api, meta];
+
     }
 
-    static function defineRouteEnum(name : String, fields : Array<Field>, pack : Array<String>){
-        var definition : TypeDefinition = {
-            fields : fields,
-            isExtern : false,
-            kind : TDEnum,
-            name : name,
-            pack : pack,
-            pos : Context.currentPos()
-        }
-
-
-        Context.defineType(definition);
-    }
-
-    /**
-      The main build method for golgi api types
-     **/
-    macro public static function build() : Array<Field> {
-        var fields = Context.getBuildFields();
-        var routes = [];
-
-        var cls = Context.getLocalClass().get();
-
-        var meta = cls.meta;
-
-        checkForInvalidPathMetadata(meta,cls.pos);
-
-        var glg = cls.superClass;
-        var treq = glg.params[0];
-        var tmet = glg.params[1];
-
-        var enum_fields = [];
-
-
-        // capture routes
-        for (f in fields){
-            if (f.name == "new") continue;
-            switch(f.kind){
-                case FFun(fn)  : {
-                    var tfnret = fn.ret.toType();
-                    if (f.access.indexOf(APublic) == -1) continue;
-                    else if (f.access.indexOf(AStatic) != -1) continue;
-                    var route_fn = processFFun(f, fn, treq, meta.get());
-                    routes.push(route_fn);
-                }
-                default : continue;
-            }
-        }
-
-
-        var enum_name = cls.name + "Route";
-
-        // var enum_type = Context.getType("TestApiRoute");
-
-
-
-        var enum_type : haxe.macro.Type;
-        var pos = Context.currentPos();
-        try{
-          enum_type = Context.getType(cls.name + "Route");
-        }catch(e:Dynamic){
-            Context.error('Type ${cls.name}Route does not exist.  Please define it as : @:build(golgi.builder.Builder.buildEnum()) enum ${cls.name}Route',pos); } var enum_ctype = enum_type.toComplexType();
-
-
-        var metagolgi_name = cls.name + "MetaGolgi";
-        var superClass : TypePath = {
-            name : "MetaGolgi",
-            pack : ["golgi", "meta"],
-            params : [TPType(treq.toComplexType()), TPType(enum_ctype)]
-        };
-        var definition : TypeDefinition = {
-            fields : [],
-            isExtern : false,
-            kind : TDClass(superClass),
-            name : metagolgi_name,
-            pack : cls.pack,
-            pos : Context.currentPos()
-        }
-        Context.defineType(definition);
-
-        var meta_type = Context.getType("golgi.meta.MetaGolgi").toComplexType();
-
-
-        var golgi_name = cls.name + "Golgi";
-        defineGolgi(golgi_name, cls.pack, routes, enum_name, enum_ctype, treq);
-
-
-
-
-        var golgi : TypePath= {
-            name : golgi_name,
-            pack : cls.pack
-
-        }
-        var golgi_type = Context.getType(golgi_name).toComplexType();
-        var builder : Field = {
-            name : "golgi",
-            access : [APublic, AStatic],
-            kind : FFun({
-                args : [{
-                    name : "api",
-                    type : Context.getLocalType().toComplexType()
-                },{
-                    name : "meta",
-                    type : meta_type,
-                    opt : true
-                }],
-                ret : golgi_type,
-                expr : macro return new $golgi(api,meta)
-            }),
-            pos : Context.currentPos()
-        }
-        fields.push(builder);
-
-        return fields;
-    }
-
-    public static function buildEnum() : Array<Field> {
+    public static function buildRoute(?api : Expr) : Array<Field> {
         var api_name = Context.getLocalModule();
         var reg = ~/Route$/;
-        trace(api_name + " is the value for api_name");
-
         var class_name = ~/Route$/.replace(api_name, "");
         var class_type = Context.getType(class_name);
         var class_inst = class_type.getClass();
@@ -500,7 +538,10 @@ class Builder {
             }
         }
 
-        return enum_fields;
+
+
+
+        return enum_fields.concat(Context.getBuildFields());
     }
 }
 #end
@@ -509,7 +550,6 @@ typedef ParamConfig = {
     subroute : Bool,
     params   : Bool,
     request  : Bool,
-    fn       : Function
 }
 
 typedef GolgiArg = {
@@ -523,4 +563,10 @@ typedef GolgiArg = {
     dispatch_slice : Int,
     leftovers      : GolgiArg->Expr
 }
+
+typedef Arg = {
+    name : String,
+    type : Type
+}
+
 

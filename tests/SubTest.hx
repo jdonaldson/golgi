@@ -1,8 +1,15 @@
 package;
 import golgi.Api;
+import foo.TestMeta;
 class SubTest extends Api<Req> {
+    var id : Int;
+    override public function new(_id : Int){
+        this.id = _id;
+        super();
+    }
+
     public function sub() : String {
-        return 'sub';
+        return 'sub_' + id;
     }
 
     @:route('3')
@@ -15,3 +22,10 @@ class SubTest extends Api<Req> {
         return 'subDefault';
     }
 }
+
+
+@:build(golgi.Builder.buildRoute())
+enum SubTestRoute {}
+
+@:build(golgi.Builder.buildGolgi(SubTest, SubTestRoute, TestMeta))
+class SubTestGolgi{}

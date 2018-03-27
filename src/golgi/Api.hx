@@ -9,13 +9,10 @@ typedef TMap<TReq,TRet> = #if lua TableMap<TReq,TRet> #else Map<TReq,TRet> #end
   to the instance.
  **/
 @:allow(golgi.Subroute)
-@:autoBuild(golgi.builder.Builder.build())
+@:autoBuild(golgi.Builder.golgi())
 class Api<TReq> {
-    // public var  __meta__(default,null) : TMeta;
-
-    public function new(){
-        // __meta__ = meta;
-    }
+    var _treq : TReq;
+    public function new(){ }
 }
 
 #if lua

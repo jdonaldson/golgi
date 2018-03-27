@@ -43,9 +43,11 @@ class Initializer {
             var length_check = route.subroute ? null : macro {
                 if (parts.length > $v{route_args}) throw golgi.Error.TooManyValues;
             }
+            var title = titleCase(field_name);
+            var enum_name = { expr : EConst(CIdent(title)), pos : route.pos};
             return macro {
                 $length_check;
-                return  untyped api.$field_name($a{route.exprs});
+                return ${enum_name}(api.$field_name($a{route.exprs}));
             }
     }
 
@@ -67,21 +69,21 @@ class Initializer {
         var block = [];
         var observed_paths = new Map<String,Bool>();
         for (route in routes){
-            var field_name=  route.route.name;
+            var field_name=  route.name;
             var paths = [field_name];
             var path_altered = false;
 
             var path_default = false;
-            for (m in route.route.meta){
+            for (m in route.meta){
                 switch(m.name){
                     case ":default" : {
-                        alteration_check(path_altered,route.route.pos);
+                        alteration_check(path_altered,route.pos);
                         paths = [""];
                         path_altered = true;
                         path_default = true;
                     };
                     case ":alias" : {
-                        alteration_check(path_altered, route.route.pos);
+                        alteration_check(path_altered, route.pos);
                         var alias_paths = [];
                         for (p in m.params){
                             switch(p.expr){
@@ -89,7 +91,7 @@ class Initializer {
                                     alias_paths.push(str);
                                 }
                                 default : {
-                                    Context.error("Alias paths must be anonymous strings", route.route.pos);
+                                    Context.error("Alias paths must be anonymous strings", route.pos);
                                 }
 
                             }
@@ -98,7 +100,7 @@ class Initializer {
                         path_altered = true;
                     }
                     case ":route" : {
-                        alteration_check(path_altered, route.route.pos);
+                        alteration_check(path_altered, route.pos);
                         var route_paths = [];
                         for (p in m.params){
                             switch(p.expr){
@@ -106,7 +108,7 @@ class Initializer {
                                     route_paths.push(str);
                                 }
                                 default : {
-                                    Context.error("Alias paths must be anonymous strings", route.route.pos);
+                                    Context.error("Alias paths must be anonymous strings", route.pos);
                                 }
 
                             }
@@ -122,10 +124,10 @@ class Initializer {
             for (path_name in paths){
                 var api_expr = {expr : EConst(CIdent(enum_name)), pos : Context.currentPos()};
                 var enum_name = titleCase(field_name);
-                var enum_expr = macro untyped $api_expr.$enum_name;
+                var enum_expr = macro $api_expr.$enum_name;
 
                 if (observed_paths.exists(path_name)){
-                    Context.error('Path name $path_name already exists in Api', route.route.pos);
+                    Context.error('Path name $path_name already exists in Api', route.pos);
                 } else {
                     observed_paths.set(path_name, true);
                 }

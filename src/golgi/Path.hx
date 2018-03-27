@@ -5,9 +5,18 @@ package golgi;
   use a pre-defined tokenization for the path.
  **/
 abstract Path(Array<String>){
+    public var length (get, never) : Int;
+    function get_length() : Int {
+        return this.length;
+    }
     function new(parts : Array<String>){
         this = parts;
     }
+    @:arrayAccess
+    public inline function get(key:Int) {
+        return this[key];
+    }
+
     @:from public static function fromString(str:String){
         if (str.charAt(0)== "/"){
             return new Path(str.substring(1).split("/"));

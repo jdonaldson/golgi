@@ -1,10 +1,13 @@
 package golgi.builder;
 import haxe.macro.Expr;
+import haxe.macro.Type;
 typedef Route = {
-    route      : Field,
-    ffun       : Function,
+    name       : String,
+    meta       : Metadata,
+    pos        : Position,
     params     : Bool,
     subroute   : Bool,
     exprs      : Array<Expr>,
     middleware : Array<ExprDef>,
 }
+

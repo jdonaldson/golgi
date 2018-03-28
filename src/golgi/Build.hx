@@ -120,7 +120,7 @@ class Build {
       Process the args, wrapping them in validator and constructor expr where
       appropriate.
      **/
-    static function processArg(arg : FunctionArg, pos : Position, args : Array<FunctionArg>, idx : Int, check: ParamConfig){
+    static function processArg(arg : TFunArg, pos : Position, args : Array<TFunArg>, idx : Int, check: ParamConfig){
         var path_idx = idx + 1;
         var dispatch_slice = args.length;
         if (check.params) dispatch_slice--;
@@ -132,7 +132,7 @@ class Build {
             name           : arg.name,
             expr           : path,
             field_pos      : pos,
-            type           : arg.type,
+            type           : arg.t.toComplexType(),
             optional       : arg.opt,
             param          : false,
             reserved       : Build.reserved,
@@ -146,7 +146,7 @@ class Build {
       Generate param configuration info for the current function.  This includes
       info on whether special subroute, params, requests, etc. are present
      **/
-    static function paramConfig(args : Array<FunctionArg>) : ParamConfig {
+    static function paramConfig(args : Array<TFunArg>) : ParamConfig {
         var subroute = false;
         var params = false;
         var request = false;
@@ -167,7 +167,7 @@ class Build {
     /**
       Make sure that the special named arguments happen in the right order
      **/
-    static function ensureOrder(m:Map<String,Int>, names : Array<String>, pos : Position){
+    static function ensureOrder(m:Map<String,Int>, names : Array<String>, pos : Position) : Void {
         for (i in 0...names.length){
             var name = names[i];
             for (j in (i+1)...names.length){
@@ -181,11 +181,45 @@ class Build {
         }
     }
 
+    static function checkArguments(fn : Function, treq : Type) : Void {
+        var args = fn.args;
+        var pos = fn.expr.pos;
+
+        var map = new Map<String, Int>();
+        for (i in 0...args.length){
+            var arg = args[i];
+            switch(arg.name){
+                case "subroute" : {
+                    if (!Context.unify(Context.getType("golgi.Subroute"), arg.type.toType())){
+                        Context.error("subroute argument must be of golgi.Subroute type", pos);
+                    }
+                }
+                case "request" : {
+                    if (!Context.unify(arg.type.toType(), treq)){
+                        Context.error('request argument must be of ${treq} type', pos);
+                    }
+                }
+                case "params" : {
+                    var t = Context.follow(arg.type.toType());
+                    var anon = switch(t){
+                        case TAnonymous(_)  : true;
+                        default : false;
+                    }
+                    if (!anon){
+                        Context.error('params argument must be of Anonymous type', pos);
+                    }
+                }
+            }
+            map.set(arg.name, i);
+        }
+        ensureOrder(map, ["params", "request", "subroute"], pos);
+    }
+
     /**
       Generate a series of expresssions that instantiates the route's middleware
       handlers.
      **/
-    static function genFieldMiddleware(field_meta : Metadata, class_meta : Metadata) : Array<ExprDef>{
+    public static function genFieldMiddleware(field_meta : Metadata, class_meta : Metadata) : Array<ExprDef>{
         var mw = [];
         var add_meta = function(m : MetadataEntry, mw : Array<ExprDef>){
             if (!~/^[a-zA-Z]\w*/.match(m.name)) return;
@@ -212,48 +246,24 @@ class Build {
       Process the  function information, ensuring that special named arguments
       are the right type, and in the right order
      **/
-    static function processFFun(name : String, meta : Metadata, pos : Position, args : Array<FunctionArg>, mw : Array<String>, treq  : haxe.macro.Type , class_meta : Metadata) : Route {
+    static function processClassField(f : ClassField , args : Array<TFunArg>, treq  : haxe.macro.Type , class_meta : Metadata) : Route {
         var path_arg = 0;
         var path_idx = 0;
         var status = paramConfig(args);
         var exprs = [];
         var map = new Map<String, Int>();
+        var pos = f.pos;
         for (i in 0...args.length){
             var arg = args[i];
-            switch(arg.name){
-                case "subroute" : {
-                    if (!Context.unify(Context.getType("golgi.Subroute"), arg.type.toType())){
-                        Context.error("subroute argument must be of golgi.Subroute type", pos);
-                    }
-                }
-                case "request" : {
-                    if (!Context.unify(arg.type.toType(), treq)){
-                        Context.error('request argument must be of ${treq} type', pos);
-                    }
-                }
-                case "params" : {
-                    var t = Context.follow(arg.type.toType());
-                    var anon = switch(t){
-                        case TAnonymous(_)  : true;
-                        default : false;
-                    }
-                    if (!anon){
-                        Context.error('params argument must be of Anonymous type', pos);
-                    }
-                }
-            }
-
-            map.set(arg.name, i);
             var arg_expr = processArg(arg, pos, args, i, status);
             exprs.push(arg_expr);
         }
-        ensureOrder(map, ["params", "request", "subroute"], pos);
 
-        var mw = genFieldMiddleware(meta, class_meta);
+        var mw = genFieldMiddleware(f.meta.get(), class_meta);
 
         return {
-            name       : name,
-            meta       : meta,
+            name       : f.name,
+            meta       : f.meta.get(),
             pos        : pos,
             subroute   : status.subroute,
             params     : status.params,
@@ -299,22 +309,19 @@ class Build {
 
         var treq = getRequestType(cls);
 
-        var routes = fields.flatMap(function(f){
-            return f.name == "new" ? [] :
+        for (f in fields){
+            if (f.name == "new") continue;
             switch(f.kind){
                 case FFun(fn)  : {
                     var mw = [for (f in f.meta) f.name];
                     var tfnret = fn.ret.toType();
                     if (f.access.indexOf(APublic) == -1) [];
                     else if (f.access.indexOf(AStatic) != -1) [];
-                    var meta =  [for (f in f.meta) f.name];
-                    var route_fn = processFFun(f.name, f.meta, f.pos, fn.args, meta, treq, null);
-                    [route_fn];
+                    checkArguments(fn, treq);
                 }
-                default : [];
+                default : continue;
             }
-        });
-
+        };
         return fields;
     }
 
@@ -421,16 +428,8 @@ class Build {
                 case FMethod(MethNormal) : {
                     switch(Context.follow(f.type)) {
                         case TFun(args, t) : {
-                            var tfnret = t;
-                            var fn_args = [for (a in  args) {
-                                meta : null,
-                                name : a.name,
-                                opt : a.opt,
-                                type : a.t.toComplexType(),
-                                value : null
-                            }];
-                            var mw = [for (m in f.meta.get()) m.name];
-                            var route_fn = processFFun(f.name, f.meta.get(), f.pos, fn_args, mw, treq, api_meta);
+                            $type(args);
+                            var route_fn = processClassField(f, args, treq, api_meta);
                             routes.push(route_fn);
                         }
                         default : Context.error("Illegal api field type", pos());
@@ -599,3 +598,12 @@ typedef Arg = {
 }
 
 
+typedef RouteFunction = {
+    name : String,
+    meta : Metadata,
+    pos : Position,
+    args : Array<FunctionArg>,
+    mw : Array<String>
+}
+
+typedef TFunArg = {t : Type, opt : Bool, name : String};

@@ -9,7 +9,7 @@ os:
 
 # you can specify futher versions as found at http://haxe.org/website-content/downloads/versions.json
 haxe:
-  - "3.4.0"
+  - "4.0.0-preview.1"
   - development
 
 matrix:

@@ -7,6 +7,7 @@ import haxe.macro.Context;
 import haxe.macro.Expr.Position;
 import haxe.macro.Expr;
 import golgi.builder.*;
+import golgi.builder.Initializer.titleCase;
 using haxe.macro.ComplexTypeTools;
 using haxe.macro.TypeTools;
 using Lambda;
@@ -354,7 +355,7 @@ class Build {
     static function checkModule(cls: {module : String, name : String}){
         var modules = cls.module.split(".");
         if (cls.name != modules[modules.length-1]){
-            Context.error("Golgi built classes and enums must be top level in their module.  Please move this declaration to a new file.", pos());
+            Context.error("Classes and enums built by Golgi must be top level in their module.  Please move this declaration to a new file.", pos());
         }
     }
 
@@ -409,8 +410,6 @@ class Build {
         }
 
 
-
-
         var api_meta = api_type.getClass().meta.get();
 
 
@@ -419,7 +418,7 @@ class Build {
             if (!f.isPublic) continue;
             switch(f.kind){
                 case FMethod(MethNormal) : {
-                    switch(f.type) {
+                    switch(Context.follow(f.type)) {
                         case TFun(args, t) : {
                             var tfnret = t;
                             var fn_args = [for (a in  args) {
@@ -511,7 +510,6 @@ class Build {
         }
 
 
-
         return [constructor, router, dict, api, meta].concat(Context.getBuildFields());
 
     }
@@ -548,7 +546,7 @@ class Build {
                     }
                     if (!f.isPublic) continue;
                     enum_fields.push({
-                        name : Initializer.titleCase(f.name),
+                        name : titleCase(f.name),
                         pos : Context.currentPos(),
                         kind : FFun({
                             args : [{

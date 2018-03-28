@@ -1,6 +1,6 @@
 package foo;
 
-@:build(golgi.Builder.buildRoute())
+@:build(golgi.Build.routes())
 enum TestApiRoute{
     Intercepted;
 }

@@ -104,7 +104,6 @@ class TestPaths extends haxe.unit.TestCase {
 
     public function testSubRouteAlias(){
         var res = golgi.route("passToSub/1/2/3", {msg : "0"}, req);
-        trace(res + " is the value for res");
         assertTrue(res.match(PassToSub("subAlias")));
     }
 

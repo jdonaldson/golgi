@@ -1,3 +1,3 @@
 
-@:build(golgi.Builder.buildEnum())
+@:build(golgi.Build.buildEnum())
 enum SubTestRoute {}

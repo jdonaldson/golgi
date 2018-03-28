@@ -3,19 +3,22 @@
 
 A composable routing library for Haxe.
 
-Golgi is a generic routing library for Haxe. Golgi does not try to be a web
-routing library on its own, but it can be used as the basis for one.
+Golgi is a macro-based generic routing library for Haxe.  It is intended to be
+used as the basis for more complex and specific routing applications (e.g. Http)
 
 It follows these design guidelines:
 
 1. Routes should be simple, fast, and composable.
 2. Routing should avoid allocation and unnecessary overhead.
-3. Route handling shouldn't presuppose a specific implementation (e.g. Http).
+3. Route handling shouldn't presuppose a specific protocol (e.g. Http).
 4. Routing should avoid boilerplate and excessive code duplication.
+5. Routing should not include the rendering of results (e.g. to Json)
 
 
-Despite these restrictions, Golgi makes very few tradeoffs for common feature
-support.
+Despite these restrictions, Golgi makes very few tradeoffs for feature support.
+Golgi relies heavily on macros, which can optimize routing in many cases, and
+provides a unique macro-based class/ADT binding that enables fluent route
+management with a minimum of coding.
 
 # Golgi Speed
 Golgi is *fast*.  The macro-based route generation eliminates common runtime and
@@ -32,17 +35,52 @@ We'll start with a simplified version of the Golgi API in the golgi.basic
 module.  Here's a small example of a small route class:
 
 ```haxe
-import golgi.basic.Api;
+import golgi.Api;
 
-class Router extends Api<Any,String>  {
+class Router extends Api<Any>  {
     public function foo() : String {
         return 'foo';
+    }
+    public function bar() : Int {
+        return 4;
     }
 }
 ```
 
-This Api creates a single route called "foo".  We can route to this function
-with the special Golgi class (using a basic version of this here as well):
+Imagine Golgi tries to route to the functions in this API.  A single route
+method could return an `Int` or a `Float`, so a single return type would need to
+encompass both.  Also, we would like to know which function was invoked (perhaps
+we need to add some specific post-routing operations in some cases).
+
+Normally, an algebraic data type (ADT) *enum* is used to specify return values.
+However, this can quickly get out of sync with the api.  Therefore, Golgi
+provides a special builder that will create this enum for you based on your api:
+
+```haxe
+@:build(golgi.Build.routes(Router)) enum Routes{}
+
+```
+
+The `@:build` metadata here instructs the Golgi macro method to build the full
+specification for `Routes` based on the api of `Router`.
+
+
+If we look at the enum constructors from `Routes` we see that they include
+`Foo(res:String)` and `Bar(res:Int)`.  These enum states describe the public
+methods of `Router`, with a single parameter providing the return type and
+value.
+
+With an enum for arbitrary results from `Router` methods, we use another builder
+to create our main Golgi router class:
+
+```haxe
+@:build(golgi.Build.golgi(Routes, Router, TestMeta))
+class TestApiGolgi{}
+
+```
+
+
+
 
 ```haxe
 import golgi.Golgi;

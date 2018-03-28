@@ -1,6 +1,7 @@
 package foo;
 import golgi.*;
 import golgi.meta.*;
+import SubTest.SubTestGolgi;
 
 class TestApi extends Api<Req> {
     public function new ()  {
@@ -34,18 +35,12 @@ class TestApi extends Api<Req> {
     }
     public function passToSub(arg : Int, arg2 : Int, params : { msg : Int }, subroute : Subroute<Req>) : String {
         var sub = new SubTest(arg);
-        var golgi = new SubTest.SubTestGolgi(sub);
+        var golgi = new SubTestGolgi(sub);
         var res = subroute.run(golgi);
         switch(res){
-            case  Sub(msg)  : {
-                return '' + arg + arg2 + msg;
-            }
-            case SubAlias(msg) : {
-                return msg;
-            }
-            case SubDefault(msg) : {
-                return 'default';
-            }
+            case Sub(msg)        : return '' + arg + arg2 + msg;
+            case SubAlias(msg)   : return msg;
+            case SubDefault(msg) : return 'default';
             default : return '';
         }
     }

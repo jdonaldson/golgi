@@ -209,8 +209,8 @@ class Build {
 
 
     /**
-      Process the  FFun function, ensuring that special named arguments are the
-      right type, and in the right order
+      Process the  function information, ensuring that special named arguments
+      are the right type, and in the right order
      **/
     static function processFFun(name : String, meta : Metadata, pos : Position, args : Array<FunctionArg>, mw : Array<String>, treq  : haxe.macro.Type , class_meta : Metadata) : Route {
         var path_arg = 0;
@@ -340,6 +340,7 @@ class Build {
         }
         return cls;
     }
+
     static function getEnum(arg : Expr) {
         var type = getType(arg);
         var enm = type.getEnum();
@@ -350,8 +351,17 @@ class Build {
 
     };
 
+    static function checkModule(cls: {module : String, name : String}){
+        var modules = cls.module.split(".");
+        if (cls.name != modules[modules.length-1]){
+            Context.error("Golgi built classes and enums must be top level in their module.  Please move this declaration to a new file.", pos());
+        }
+    }
+
     static function golgi(?api : Expr, ?route : Expr, ?meta : Expr) : Array<Field> {
+
         var cls = Context.getLocalClass().get();
+        checkModule(cls);
 
         var api_class = getClass(api);
         var fields = api_class.fields.get();
@@ -507,8 +517,13 @@ class Build {
     }
 
     public static function routes(?api : Expr) : Array<Field> {
-        var api_name = Context.getLocalModule();
+
+        var enm = Context.getLocalType().getEnum();
+        checkModule(enm);
+        var api_name = enm.name;
+
         var reg = ~/Route$/;
+
         var class_name = ~/Route$/.replace(api_name, "");
         var class_type = Context.getType(class_name);
         var class_inst = class_type.getClass();

@@ -27,5 +27,3 @@ class SubTest extends Api<Req> {
 @:build(golgi.Build.routes())
 enum SubTestRoute {}
 
-@:build(golgi.Build.golgi(SubTest, SubTestRoute, TestMeta))
-class SubTestGolgi{}

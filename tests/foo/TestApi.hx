@@ -1,7 +1,7 @@
 package foo;
 import golgi.*;
 import golgi.meta.*;
-import SubTest.SubTestGolgi;
+import SubTestGolgi;
 
 class TestApi extends Api<Req> {
     public function new ()  {
@@ -55,9 +55,5 @@ class TestApi extends Api<Req> {
         return 'not intercepted';
     }
 }
-
-
-
-
 
 

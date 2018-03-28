@@ -3,6 +3,7 @@ package;
 import golgi.*;
 import golgi.meta.MetaGolgi;
 import foo.*;
+import foo.TestApiGolgi;
 
 
 class TestPaths extends haxe.unit.TestCase {

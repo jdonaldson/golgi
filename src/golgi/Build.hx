@@ -23,7 +23,6 @@ class Build {
     **/
     static function unify(t:haxe.macro.ComplexType, target : haxe.macro.ComplexType){
         return Context.unify(t.toType(), target.toType());
-
     }
 
     /**
@@ -323,6 +322,7 @@ class Build {
     static function pos() {
         return Context.currentPos();
     }
+
     static function getType(arg : Expr) {
         var class_name = switch(arg){
             case {expr : EConst(CIdent(str) | CString(str))} : str;
@@ -333,6 +333,7 @@ class Build {
         }
         return Context.getType(class_name);
     }
+
     static function getClass(arg : Expr) {
         var type = getType(arg);
         var cls = type.getClass();
@@ -456,11 +457,15 @@ class Build {
         var router = {
             name   : "route",
             access : [APublic],
-            kind: FFun({args : [
-                {name:"parts",   type: TPath({name : "Path", pack:["golgi"]})},
-                {name:"params",  type: TPath({name : "Dynamic", pack:[]})},
-                {name:"request", type: TPath({name : "Dynamic", pack:[]})}
-            ], ret : enum_ctype, expr : handler_macro}),
+            kind: FFun({
+                args : [
+                    {name:"parts",   type: TPath({name : "Path", pack:["golgi"]})},
+                    {name:"params",  type: TPath({name : "Dynamic", pack:[]})},
+                    {name:"request", type: treq.toComplexType()}
+                ],
+                ret  : enum_ctype,
+                expr : handler_macro
+            }),
             pos: Context.currentPos()
         };
 
@@ -485,6 +490,7 @@ class Build {
             }),
             pos : Context.currentPos()
         };
+
         var map_type = macro : Map<String, Array<String>->Dynamic->Dynamic->$enum_ctype>;
         var dict_init = macro new Map<String, Array<String>->Dynamic->Dynamic->$enum_ctype>();
 
@@ -508,10 +514,9 @@ class Build {
             kind : FVar(meta_type.toComplexType(), null),
             pos : Context.currentPos()
         }
-
-
-        return [constructor, router, dict, api, meta].concat(Context.getBuildFields());
-
+        var fields = Context.getBuildFields();
+        var ret_fields = fields.concat([constructor, router, dict, api, meta]);
+        return ret_fields;
     }
 
     public static function routes(?api : Expr) : Array<Field> {

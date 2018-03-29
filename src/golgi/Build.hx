@@ -591,18 +591,4 @@ typedef GolgiArg = {
     leftovers      : GolgiArg->Expr
 }
 
-typedef Arg = {
-    name : String,
-    type : Type
-}
-
-
-typedef RouteFunction = {
-    name : String,
-    meta : Metadata,
-    pos : Position,
-    args : Array<FunctionArg>,
-    mw : Array<String>
-}
-
 typedef TFunArg = {t : Type, opt : Bool, name : String};

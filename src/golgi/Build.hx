@@ -428,7 +428,6 @@ class Build {
                 case FMethod(MethNormal) : {
                     switch(Context.follow(f.type)) {
                         case TFun(args, t) : {
-                            $type(args);
                             var route_fn = processClassField(f, args, treq, api_meta);
                             routes.push(route_fn);
                         }

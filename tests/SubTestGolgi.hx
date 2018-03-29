@@ -1,4 +1,4 @@
 import foo.TestMeta;
 
-@:build(golgi.Build.golgi(SubTest, SubTestRoute, TestMeta))
+@:build(golgi.Build.golgi(SubTestRoute, TestMeta))
 class SubTestGolgi{}

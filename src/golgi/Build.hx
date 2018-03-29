@@ -367,15 +367,16 @@ class Build {
         }
     }
 
-    static function golgi(?api : Expr, ?route : Expr, ?meta : Expr) : Array<Field> {
+    static function golgi( route : Expr, ?meta : Expr) : Array<Field> {
 
         var cls = Context.getLocalClass().get();
         checkModule(cls);
 
-        var api_class = getClass(api);
-        var fields = api_class.fields.get();
 
         var route_enum = getEnum(route);
+        var api = route_enum.meta.extract("_golgi_api")[0].params[0];
+        var api_class = getClass(api);
+        var fields = api_class.fields.get();
 
         var api_type = Context.getType(api_class.name);
 
@@ -517,19 +518,18 @@ class Build {
         return ret_fields;
     }
 
-    public static function routes(?api : Expr) : Array<Field> {
+    public static function routes(api : Expr) : Array<Field> {
 
         var enm = Context.getLocalType().getEnum();
         checkModule(enm);
-        var api_name = enm.name;
 
-        var reg = ~/Route$/;
 
-        var class_name = ~/Route$/.replace(api_name, "");
-        var class_type = Context.getType(class_name);
-        var class_inst = class_type.getClass();
+        var api_class = getClass(api);
+        var api_name = {expr :EConst(CString(api_class.name)), pos : enm.pos};
 
-        var fields = class_inst.fields.get();
+        enm.meta.add("_golgi_api", [api_name], enm.pos);
+
+        var fields = api_class.fields.get();
         var enum_fields = [];
 
         // capture routes

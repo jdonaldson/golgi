@@ -1,4 +1,4 @@
 package foo;
 
-@:build(golgi.Build.golgi(TestApi, TestApiRoute, TestMeta))
+@:build(golgi.Build.golgi(TestApiRoute, TestMeta))
 class TestApiGolgi{}

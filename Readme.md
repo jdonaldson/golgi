@@ -31,13 +31,17 @@ tasks on a sample of Haxe targets.
 ![plot](https://i.imgur.com/erHufxP.png)
 
 # Intro
+
 We'll start with a simplified version of the Golgi API in the golgi.basic
-module.  Here's a small example of a small route class:
+module.  The golgi Api requires a type parameter for a request type, but we can
+ignore that for now by passing a dummy type. Here's a small example of a small
+route class:
 
 ```haxe
 import golgi.Api;
+typedef Req = Any;
 
-class Router extends Api<Any>  {
+class TestApi extends Api<Req>  {
     public function foo() : String {
         return 'foo';
     }
@@ -47,39 +51,60 @@ class Router extends Api<Any>  {
 }
 ```
 
-Imagine Golgi tries to route to the functions in this API.  A single route
-method could return an `Int` or a `Float`, so a single return type would need to
-encompass both.  Also, we would like to know which function was invoked (perhaps
-we need to add some specific post-routing operations in some cases).
+Conventional routing system functions don't have heterogeneous return types.
+They will require that responses be written inside the handler, or they will
+require returning a single type across all routes. Golgi differs radically from
+this approach by enabling heterogeneous return values across the defined routes.
+This enables greater flexibility in providing routing behavior, while also
+maintaining a type safe interface for a routing result.
 
-Normally, an algebraic data type (ADT) *enum* is used to specify return values.
-However, this can quickly get out of sync with the api.  Therefore, Golgi
-provides a special builder that will create this enum for you based on your api:
+Ideally, an algebraic data type (ADT) *enum* is used to specify
+heterogeneous return values.  However, this enum must be maintained separately
+from the actual routing logic, increasing the chances for bugs, and adding to
+the maintenance overhead. Golgi's approach is to build the enum for you, based
+on the routing api you specify using a special `@:build` directive:
 
 ```haxe
-@:build(golgi.Build.routes(Router)) enum Routes{}
+@:build(golgi.Build.routes(TestApi))
+enum TestApiRoute {}
 
 ```
 
 The `@:build` metadata here instructs the Golgi macro method to build the full
-specification for `Routes` based on the api of `Router`.
+specification for the `TestApiRoute` enum based on the api of `TestApi`.
 
 
-If we look at the enum constructors from `Routes` we see that they include
+If we look at the enum constructors from `TestApiRoute` we see that they include
 `Foo(res:String)` and `Bar(res:Int)`.  These enum states describe the public
-methods of `Router`, with a single parameter providing the return type and
+methods of `TestApi`, with a single parameter providing the return type and
 value.
 
-With an enum for arbitrary results from `Router` methods, we use another builder
-to create our main Golgi router class:
+Having an enum for our test api results is not enough though, we still need to
+provide the logic for parsing a url into paths and parameters, selecting the
+function to invoke, and capturing the return value in the enum.
+
+Golgi provides this functionality by extending a separate `Golgi` class.  This
+class is fully parameterized by the types we've defined previously.  It also
+includes a special `MetaGolgi` parameter that we'll talk about later.
 
 ```haxe
-@:build(golgi.Build.golgi(Routes, Router, TestMeta))
-class TestApiGolgi{}
+import golgi.Golgi;
+typedef TestMeta = golgi.meta.MetaGolgi<Any,TestApiRoute>;
+
+class TestApiGolgi extends Golgi<Req, TestApi, TestApiRoute, TestMeta>{}
 
 ```
 
+The Golgi class we extended is also under the effect of a build macro.  This
+macro builds the specialized route function that:
 
+1. Parses the path arguments into routes and arguments.
+2. Applies relevant route metamethods defined in the MetaGolgi.
+3. Applies the arguments on the route function.
+4. Captures the result in the route enum.
+
+The routing class requires this types we've created previously.  In addition, it
+requires a `MetaGolgi` argument that we will get into later.
 
 
 ```haxe
@@ -87,18 +112,19 @@ import golgi.Golgi;
 
 class Main {
     static function main() {
-        var path = "foo";
         var params = {};
-        var api  = new Router();
-        var req = null;
+        var req = {};
 
-        Golgi.run(path, params, req, api);
+        var api  = new TestApi();
+        var golgi = new TestApiGolgi();
+
+        var res = golgi.route(["foo"], params, req);
     }
 }
 ```
 
 Here we're running the Golgi router on the path "foo", using the Api defined by
-`Router` (other arguments will be discussed shortly).    This method manages the
+`TestApi` (other arguments will be discussed shortly).    This method manages the
 lookup of the right function on Router, and invokes the function there.
 
 # Fully Typed Path Arguments
@@ -127,7 +153,7 @@ class Main {
 ```
 
 Note that the argument ``x`` inside the function body is typed as an ``Int``.
-Golgi reads the type information on the``Router`` method interface, and then
+Golgi reads the type information on the``TestApi`` method interface, and then
 makes the appropriate conversion on the corresponding path segment.  If the
 ``x`` argument is missing, a ``NotFound(path:String)`` error is thrown.  If the
 argument can not be converted to an ``Int``, then an ``InvalidValue`` error is

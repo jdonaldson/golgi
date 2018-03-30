@@ -1,4 +1,5 @@
 package foo;
+import golgi.Golgi;
 
-class TestApiGolgi extends golgi.Golgi<Req,TestApi,TestApiRoute,TestMeta>{
+class TestApiGolgi extends Golgi<Req,TestApi,TestApiRoute,TestMeta>{
 }

@@ -478,51 +478,19 @@ class Build {
 
         var new_field = Initializer.build(routes, route_enum.name);
 
-        var constructor : Field = {
-            name : "new",
+        var init : Field = {
+            name : "__init",
             access : [APublic, AOverride],
             kind : FFun({
-                args : [{
-                    name : "api",
-                    type : api_type.toComplexType(),
-                },
-                {
-                    name : "meta",
-                    type : meta_type.toComplexType(),
-                    opt  : true
-                }],
+                args : [],
                 ret : null,
                 expr : macro $b{new_field}
             }),
             pos : Context.currentPos()
         };
 
-        // var map_type = macro : Map<String, Array<String>->Dynamic->Dynamic->$enum_ctype>;
-        // var dict_init = macro new Map<String, Array<String>->Dynamic->Dynamic->$enum_ctype>();
-
-        // var dict : Field = {
-        //     name : "dict",
-        //     access : [],
-        //     kind : FVar(map_type, dict_init),
-        //     pos : Context.currentPos()
-        // }
-
-        // var api : Field = {
-        //     name : "api",
-        //     access : [],
-        //     kind : FVar(api_type.toComplexType(), null),
-        //     pos : Context.currentPos()
-        // }
-
-        // var meta : Field = {
-        //     name : "meta",
-        //     access : [],
-        //     kind : FVar(meta_type.toComplexType(), null),
-        //     pos : Context.currentPos()
-        // }
-
         var fields = Context.getBuildFields();
-        return fields.concat([router, constructor]);
+        return fields.concat([router, init]);
     }
 
     public static function routes(api : Expr) : Array<Field> {

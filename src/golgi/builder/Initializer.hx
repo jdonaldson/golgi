@@ -66,7 +66,7 @@ class Initializer {
     }
 
     public static function build(routes:Array<Route>, enum_name : String) : Array<Expr>{
-        var block = [macro super(api,meta)];
+        var block = [];
         var observed_paths = new Map<String,Bool>();
         for (route in routes){
             var field_name=  route.name;

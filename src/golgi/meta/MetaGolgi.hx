@@ -4,15 +4,15 @@ package golgi.meta;
   methods can be used as middleware within Golgi Apis.
  **/
 @:autoBuild(golgi.builder.MetaBuilder.build())
-class MetaGolgi<TReq, TRet> {
+class MetaGolgi<TReq, TRoute> {
     var req : TReq;
-    var ret : TRet;
+    var ret : TRoute;
     public function new(){}
     /**
       This is the pass through interface, it will not generate a middleware call
       in the resulting route table.
     **/
-    public function _golgi_pass(req: TReq, next : TReq->TRet) : TRet {
+    public function _golgi_pass(req: TReq, next : TReq->TRoute) : TRoute {
         return next(req);
     }
 }

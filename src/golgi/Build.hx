@@ -367,15 +367,34 @@ class Build {
         }
     }
 
-    static function golgi( route : Expr, ?meta : Expr) : Array<Field> {
+    static function golgi() : Array<Field> {
 
         var cls = Context.getLocalClass().get();
         checkModule(cls);
+        var api_param = cls.findField("api").type;
+        var k = api_param.follow();
+
+        var sup = cls.superClass;
+        var api_type = api_param.applyTypeParameters(sup.t.get().params, sup.params);
 
 
-        var route_enum = getEnum(route);
-        var api = route_enum.meta.extract("_golgi_api")[0].params[0];
-        var api_class = getClass(api);
+        var route_f = Context.follow(cls.findField("route").type);
+        var route_type = switch(route_f)  {
+            case TFun(_,ret) : {
+                ret.applyTypeParameters(sup.t.get().params, sup.params);
+            }
+            default : {
+                Context.error("Illegal route function type", cls.pos);
+            };
+        }
+
+        var meta_param = cls.findField("meta").type;
+        var meta_type = meta_param.applyTypeParameters(sup.t.get().params, sup.params);
+        var meta = meta_type.getClass();
+
+
+        var route_enum = route_type.getEnum();
+        var api_class = api_type.getClass();
         var fields = api_class.fields.get();
 
         var api_type = Context.getType(api_class.name);
@@ -404,20 +423,6 @@ class Build {
 
 
         var treq = param;
-
-        var meta_type : Type = if (!meta.expr.match(EConst(CIdent("null")))){
-            var meta_class = getClass(meta);
-            Context.getType(meta_class.name);
-        } else {
-
-            var meta : TypePath = {
-                name : "MetaGolgi",
-                pack : ["golgi", "meta"],
-                params : [TPType(treq.toComplexType()), TPType(enum_ctype)]
-            };
-            TPath(meta).toType();
-        }
-
 
         var api_meta = api_type.getClass().meta.get();
 
@@ -452,13 +457,15 @@ class Build {
                 throw golgi.Error.NotFound(parts[0]);
             }
         };
+        var string_ctype = Context.getType("String").toComplexType();
+
 
         var router = {
             name   : "route",
-            access : [APublic],
+            access : [APublic,AOverride],
             kind: FFun({
                 args : [
-                    {name:"parts",   type: TPath({name : "Path", pack:["golgi"]})},
+                    {name:"parts",   type: TPath({name : "Array", pack:[], params:[TPType(string_ctype)]})},
                     {name:"params",  type: TPath({name : "Dynamic", pack:[]})},
                     {name:"request", type: treq.toComplexType()}
                 ],
@@ -473,7 +480,7 @@ class Build {
 
         var constructor : Field = {
             name : "new",
-            access : [APublic],
+            access : [APublic, AOverride],
             kind : FFun({
                 args : [{
                     name : "api",
@@ -490,32 +497,32 @@ class Build {
             pos : Context.currentPos()
         };
 
-        var map_type = macro : Map<String, Array<String>->Dynamic->Dynamic->$enum_ctype>;
-        var dict_init = macro new Map<String, Array<String>->Dynamic->Dynamic->$enum_ctype>();
+        // var map_type = macro : Map<String, Array<String>->Dynamic->Dynamic->$enum_ctype>;
+        // var dict_init = macro new Map<String, Array<String>->Dynamic->Dynamic->$enum_ctype>();
 
-        var dict : Field = {
-            name : "dict",
-            access : [],
-            kind : FVar(map_type, dict_init),
-            pos : Context.currentPos()
-        }
+        // var dict : Field = {
+        //     name : "dict",
+        //     access : [],
+        //     kind : FVar(map_type, dict_init),
+        //     pos : Context.currentPos()
+        // }
 
-        var api : Field = {
-            name : "api",
-            access : [],
-            kind : FVar(api_type.toComplexType(), null),
-            pos : Context.currentPos()
-        }
+        // var api : Field = {
+        //     name : "api",
+        //     access : [],
+        //     kind : FVar(api_type.toComplexType(), null),
+        //     pos : Context.currentPos()
+        // }
 
-        var meta : Field = {
-            name : "meta",
-            access : [],
-            kind : FVar(meta_type.toComplexType(), null),
-            pos : Context.currentPos()
-        }
+        // var meta : Field = {
+        //     name : "meta",
+        //     access : [],
+        //     kind : FVar(meta_type.toComplexType(), null),
+        //     pos : Context.currentPos()
+        // }
+
         var fields = Context.getBuildFields();
-        var ret_fields = fields.concat([constructor, router, dict, api, meta]);
-        return ret_fields;
+        return fields.concat([router, constructor]);
     }
 
     public static function routes(api : Expr) : Array<Field> {

@@ -1,4 +1,5 @@
 import foo.TestMeta;
+import golgi.meta.MetaGolgi;
 
-@:build(golgi.Build.golgi(SubTestRoute, TestMeta))
-class SubTestGolgi{}
+class SubTestGolgi extends golgi.Golgi<Req,SubTest,SubTestRoute,MetaGolgi<Req,SubTestRoute>>{
+}

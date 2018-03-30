@@ -4,9 +4,12 @@ import golgi.*;
 import golgi.meta.MetaGolgi;
 import foo.*;
 import foo.TestApiGolgi;
+using TestPaths.PathTools;
 
 
 class TestPaths extends haxe.unit.TestCase {
+
+
     public function shouldthrow() {
         fail("Test should have thrown error");
     }
@@ -27,13 +30,13 @@ class TestPaths extends haxe.unit.TestCase {
     }
 
     public function testBasicPath(){
-        var res = golgi.route("vanilla", {}, req);
+        var res = golgi.route("vanilla".path(), {}, req);
         assertTrue(res.match(Vanilla("vanilla")));
     }
 
     public function testFailInvalidPath(){
         try{
-            var res = golgi.route("chocolate", {}, req);
+            var res = golgi.route("chocolate".path(), {}, req);
             shouldthrow();
         } catch (e : Error) {
             assertTrue(e.match(NotFound("chocolate")));
@@ -41,13 +44,13 @@ class TestPaths extends haxe.unit.TestCase {
     }
 
     public function testSingleArg(){
-        var res = golgi.route("singlearg/1", {}, req);
+        var res = golgi.route("singlearg/1".path(), {}, req);
         assertTrue(res.match(Singlearg('1')));
     }
 
     public function testFailSingleArg(){
         try{
-            var res = golgi.route("singlearg/blah", {}, req);
+            var res = golgi.route("singlearg/blah".path(), {}, req);
             shouldthrow();
         } catch (e : Error){
             assertTrue(e.match(InvalidValue("x")));
@@ -55,23 +58,23 @@ class TestPaths extends haxe.unit.TestCase {
     }
 
     public function testMultipleArgs(){
-        var res = golgi.route("multiarg/1/2", {}, req);
+        var res = golgi.route("multiarg/1/2".path(), {}, req);
         assertTrue(res.match(Multiarg("12")));
     }
 
     public function testParamArgString() {
-        var res = golgi.route("paramArgString", {msg:"received"}, req);
+        var res = golgi.route("paramArgString".path(), {msg:"received"}, req);
         assertTrue(res.match(ParamArgString("received")));
     }
 
     public function testParamArgInt() {
-        var res = golgi.route("paramArgInt", {msg:"1"}, req);
+        var res = golgi.route("paramArgInt".path(), {msg:"1"}, req);
         assertTrue(res.match(ParamArgInt("1")));
     }
 
     public function testFailParamArgInt() {
         try {
-            var res = golgi.route("paramArgInt", {msg:'no'}, req);
+            var res = golgi.route("paramArgInt".path(), {msg:'no'}, req);
             shouldthrow();
         } catch (e : Error){
             assertTrue(e.match(InvalidValueParam("msg")));
@@ -79,39 +82,49 @@ class TestPaths extends haxe.unit.TestCase {
     }
 
     public function testMetaGolgi(){
-        var res = golgi.route("metagolgi", {}, req);
+        var res = golgi.route("metagolgi".path(), {}, req);
         assertTrue(res.match(Intercepted));
     }
 
     public function testChain(){
-        var res = golgi.route("bang", {}, req);
+        var res = golgi.route("bang".path(), {}, req);
         assertTrue(res.match(Intercepted));
     }
 
     public function testDefault(){
-        var res = golgi.route("", {}, req);
+        var res = golgi.route("".path(), {}, req);
         assertTrue(res.match(DefaultRoute("default")));
     }
 
     public function testDefaultRoot(){
-        var res = golgi.route("/", {}, req);
+        var res = golgi.route("/".path(), {}, req);
         assertTrue(res.match(DefaultRoute("default")));
     }
 
     public function testSubRoute(){
-        var res = golgi.route("passToSub/1/2/sub", {msg :"0"}, req);
+        var res = golgi.route("passToSub/1/2/sub".path(), {msg :"0"}, req);
         assertTrue(res.match(PassToSub("12sub_1")));
     }
 
     public function testSubRouteAlias(){
-        var res = golgi.route("passToSub/1/2/3", {msg : "0"}, req);
+        var res = golgi.route("passToSub/1/2/3".path(), {msg : "0"}, req);
         assertTrue(res.match(PassToSub("subAlias")));
     }
 
     public function testSubRouteDefault(){
-        var res = golgi.route("passToSub/1/2/", {msg : "0"}, req);
+        var res = golgi.route("passToSub/1/2/".path(), {msg : "0"}, req);
         assertTrue(res.match(PassToSub("default")));
     }
 
 }
 
+
+class PathTools {
+    public static function path(str:String){
+        if (str.charAt(0)== "/"){
+            return str.substring(1).split("/");
+        } else {
+            return str.split("/");
+        }
+    }
+}

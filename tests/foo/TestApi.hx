@@ -36,7 +36,7 @@ class TestApi extends Api<Req> {
     public function passToSub(arg : Int, arg2 : Int, params : { msg : Int }, subroute : Subroute<Req>) : String {
         var sub = new SubTest(arg);
         var golgi = new SubTestGolgi(sub);
-        var res = subroute.run(golgi);
+        var res = subroute.route(golgi);
         switch(res){
             case Sub(msg)        : return '' + arg + arg2 + msg;
             case SubAlias(msg)   : return msg;

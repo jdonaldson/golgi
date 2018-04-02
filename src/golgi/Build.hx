@@ -390,7 +390,6 @@ class Build {
 
         var meta_param = cls.findField("meta").type;
         var meta_type = meta_param.applyTypeParameters(sup.t.get().params, sup.params);
-        var meta = meta_type.getClass();
 
 
         var route_enum = route_type.getEnum();
@@ -480,7 +479,7 @@ class Build {
 
         var init : Field = {
             name : "__init",
-            access : [APublic, AOverride],
+            access : [AOverride],
             kind : FFun({
                 args : [],
                 ret : null,

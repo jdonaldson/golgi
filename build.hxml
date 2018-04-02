@@ -1,9 +1,2 @@
 -cp src
--cp tests
--main RunTests
--lua bin/out.lua
--lib hx3compat
--lib travix
--cmd lua bin/out.lua
--D eval-stack
-
+demo.hxml

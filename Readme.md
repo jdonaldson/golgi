@@ -4,7 +4,8 @@
 A composable routing library for Haxe.
 
 Golgi is a macro-based generic routing library for Haxe.  It is intended to be
-used as the basis for more complex and specific routing applications (e.g. Http)
+used as the basis for more complex and specific routing applications (e.g. Http
+URL routing)
 
 It follows these design guidelines:
 
@@ -19,6 +20,7 @@ Despite these restrictions, Golgi makes very few tradeoffs for feature support.
 Golgi relies heavily on macros, which can optimize routing in many cases, and
 provides a unique macro-based class/ADT binding that enables fluent route
 management with a minimum of coding.
+
 
 # Golgi Speed
 Golgi is *fast*.  The macro-based route generation eliminates common runtime and
@@ -84,8 +86,7 @@ provide the logic for parsing a url into paths and parameters, selecting the
 function to invoke, and capturing the return value in the enum.
 
 Golgi provides this functionality by extending a separate `Golgi` class.  This
-class is fully parameterized by the types we've defined previously.  It also
-includes a special `MetaGolgi` parameter that we'll talk about later.
+class is fully parameterized by the types we've defined previously.
 
 ```haxe
 import golgi.Golgi;
@@ -98,13 +99,13 @@ class TestApiGolgi extends Golgi<Req, TestApi, TestApiRoute, TestMeta>{}
 The Golgi class we extended is also under the effect of a build macro.  This
 macro builds the specialized route function that:
 
-1. Parses the path arguments into routes and arguments.
+1. Separates the path arguments into function names and arguments
 2. Applies relevant route metamethods defined in the MetaGolgi.
 3. Applies the arguments on the route function.
 4. Captures the result in the route enum.
 
 The routing class requires this types we've created previously.  In addition, it
-requires a `MetaGolgi` argument that we will get into later.
+requires a `MetaGolgi` parameter that we will describe later.
 
 
 ```haxe
@@ -116,16 +117,20 @@ class Main {
         var req = {};
 
         var api  = new TestApi();
-        var golgi = new TestApiGolgi();
+        var glg = new TestApiGolgi();
 
-        var res = golgi.route(["foo"], params, req);
+        var res = glg.route(["foo"], params, req);
     }
 }
 ```
 
 Here we're running the Golgi router on the path "foo", using the Api defined by
 `TestApi` (other arguments will be discussed shortly).    This method manages the
-lookup of the right function on Router, and invokes the function there.
+lookup of the right function on TestApi, and invokes the function there.
+
+Note : Golgi accepts its path argument as an array of simple strings.  Golgi
+does not split or decode raw string urls, as is common in more web-specific
+frameworks.
 
 # Fully Typed Path Arguments
 
@@ -133,21 +138,20 @@ The next step is to do something useful with the API, such as accepting
 arguments from the parsed path:
 
 ```haxe
-class Router extends Api<Any,String>  {
-    public function foo(x:Int){
-        trace('x + 1 is  ${x + 1}');
-        return 'foo';
+class TestApi extends Api<Any>  {
+    public function arg(x:Int){
+        return x;
     }
 }
 ```
 
-The Router class now has a ``foo`` function that accepts an integer. We can
-invoke it with the following call:
+The TestApi class now has a ``foo`` function that accepts an integer and returns
+it as its result. We can invoke it with the following call:
 
 ```haxe
 class Main {
     static function main() {
-        Golgi.run( "foo/1", {}, new Router());
+        Golgi.run( "foo/1", {}, new TestApi());
     }
 }
 ```
@@ -167,15 +171,15 @@ available via abstract typing which is described later on*.
 
 # Route Parameter Support
 
-We can also pass in query parameters using a special ``params`` argument:
+We can also pass in query parameters using a special ``params`` argument.
+This simple example adds the `x` Integer argument to the `y` argument passed as
+a param:
 
 ```haxe
-class Router implements Api<String>  {
-    public function foo(x:Int, params : {y : Int}){
-        trace('x + 1 is  ${x + 1}');
-        trace('params.y + 1 is ${params.y + 1}');
-        return 'foo';
-    }
+class TestApi implements Api<Req>  {
+   public function param(x : Int, params : {y : Int}){
+      return x  + params.y;
+   }
 }
 ```
 
@@ -184,15 +188,15 @@ The params are passed in using the second argument of the ``Golgi.run`` method:
 ```haxe
 class Main {
     static function main() {
-        Golgi.run("foo/1", {y : 4}, null, new Router());
+      var param = glg.route(["param", "1"], {y : "2"}, {});
     }
 }
 ```
 
 The ``params`` argument name is *reserved*.  That is, you can only use that
-argument name to specify url parameters, and it must be typed as an anonymous
-object.  Also, all param fields must be simple value types, just like the typed
-path arguments.
+argument name to specify path-derived parameters, and it must be typed as an
+anonymous object.  Also, all param fields must be simple value types, just like
+the typed path arguments.
 
 
 Note that params are not automatically parsed from the path.  They must be
@@ -205,14 +209,11 @@ checking headers, etc.  In Golgi this is called the `request` argument.  It can 
 of any type, so once again `request` is a reserved argument name:
 
 ```haxe
-typedef Request = { header : String };
+typedef Req = { header : String };
 
-class Router implements Api<Request, String>  {
-    public function foo(x:Int, params : {y : Int}, request : Request){
-        trace('x + 1 is  ${x + 1}');
-        trace('params.y + 1 is ${params.y + 1}');
-        trace('the dummmy request is $request');
-        return 'foo';
+class TestApi implements Api<Req>  {
+    public function foo(request : Req){
+
     }
 }
 ```
@@ -220,14 +221,17 @@ class Router implements Api<Request, String>  {
 ```haxe
 class Main {
     static function main() {
-        Golgi.run("foo/1", {y : 4}, {header : "dummy"}, new Router());
+         var req = glg.route(["request"], {}, req);
     }
 }
 ```
 
-Here we're using another structural type for our request.  The request type here
-will likely be based on the network api provided by the platform, or some cross
-platform abstraction.
+Here we're using another structural type for our request.  However, `request`
+and `params` tend to have specialized purposes : The `params` argument *must* be
+an anonymous object type that has simple string fields.  It is typically
+constructed from the path content itself.  The `request` argument should refer
+to internal application data that is available in the request context.
+
 
 # Sub-Routing
 
@@ -236,50 +240,54 @@ secondary Golgi Api to process additional url parameters, common in hierarchical
 routing scenarios.
 
 ```haxe
-class Router implements golgi.BasicApi<String,String>  {
-    public function foo(x:Int, request : Request, subroute : Subroute<String>){
-        var result = subroute.run(new SubRouter());
-
-        return result != null ? result : 'foo';
-    }
+class TestApi implements golgi.Api<Req>  {
+   public function subroute(request : Req, subroute : Subroute<Req>) {
+      var sub_api = new SubTestApi();
+      var sub_glg = new SubTestApiGolgi(sub_api);
+      vu res = subroute.route(sub_glg);
+      switch(res){
+         case Foo(x) : return x;
+         default : throw ('Invalid $res');
+      }
+   }
 }
 ```
 
-Like the params and request argument, subroute is a reserved argument name.
+Like the params and request argument, subroute is a reserved argument name. It
+contains a simple method that will accept an appropriately typed Golgi instance,
+and apply the leftover paths as a route there.
+
+Handling the return value from the subroute is identical to handling a normal
+route.
 
 # Golgi Type Parameters Explained
 
-We can see that the type parameters of the Golgi Api ``Router<Request,String>``
-include the type for the request (``Request``).  The second type parameter
-(``String``) indicates the return value that *every* function in the Api must
-satisfy.  With this constraint, it's possible to get a statically typed results
-from an arbitrary route request:
+We can see that the type parameters of the Golgi Api ``TestApi<Req>``
+includes the type for the request (``Req``).
+
+The Golgi router itself accepts four parameters:
 
 ```haxe
-class Main {
-    static function main() {
-        var result = Golgi.run("foo/1", {y : 4}, {header : "dummy"} , new Router());
-        trace('The result is always a string for Router: $result');
-    }
-}
+class TestApiGolgi extends Golgi<Req, TestApi, TestApiRoute, TestMeta>{}
 ```
+These parameters tell Golgi the relationships between the four types required
+for routing :
 
-With a consistent return value type retrieved from the route request, it becomes
-easier to write a flexible response.  Note that Strings are used here for
-illustration purposes only.  Proper return types such as class instances, enums,
-and abstract types enable much more control over how information is returned
-from the API.
-
+1. Request parameter
+2. Api parameter (which must have its own matching Request parameter)
+3. Route parameter (which must match the Api parameter function/return values)
+4. Path Metadata (meta) parameter, which must match the Route parameter as well
+   as the Request parameter.
 
 
 # Path Metadata
 
-It's common for certain paths to include characters and words that are not
-valid function names.  Golgi handles this with special path metadata which can
-be applied to a route.  Here's how one would handle an *empty* path:
+Sometimes paths must include characters that are not allowed as valid function
+names.  Golgi handles this with special path metadata which can be applied to a
+route.  Here's how one would handle an *empty* path:
 
 ```haxe
-class Router implements Api<Request,String>  {
+class TestApi implements Api<Request,String>  {
     @:default
     public function foo(){
         return 'foo';
@@ -306,10 +314,9 @@ specification.
 # MetaGolgi
 
 It's common for certain routes to share common handling patterns.  E.g., some
-routes are authenticated, others are only applicable for certain Http methods.
-
-It's painful to have to manage these pattern manually on a per-route basis.
-Golgi addresses this with a powerful metadata-driven middleware system.
+routes require authentication, others are only applicable for certain Http
+methods. It's painful to have to manage these pattern manually on a per-route
+basis.  Golgi addresses this with a powerful metadata-driven middleware system.
 
 The MetaGolgi instance expects a signature of `TReq->(TReq->TRet)->TRet`.  This
 signature provides the request parameter, and a function that calls the next
@@ -324,7 +331,7 @@ the required signatures for its methods.
 
 
 ```haxe
-class MetaRouter<Request,String> extends golgi.meta.MetaGolgi {
+class MetaTestApi extends golgi.meta.MetaGolgi<Request> {
    public function bar(req : Request, next : Request->String) : String {
       return next(req) + "!";
    }
@@ -332,20 +339,20 @@ class MetaRouter<Request,String> extends golgi.meta.MetaGolgi {
 ```
 
 When you have an appropriate class declared, you may use it in your Api
-declarations.  Just use it as simple metadata, with no colon:
+declarations.  Just use it as simple metadata, *with no colon*:
 
 ```haxe
-class Router extends Api<Request,String,MetaRouter> {
+class TestApi extends Api<Request,String,MetaTestApi> {
     @bar
-    public function foo(x:Int, request : Request, subroute : Subroute<String>){
-        subroute.run(new SubRouter());
+    public function foo(request : Request){
         return 'foo';
     }
 }
 ```
 
 The presence of the `@bar` metadata tells Golgi to apply the corresponding
-middleware to this route.
+middleware to this route.  Note that a `request` argument must be accepted by
+the function for the metagolgi method to work.
 
 Any unknown simple metadata that is not handled by the MetaGolgi instance will
 throw a compile error, ensuring that your middleware behavior is completely
@@ -356,9 +363,9 @@ all routes defined by the API:
 
 ```haxe
 @bar
-class Router extends Api<Request,String,MetaRouter> {
+class TestApi extends Api<Request> {
     public function foo(x:Int, request : Request, subroute : Subroute<Request>){
-        subroute.run(new SubRouter());
+        subroute.run(new SubTestApi());
         return 'foo';
     }
 }
@@ -380,7 +387,7 @@ possibilities for automated instantiation and reduction of boilerplate:
 
 
 ```haxe
-class Router implements golgi.BasicApi<String,String>  {
+class TestApi implements golgi.BasicApi<Req>  {
     public function foo(x:Bar) : String{
         trace(x.toString());
         return 'foo';
@@ -400,20 +407,6 @@ abstract Bar(String){
     }
 }
 ```
-## Pre-segmented paths
-
-Golgi segments paths by splitting on forward slash characters.  It's possible
-to route on pre-segmented paths.  Simply pass an array of strings,
-rather than a single string path.
-
-```haxe
-
-        Golgi.run( ["foo","1"], {}, "", new Router());
-```
-
-This is useful in situations where the path is already segmented, or when a
-specific non-standard delimiter is required.
-
 
 # Misc
 

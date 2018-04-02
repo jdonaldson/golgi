@@ -2,3 +2,6 @@
 -main RunTests
 -dce full
 -lib hx3compat
+-lib travix
+-lua bin/out.lua
+-cmd bin/out.lua

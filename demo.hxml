@@ -1,0 +1,5 @@
+-cp demo/
+-main Main
+-lua bin/demo.lua
+-cmd lua bin/demo.lua
+

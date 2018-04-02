@@ -11,7 +11,7 @@ class Validate {
             if (!optional) throw missingf(arg_name);
             else return null;
         } else {
-            return StringTools.urlDecode(str);
+            return str;
         }
     }
     public static function int(str:String, optional=false, arg_name : String, missingf : String->Error, invalidf : String->Error) : Int {

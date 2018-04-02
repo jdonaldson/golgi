@@ -82,7 +82,7 @@ methods of `TestApi`, with a single parameter providing the return type and
 value.
 
 Having an enum for our test api results is not enough though, we still need to
-provide the logic for parsing a url into paths and parameters, selecting the
+provide the logic for parsing a string into paths and parameters, selecting the
 function to invoke, and capturing the return value in the enum.
 
 Golgi provides this functionality by extending a separate `Golgi` class.  This
@@ -129,8 +129,8 @@ Here we're running the Golgi router on the path "foo", using the Api defined by
 lookup of the right function on TestApi, and invokes the function there.
 
 Note : Golgi accepts its path argument as an array of simple strings.  Golgi
-does not split or decode raw string urls, as is common in more web-specific
-frameworks.
+does not split or decode strings in urls, leaving that for more specific
+url-based implementations.
 
 # Fully Typed Path Arguments
 
@@ -151,18 +151,18 @@ it as its result. We can invoke it with the following call:
 ```haxe
 class Main {
     static function main() {
-        Golgi.run( "foo/1", {}, new TestApi());
+        glg.run( ["foo","1"], {}, req));
     }
 }
 ```
 
 Note that the argument ``x`` inside the function body is typed as an ``Int``.
 Golgi reads the type information on the``TestApi`` method interface, and then
-makes the appropriate conversion on the corresponding path segment.  If the
-``x`` argument is missing, a ``NotFound(path:String)`` error is thrown.  If the
-argument can not be converted to an ``Int``, then an ``InvalidValue`` error is
-thrown.  All `Float`, `Int`, and `Bool` are all converted directly from strings.
-Any `String` arguments are url-escaped.
+makes the appropriate conversion on the corresponding path segment in the
+runtime.  If the ``x`` argument is missing, a ``NotFound(path:String)`` error is
+thrown.  If the argument can not be converted to an ``Int``, then an
+``InvalidValue`` error is thrown.  `Float`, `Int`, and `Bool` are all
+converted directly from strings.
 
 We can add as many typed arguments as we want, but the argument types are
 somewhat limited.  They can only be value types that are able to be converted
@@ -236,7 +236,7 @@ to internal application data that is available in the request context.
 # Sub-Routing
 
 It's also possible to do sub-routing in Golgi.  This process involves using a
-secondary Golgi Api to process additional url parameters, common in hierarchical
+secondary Golgi Api to process additional path parameters, common in hierarchical
 routing scenarios.
 
 ```haxe

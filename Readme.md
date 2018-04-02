@@ -77,13 +77,20 @@ specification for the `TestApiRoute` enum based on the api of `TestApi`.
 
 
 If we look at the enum constructors from `TestApiRoute` we see that they include
-`Foo(res:String)` and `Bar(res:Int)`.  These enum states describe the public
-methods of `TestApi`, with a single parameter providing the return type and
-value.
+`Foo(res:String)` and `Bar(res:Int)`, both according to the compiler and in the
+runtime.  These enum states describe the public methods of `TestApi`, with a
+single parameter providing the return type and value.
 
-Having an enum for our test api results is not enough though, we still need to
-provide the logic for parsing a string into paths and parameters, selecting the
-function to invoke, and capturing the return value in the enum.
+```haxe
+ var ctors = TestApiRoute.getConstructors();
+ trace(ctors + " is the value for ctors"); // [Foo, Bar]
+
+```
+
+
+Having a synchronized enum for our test api results is not enough though, we
+still need to provide the logic for parsing a string into paths and parameters,
+selecting the function to invoke, and capturing the return value in the enum.
 
 Golgi provides this functionality by extending a separate `Golgi` class.  This
 class is fully parameterized by the types we've defined previously.
@@ -97,7 +104,7 @@ class TestApiGolgi extends Golgi<Req, TestApi, TestApiRoute, TestMeta>{}
 ```
 
 The Golgi class we extended is also under the effect of a build macro.  This
-macro builds the specialized route function that:
+macro builds a specialized `route` function that:
 
 1. Separates the path arguments into function names and arguments
 2. Applies relevant route metamethods defined in the MetaGolgi.
@@ -129,8 +136,8 @@ Here we're running the Golgi router on the path "foo", using the Api defined by
 lookup of the right function on TestApi, and invokes the function there.
 
 Note : Golgi accepts its path argument as an array of simple strings.  Golgi
-does not split or decode strings in urls, leaving that for more specific
-url-based implementations.
+does not split or decode strings in urls, leaving that to be handled by upstream
+libraries.
 
 # Fully Typed Path Arguments
 

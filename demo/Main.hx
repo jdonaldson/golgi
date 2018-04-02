@@ -1,6 +1,9 @@
 import golgi.Error;
 class Main {
    static function main() {
+      var ctors = TestApiRoute.getConstructors();
+      trace(ctors + " is the value for ctors");
+
       var api = new TestApi();
       var glg = new TestApiGolgi(api);
       var req = {header : "dummy"};

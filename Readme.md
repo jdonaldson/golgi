@@ -60,10 +60,12 @@ this approach by enabling heterogeneous return values across the defined routes.
 This enables greater flexibility in providing routing behavior, while also
 maintaining a type safe interface for a routing result.
 
+# Routers and ADT
+
 Ideally, an algebraic data type (ADT) *enum* is used to specify
 heterogeneous return values.  However, this enum must be maintained separately
 from the actual routing logic, increasing the chances for bugs, and adding to
-the maintenance overhead. Golgi's approach is to build the enum for you, based
+the maintenance overhead.  Golgi's approach is to build the enum for you, based
 on the routing api you specify using a special `@:build` directive:
 
 ```haxe
@@ -91,9 +93,12 @@ single parameter providing the return type and value.
 Having a synchronized enum for our test api results is not enough though, we
 still need to provide the logic for parsing a string into paths and parameters,
 selecting the function to invoke, and capturing the return value in the enum.
+Furthermore, we only want the ADT enum type when we *don't* know which function
+is getting called.  In all other cases, we want to be able to use the plain
+`TestApi` instance directly.
 
-Golgi provides this functionality by extending a separate `Golgi` class.  This
-class is fully parameterized by the types we've defined previously.
+Golgi provides all of this functionality by extending a separate `Golgi` class.
+This class is fully parameterized by the types we've defined previously.
 
 ```haxe
 import golgi.Golgi;
@@ -103,7 +108,7 @@ class TestApiGolgi extends Golgi<Req, TestApi, TestApiRoute, TestMeta>{}
 
 ```
 
-The Golgi class we extended is also under the effect of a build macro.  This
+The Golgi class we defined is also under the effect of a build macro.  This
 macro builds a specialized `route` function that:
 
 1. Separates the path arguments into function names and arguments
@@ -111,8 +116,8 @@ macro builds a specialized `route` function that:
 3. Applies the arguments on the route function.
 4. Captures the result in the route enum.
 
-The routing class requires this types we've created previously.  In addition, it
-requires a `MetaGolgi` parameter that we will describe later.
+The routing class requires references to the types we've defined previously.  (In
+addition, it requires a `MetaGolgi` parameter that we will describe later.)
 
 
 ```haxe
@@ -242,9 +247,24 @@ to internal application data that is available in the request context.
 
 # Sub-Routing
 
-It's also possible to do sub-routing in Golgi.  This process involves using a
-secondary Golgi Api to process additional path parameters, common in hierarchical
-routing scenarios.
+It's also possible to perform sub-routing in Golgi.  This process involves using
+a secondary Golgi Api to process additional path parameters, common in
+hierarchical routing scenarios:
+
+```haxe
+import golgi.*;
+class SubTestApi extends Api<Req> {
+   public function foo(x: Int){
+      return x;
+   }
+}
+
+```
+
+When we handle the subroute, we can use the special `subroute` argument to route
+the leftover parts of the path on the relevant instance.
+
+
 
 ```haxe
 class TestApi implements golgi.Api<Req>  {
@@ -260,12 +280,18 @@ class TestApi implements golgi.Api<Req>  {
 }
 ```
 
-Like the params and request argument, subroute is a reserved argument name. It
+Like the params and request argument, `subroute` is a reserved argument name. It
 contains a simple method that will accept an appropriately typed Golgi instance,
-and apply the leftover paths as a route there.
+and handle the leftover paths as a route there.
 
-Handling the return value from the subroute is identical to handling a normal
-route.
+Routing to the subroute doesn't require anything special from the main router.
+Simply pass in the path containing the extra parameters required by the
+subroute.
+
+```haxe
+   var sub = glg.route(["subroute","foo","1"], {}, req);
+```
+
 
 # Golgi Type Parameters Explained
 

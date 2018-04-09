@@ -23,7 +23,7 @@ class Initializer {
         } else if (path_default){
             1;
         } else {
-            var arg_count = route.exprs.length + 1;
+            var arg_count = route.arg_exprs.length + 1;
             if (route.params) arg_count--;
             arg_count;
         }
@@ -47,7 +47,7 @@ class Initializer {
             var enum_name = { expr : EConst(CIdent(title)), pos : route.pos};
             return macro {
                 $length_check;
-                return ${enum_name}(api.$field_name($a{route.exprs}));
+                return ${enum_name}(api.$field_name($a{route.arg_exprs}));
             }
     }
 
@@ -122,12 +122,12 @@ class Initializer {
                     var route_args = route_arg_count(route, path_default);
                     var func = if (route.subroute){
                         macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
-                            return $enum_expr(api.$field_name($a{route.exprs}));
+                            return $enum_expr(api.$field_name($a{route.arg_exprs}));
                         };
                     } else {
                         macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
                             if (parts.length > $v{route_args}) throw golgi.Error.TooManyValues;
-                            return $enum_expr(api.$field_name($a{route.exprs}));
+                            return $enum_expr(api.$field_name($a{route.arg_exprs}));
                         };
                     }
                     block.push( macro dict.set($v{path_name}, $func));

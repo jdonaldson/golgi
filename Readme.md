@@ -309,7 +309,7 @@ for routing :
 1. Request parameter
 2. Api parameter (which must have its own matching Request parameter)
 3. Route parameter (which must match the Api parameter function/return values)
-4. Path Metadata (meta) parameter, which must match the Route parameter as well
+4. MetaGolgi (meta) parameter, which must match the Route parameter as well
    as the Request parameter.
 
 

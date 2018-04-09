@@ -65,6 +65,7 @@ class Initializer {
         }
     }
 
+
     public static function build(routes:Array<Route>, enum_name : String) : Array<Expr>{
         var block = [];
         var observed_paths = new Map<String,Bool>();
@@ -74,6 +75,7 @@ class Initializer {
             var path_altered = false;
 
             var path_default = false;
+
             for (m in route.meta){
                 switch(m.name){
                     case ":default" : {
@@ -82,40 +84,22 @@ class Initializer {
                         path_altered = true;
                         path_default = true;
                     };
-                    case ":alias" : {
+                    case ":alias", ":route" : {
                         alteration_check(path_altered, route.pos);
-                        var alias_paths = [];
+                        var tpaths = [];
                         for (p in m.params){
                             switch(p.expr){
                                 case EConst(CString(str)) :{
-                                    alias_paths.push(str);
+                                    tpaths.push(str);
                                 }
                                 default : {
-                                    Context.error("Alias paths must be anonymous strings", route.pos);
+                                    Context.error("The @:alias and @:route arguments must be anonymous strings", route.pos);
                                 }
 
                             }
                         }
-                        paths = paths.concat(alias_paths);
+                        paths = m.name == ":alias" ? tpaths.concat(paths) : tpaths;
                         path_altered = true;
-                    }
-                    case ":route" : {
-                        alteration_check(path_altered, route.pos);
-                        var route_paths = [];
-                        for (p in m.params){
-                            switch(p.expr){
-                                case EConst(CString(str)) :{
-                                    route_paths.push(str);
-                                }
-                                default : {
-                                    Context.error("Alias paths must be anonymous strings", route.pos);
-                                }
-
-                            }
-                        }
-                        paths = route_paths;
-                        path_altered = true;
-
                     }
                 }
 

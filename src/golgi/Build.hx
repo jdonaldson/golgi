@@ -117,7 +117,7 @@ class Build {
     }
 
     /**
-      Process the args, wrapping them in validator and constructor expr where
+      Process an arg, wrapping it in validator and constructor expr where
       appropriate.
      **/
     static function processArg(arg : TFunArg, pos : Position, args : Array<TFunArg>, idx : Int, check: ParamConfig){

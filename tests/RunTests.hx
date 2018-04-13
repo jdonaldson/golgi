@@ -1,6 +1,6 @@
 package ;
 import haxe.unit.*;
-import foo.TestApiRoute;
+import foo.TestApiResult;
 
 
 class RunTests {

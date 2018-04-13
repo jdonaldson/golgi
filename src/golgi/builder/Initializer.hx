@@ -45,9 +45,15 @@ class Initializer {
             }
             var title = titleCase(field_name);
             var enum_name = { expr : EConst(CIdent(title)), pos : route.pos};
-            return macro {
-                $length_check;
-                return ${enum_name}(api.$field_name($a{route.arg_exprs}));
+            if (route.method){
+                return macro {
+                    $length_check;
+                    return ${enum_name}(api.$field_name($a{route.arg_exprs}));
+                }
+            } else {
+                return macro {
+                    return ${enum_name}(api.$field_name);
+                }
             }
     }
 
@@ -115,24 +121,27 @@ class Initializer {
                 } else {
                     observed_paths.set(path_name, true);
                 }
-                if (route.middleware.length > 0){
-                    var func = mw_gen(field_name, route, path_default);
-                    block.push( macro  dict.set($v{path_name}, $func));
+                var func = if (route.middleware.length > 0){
+                    mw_gen(field_name, route, path_default);
                 } else {
                     var route_args = route_arg_count(route, path_default);
-                    var func = if (route.subroute){
-                        macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
-                            return $enum_expr(api.$field_name($a{route.arg_exprs}));
-                        };
-                    } else {
-                        macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
-                            if (parts.length > $v{route_args}) throw golgi.Error.TooManyValues;
-                            return $enum_expr(api.$field_name($a{route.arg_exprs}));
-                        };
-                    }
-                    block.push( macro dict.set($v{path_name}, $func));
+                    var exprs = [];
 
+                    if (!route.subroute) {
+                       exprs.push( macro if (parts.length > $v{route_args}) throw golgi.Error.TooManyValues);
+                    }
+
+                    if (route.method){
+                        exprs.push( macro return $enum_expr(api.$field_name($a{route.arg_exprs})));
+                    } else {
+                        exprs.push( macro return $enum_expr(api.$field_name));
+                    }
+
+                    macro function(parts:Array<String>, params:Dynamic, request : Dynamic){
+                        $b{exprs};
+                    };
                 }
+                block.push( macro dict.set($v{path_name}, $func));
             }
 
         };

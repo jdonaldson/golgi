@@ -1,1 +1,1 @@
-typedef TestMeta = golgi.meta.MetaGolgi<Req,TestApiRoute>;
+typedef TestMeta = golgi.meta.MetaGolgi<Req,TestApiResult>;

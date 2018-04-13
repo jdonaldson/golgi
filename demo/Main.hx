@@ -1,7 +1,7 @@
 import golgi.Error;
 class Main {
    static function main() {
-      var ctors = TestApiRoute.getConstructors();
+      var ctors = TestApiResult.getConstructors();
       trace(ctors + " is the value for ctors");
 
       var api = new TestApi();

@@ -70,21 +70,21 @@ on the routing api you specify using a special `@:build` directive:
 
 ```haxe
 @:build(golgi.Build.routes(TestApi))
-enum TestApiRoute {}
+enum TestApiResult {}
 
 ```
 
 The `@:build` metadata here instructs the Golgi macro method to build the full
-specification for the `TestApiRoute` enum based on the api of `TestApi`.
+specification for the `TestApiResult` enum based on the api of `TestApi`.
 
 
-If we look at the enum constructors from `TestApiRoute` we see that they include
+If we look at the enum constructors from `TestApiResult` we see that they include
 `Foo(res:String)` and `Bar(res:Int)`, both according to the compiler and in the
 runtime.  These enum states describe the public methods of `TestApi`, with a
 single parameter providing the return type and value.
 
 ```haxe
- var ctors = TestApiRoute.getConstructors();
+ var ctors = TestApiResult.getConstructors();
  trace(ctors + " is the value for ctors"); // [Foo, Bar]
 
 ```
@@ -102,9 +102,9 @@ This class is fully parameterized by the types we've defined previously.
 
 ```haxe
 import golgi.Golgi;
-typedef TestMeta = golgi.meta.MetaGolgi<Any,TestApiRoute>;
+typedef TestMeta = golgi.meta.MetaGolgi<Any,TestApiResult>;
 
-class TestApiGolgi extends Golgi<Req, TestApi, TestApiRoute, TestMeta>{}
+class TestApiGolgi extends Golgi<Req, TestApi, TestApiResult, TestMeta>{}
 
 ```
 
@@ -301,7 +301,7 @@ includes the type for the request (``Req``).
 The Golgi router itself accepts four parameters:
 
 ```haxe
-class TestApiGolgi extends Golgi<Req, TestApi, TestApiRoute, TestMeta>{}
+class TestApiGolgi extends Golgi<Req, TestApi, TestApiResult, TestMeta>{}
 ```
 These parameters tell Golgi the relationships between the four types required
 for routing :

@@ -18,9 +18,11 @@ class TestPaths extends haxe.unit.TestCase {
         assertTrue(false);
     }
     static var req = { msg : "dummy"};
+
     var api : TestApi;
     var golgi : TestApiGolgi;
     var meta : TestMeta;
+
     public function new(){
         api = new TestApi();
         meta = new TestMeta();

@@ -4,6 +4,7 @@ import golgi.meta.*;
 import SubTestGolgi;
 
 class TestApi extends Api<Req> {
+   public var someVar : Int = 4;
     public function new ()  {
         super();
     }

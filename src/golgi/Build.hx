@@ -261,13 +261,20 @@ class Build {
 
         var mw = genFieldMiddleware(f.meta.get(), class_meta);
 
+        var method = switch(f.kind){
+            case FVar(_) : false;
+            case FMethod(_) : true;
+            default : Context.error('Only field variables and methods allowed', pos);
+        }
+
         return {
             name       : f.name,
             meta       : f.meta.get(),
             pos        : pos,
             subroute   : status.subroute,
             params     : status.params,
-            arg_exprs      : arg_exprs,
+            arg_exprs  : arg_exprs,
+            method     : method,
             middleware : mw
         };
     }
@@ -296,7 +303,7 @@ class Build {
     }
 
     /**
-      The main build method for golgi api types
+      The main @:build method for golgi api types.  Only checks arguments.
      **/
     macro public static function api() : Array<Field> {
         var fields = Context.getBuildFields();
@@ -311,18 +318,22 @@ class Build {
 
         for (f in fields){
             if (f.name == "new") continue;
+            if (f.access.indexOf(APublic) == -1) [];
+            else if (f.access.indexOf(AStatic) != -1) [];
             switch(f.kind){
                 case FFun(fn)  : {
                     var mw = [for (f in f.meta) f.name];
                     var tfnret = fn.ret.toType();
-                    if (f.access.indexOf(APublic) == -1) [];
-                    else if (f.access.indexOf(AStatic) != -1) [];
                     checkArguments(fn, treq);
+                }
+                case FVar(t) : {
+                    var mw = [for (f in f.meta) f.name];
+                    var tfnret = t;
                 }
                 default : continue;
             }
         };
-        return fields;
+        return null; // haxe will use the original build fields.
     }
 
 
@@ -439,6 +450,10 @@ class Build {
                         default : Context.error("Illegal api field type", pos());
                     }
                 }
+                case FVar(t,p) : {
+                    var route_fn= processClassField(f, [], treq, api_meta);
+                    routes.push(route_fn);
+                }
                 default : continue;
             }
         }
@@ -492,7 +507,7 @@ class Build {
         return fields.concat([router, init]);
     }
 
-    public static function routes(api : Expr) : Array<Field> {
+    public static function results(api : Expr) : Array<Field> {
 
         var enm = Context.getLocalType().getEnum();
         checkModule(enm);
@@ -524,7 +539,7 @@ class Build {
                     if (!f.isPublic) continue;
                     enum_fields.push({
                         name : titleCase(f.name),
-                        pos : Context.currentPos(),
+                        pos : api.pos,
                         kind : FFun({
                             args : [{
                                 name : "result",
@@ -535,12 +550,26 @@ class Build {
                         })
                     });
                 }
+                case FVar(t,p) : {
+                    var ret = f.type.toComplexType();
+                    enum_fields.push({
+                        name : titleCase(f.name),
+                        pos : api.pos,
+                        kind : FFun({
+                            args : [{
+                                name : "result",
+                                type : ret
+                            }],
+                            expr : null,
+                            ret : null
+                        })
+
+                    });
+
+                }
                 default : continue;
             }
         }
-
-
-
 
         return enum_fields.concat(Context.getBuildFields());
     }

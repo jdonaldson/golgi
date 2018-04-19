@@ -5,7 +5,7 @@ import golgi.MetaGolgi;
 /**
   The base subclass for a Golgi Api.
  **/
-@:autoBuild(golgi.Build.api())
+@:autoBuild(golgi.Check.api())
 class Api<TReq> {
     public function new(){ }
 }

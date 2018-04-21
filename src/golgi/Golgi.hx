@@ -1,5 +1,5 @@
 package golgi;
-import golgi.meta.MetaGolgi;
+import golgi.MetaGolgi;
 
 @:autoBuild(golgi.Build.golgi())
 class Golgi<TReq, TApi:Api<TReq>, TResult, TMeta:MetaGolgi<TReq, TResult>> {

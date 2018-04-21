@@ -1,5 +1,5 @@
 package golgi;
-import golgi.meta.MetaGolgi;
+import golgi.MetaGolgi;
 
 
 /**

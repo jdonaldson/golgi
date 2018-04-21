@@ -1,5 +1,5 @@
 import foo.TestMeta;
-import golgi.meta.MetaGolgi;
+import golgi.MetaGolgi;
 
 class SubTestGolgi extends golgi.Golgi<Req,SubTest,SubTestResult,MetaGolgi<Req,SubTestResult>>{
 }

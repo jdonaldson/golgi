@@ -1,7 +1,7 @@
 package;
 
 import golgi.*;
-import golgi.meta.MetaGolgi;
+import golgi.MetaGolgi;
 import foo.*;
 import foo.TestApiGolgi;
 using TestPaths.PathTools;

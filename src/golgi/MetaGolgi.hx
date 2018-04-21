@@ -1,4 +1,4 @@
-package golgi.meta;
+package golgi;
 /**
   Classes that extend this class follow the MetaGolgi pattern.  Their instance
   methods can be used as middleware within Golgi Apis.

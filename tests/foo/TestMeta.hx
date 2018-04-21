@@ -1,5 +1,5 @@
 package foo;
-class TestMeta extends golgi.meta.MetaGolgi<Req, TestApiResult>{
+class TestMeta extends golgi.MetaGolgi<Req, TestApiResult>{
     public function new() super();
     public function intercept(req : Req, next : Req->TestApiResult) : TestApiResult {
         return Intercepted;

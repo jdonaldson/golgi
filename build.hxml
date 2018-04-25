@@ -1,2 +1,3 @@
 -cp src
 quicktest.hxml
+-D eval-stack

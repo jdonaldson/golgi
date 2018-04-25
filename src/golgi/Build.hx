@@ -265,28 +265,63 @@ class Build {
 
     };
 
-    static function checkModule(cls: {module : String, name : String}){
+    static function checkTopLevel(cls: {module : String, name : String}){
         var modules = cls.module.split(".");
         if (cls.name != modules[modules.length-1]){
             Context.error("Classes and enums built by Golgi must be top level in their module.  Please move this declaration to a new file.", pos());
         }
     }
 
+    static function isTypeParameter(t : Type) {
+        switch(Context.follow(t)){
+            case TInst(_) : return true;
+            default : return false;
+        }
+    }
+    static function buildSupers(cls:ClassType) : Array<SuperParams>{
+        var cursup = cls.superClass;
+        var supers = [];
+        while(cursup != null){
+            supers.push({tp : cursup.t.get().params, cp : cursup.params});
+            cursup = cursup.t.get().superClass;
+        }
+        return supers;
+    }
+
+    static function applyTypeParameters(cls:ClassType, type : Type, ?supers : Array<SuperParams>) :  Type {
+        if (supers == null){
+            supers = buildSupers(cls);
+        }
+        for (i in 0...supers.length){
+            var p = supers[supers.length-i-1];
+            type = type.applyTypeParameters(p.tp, p.cp);
+        }
+        return type;
+    }
+
     static function golgi() : Array<Field> {
 
         var cls = Context.getLocalClass().get();
-        checkModule(cls);
+        checkTopLevel(cls);
+        if (cls.params.length > 0){
+            return null;
+        }
         var api_param = cls.findField("api").type;
         var k = api_param.follow();
 
         var sup = cls.superClass;
-        var api_type = api_param.applyTypeParameters(sup.t.get().params, sup.params);
+        var supers = buildSupers(cls);
 
+        var api_type = applyTypeParameters(cls, api_param, supers);
 
-        var route_f = Context.follow(cls.findField("route").type);
+        var route_field = "route";
+        var route_f = Context.follow(cls.findField(route_field).type);
+
+        var cursup = sup;
+
         var route_type = switch(route_f)  {
             case TFun(_,ret) : {
-                ret.applyTypeParameters(sup.t.get().params, sup.params);
+                applyTypeParameters(cls, ret);
             }
             default : {
                 Context.error("Illegal route function type", cls.pos);
@@ -294,11 +329,23 @@ class Build {
         }
 
         var meta_param = cls.findField("meta").type;
-        var meta_type = meta_param.applyTypeParameters(sup.t.get().params, sup.params);
+        var meta_type = applyTypeParameters(cls, meta_param, supers);
 
 
-        var route_enum = route_type.getEnum();
-        var api_class = api_type.getClass();
+        var route_enum = switch(route_type){
+            case TEnum(e,p) : e.get();
+            case TInst(c,p) : {
+                switch(c.get().kind){
+                    case KTypeParameter(_) : {
+                        return null; // a type parameter was passed.  Defer build.
+                    }
+                    default : Context.error("Invalid result type", pos());
+                }
+            }
+            default : Context.error("Invalid result type", pos());
+        }
+
+        var api_class = applyTypeParameters(cls, api_type).getClass();
         var fields = api_class.fields.get();
 
         var api_type = Context.getType(api_class.name);
@@ -404,7 +451,14 @@ class Build {
     public static function results(api : Expr) : Array<Field> {
 
         var enm = Context.getLocalType().getEnum();
-        checkModule(enm);
+
+        checkTopLevel(enm);
+        var type =Context.getLocalType();
+        switch(type){
+            case TEnum(_) : null;
+            default : Context.error("Results builder requires an enum", pos());
+
+        }
 
 
         var api_class = getClass(api);
@@ -489,3 +543,5 @@ typedef GolgiArg = {
 }
 
 typedef TFunArg = {t : Type, opt : Bool, name : String};
+
+typedef SuperParams = {tp : Array<TypeParameter>, cp : Array<Type>};

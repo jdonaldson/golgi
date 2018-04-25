@@ -21,6 +21,10 @@ Golgi relies heavily on macros, which can optimize routing in many cases, and
 provides a unique macro-based class/ADT binding that enables fluent route
 management with a minimum of coding.
 
+See a [recent
+presentation](https://docs.google.com/presentation/d/14_sodhxaSQ_wWDhmqVq_Fogjz-fGUIY6RvvXnSs_uaY/edit?usp=sharing)
+for more info.
+
 
 # Golgi Speed
 Golgi is *fast*.  The macro-based route generation eliminates common runtime and

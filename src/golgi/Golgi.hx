@@ -1,5 +1,4 @@
 package golgi;
-import golgi.MetaGolgi;
 
 @:autoBuild(golgi.Build.golgi())
 class Golgi<TReq, TApi:Api<TReq>, TResult, TMeta:MetaGolgi<TReq, TResult>> {
@@ -15,6 +14,7 @@ class Golgi<TReq, TApi:Api<TReq>, TResult, TMeta:MetaGolgi<TReq, TResult>> {
         this.dict = new Map();
         __init();
     }
+
     public function route(parts : Array<String>, params : Dynamic, request : TReq): TResult {
         var path = parts.length > 0 ? parts[0] : "";
 

@@ -399,37 +399,6 @@ class Build {
             }
         }
 
-        var handler_macro = macro {
-            var path = "";
-            if (parts.length == 0) {
-                parts = [];
-            } else {
-                path = parts[0];
-            }
-            if (dict.exists(path)){
-                return dict.get(path)(parts,params,request);
-            } else {
-                throw golgi.Error.NotFound(parts[0]);
-            }
-        };
-        var string_ctype = Context.getType("String").toComplexType();
-
-
-        var router = {
-            name   : "route",
-            access : [APublic,AOverride],
-            kind: FFun({
-                args : [
-                    {name:"parts",   type: TPath({name : "Array", pack:[], params:[TPType(string_ctype)]})},
-                    {name:"params",  type: TPath({name : "Dynamic", pack:[]})},
-                    {name:"request", type: treq.toComplexType()}
-                ],
-                ret  : enum_ctype,
-                expr : handler_macro
-            }),
-            pos: Context.currentPos()
-        };
-
 
         var new_field = Initializer.build(routes, route_enum.name);
 
@@ -445,7 +414,7 @@ class Build {
         };
 
         var fields = Context.getBuildFields();
-        return fields.concat([router, init]);
+        return fields.concat([init]);
     }
 
     public static function results(api : Expr) : Array<Field> {

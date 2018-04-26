@@ -16,6 +16,12 @@ class Golgi<TReq, TApi:Api<TReq>, TResult, TMeta:MetaGolgi<TReq, TResult>> {
         __init();
     }
     public function route(parts : Array<String>, params : Dynamic, request : TReq): TResult {
-        return null;
+        var path = parts.length > 0 ? parts[0] : "";
+
+        if (dict.exists(path)) {
+            return dict.get(path)(parts, params, request);
+        } else {
+            throw Error.NotFound(parts[0]);
+        }
     }
 }

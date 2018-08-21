@@ -1,2 +1,3 @@
 import golgi.*;
-class TestApiGolgi extends Golgi<Req, TestApi, TestApiResult, TestMeta>{}
+import adadt.ADADT;
+class TestApiGolgi extends Golgi<Req, TestApi, ADADT<TestApi>, TestMeta>{}

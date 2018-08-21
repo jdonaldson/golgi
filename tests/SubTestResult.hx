@@ -1,2 +1,2 @@
-@:build(golgi.Build.results(SubTest))
+@:build(adadt.Build.build(SubTest))
 enum SubTestResult {}

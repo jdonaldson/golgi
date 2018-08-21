@@ -3,3 +3,4 @@
 -dce full
 -lib hx3compat
 -lib travix
+-lib adadt

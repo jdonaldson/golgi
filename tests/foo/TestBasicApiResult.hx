@@ -1,4 +1,5 @@
 package foo;
-@:build(golgi.Build.results(TestBasicApi))
+
+@:build(adadt.Build.build(TestBasicApi))
 enum TestBasicApiResult {}
 

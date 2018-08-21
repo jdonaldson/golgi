@@ -5,6 +5,7 @@ import haxe.macro.Context;
 import haxe.macro.Type;
 
 using haxe.macro.ComplexTypeTools;
+using haxe.macro.TypeTools;
 
 
 class Check {
@@ -19,6 +20,7 @@ class Check {
 
 
         var meta = cls.meta;
+
 
         checkForInvalidPathMetadata(meta,cls.pos);
 
@@ -103,17 +105,41 @@ class Check {
         ensureOrder(map, ["params", "request", "subroute"], pos);
     }
 
+    static function getApiType(arr : Array<Type>) : haxe.ds.Option<Type>{
+        return null;
+
+    }
+
     static function getRequestType(cls : ClassType) : Type {
         var treq : Type = null;
-        if (cls.params.length > 0){
-            treq = cls.params[0].t;
-        }else {
-            var glg = cls.superClass;
-            while(glg.params.length <= 0){
-                glg = glg.t.get().superClass;
-            }
-            treq = glg.params[0];
+        var stack = [];
+        var find_api = function(cls : ClassType){
+            for(i in cls.interfaces) {
+                var type = i.t.get();
+                var arr = type.pack;
+                arr.push(type.name);
+                if (arr.join('.') == "golgi.Api"){
+                    return i.params[0].applyTypeParameters(type.params, i.params);
+                }
+            };
+            return null;
         }
-        return treq;
+        var api_type = find_api(cls);
+
+        var stack = [];
+
+        while(api_type == null && cls.superClass != null){
+            stack.push(cls.superClass);
+            cls = cls.superClass.t.get();
+            api_type = find_api(cls);
+        };
+        if (api_type != null){
+            var req_t = api_type;
+            for (cls in stack){
+                req_t = req_t.applyTypeParameters(cls.t.get().params, cls.params);
+            }
+            return req_t;
+        }
+        return null;
     }
 }

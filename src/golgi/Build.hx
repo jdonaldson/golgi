@@ -8,12 +8,12 @@ import haxe.macro.Expr.Position;
 import haxe.macro.Expr;
 import golgi.builder.*;
 import golgi.builder.Initializer.titleCase;
+
 using haxe.macro.ComplexTypeTools;
 using haxe.macro.TypeTools;
 using Lambda;
 
 
-#if macro
 class Build {
     static var reserved = ["params", "request", "subroute"];
 
@@ -227,50 +227,12 @@ class Build {
     }
 
 
-
-
-
-
     static function pos() {
         return Context.currentPos();
     }
 
-    static function getType(arg : Expr) {
-        var class_name = switch(arg){
-            case {expr : EConst(CIdent(str) | CString(str))} : str;
-            default : {
-                Context.error("Argument should be a Class name", pos());
-                null;
-            }
-        }
-        return Context.getType(class_name);
-    }
 
-    static function getClass(arg : Expr) {
-        var type = getType(arg);
-        var cls = type.getClass();
-        if (cls == null){
-            Context.error('Class ${type.getName()} does not exist', pos());
-        }
-        return cls;
-    }
 
-    static function getEnum(arg : Expr) {
-        var type = getType(arg);
-        var enm = type.getEnum();
-        if (enm == null){
-            Context.error('Enum ${type.getName()} does not exist', pos());
-        }
-        return enm;
-
-    };
-
-    static function checkTopLevel(cls: {module : String, name : String}){
-        var modules = cls.module.split(".");
-        if (cls.name != modules[modules.length-1]){
-            Context.error("Classes and enums built by Golgi must be top level in their module.  Please move this declaration to a new file.", pos());
-        }
-    }
 
     static function isTypeParameter(t : Type) {
         switch(Context.follow(t)){
@@ -294,15 +256,16 @@ class Build {
         }
         for (i in 0...supers.length){
             var p = supers[supers.length-i-1];
+            trace(p.cp + " is the value for cp");
             type = type.applyTypeParameters(p.tp, p.cp);
         }
-        return type;
+        return Context.followWithAbstracts(type);
     }
 
     static function golgi() : Array<Field> {
 
         var cls = Context.getLocalClass().get();
-        checkTopLevel(cls);
+        Utils.checkTopLevel(cls);
         if (cls.params.length > 0){
             return null;
         }
@@ -315,12 +278,13 @@ class Build {
         var api_type = applyTypeParameters(cls, api_param, supers);
 
         var route_field = "route";
-        var route_f = Context.follow(cls.findField(route_field).type);
+        var route_f = Context.followWithAbstracts(cls.findField(route_field).type);
 
         var cursup = sup;
 
         var route_type = switch(route_f)  {
             case TFun(_,ret) : {
+                trace(ret + " is the value for ret");
                 applyTypeParameters(cls, ret);
             }
             default : {
@@ -332,6 +296,8 @@ class Build {
         var meta_type = applyTypeParameters(cls, meta_param, supers);
 
 
+        trace(cls.name + " is the value for cls.name");
+        trace(route_type + " is the value for route_type");
         var route_enum = switch(route_type){
             case TEnum(e,p) : e.get();
             case TInst(c,p) : {
@@ -341,6 +307,10 @@ class Build {
                     }
                     default : Context.error("Invalid result type", pos());
                 }
+            }
+            case TMono(m) : {
+              trace(m.get() + " is the value for m");
+              return null;
             }
             default : Context.error("Invalid result type", pos());
         }
@@ -355,23 +325,7 @@ class Build {
 
         var routes = [];
 
-        var param : Type;
-        var sup = api_class.superClass;
-        if (api_class.params.length > 0){
-            param = api_class.params[0].t;
-        } else {
-            while (sup != null){
-                if (sup.params.length > 0){
-                    param = sup.params[0];
-                    break;
-                }
-                sup = sup.t.get().superClass;
-            }
-            if (param == null){
-                Context.error("No suitable request parameter found", pos());
-            }
-        }
-
+        var param : Type = getRequestType(api_class);
 
         var treq = param;
 
@@ -416,82 +370,40 @@ class Build {
         var fields = Context.getBuildFields();
         return fields.concat([init]);
     }
-
-    public static function results(api : Expr) : Array<Field> {
-
-        var enm = Context.getLocalType().getEnum();
-
-        checkTopLevel(enm);
-        var type =Context.getLocalType();
-        switch(type){
-            case TEnum(_) : null;
-            default : Context.error("Results builder requires an enum", pos());
-
+    static function getRequestType(cls : ClassType) : Type {
+        var treq : Type = null;
+        var stack = [];
+        var find_api = function(cls : ClassType){
+            for(i in cls.interfaces) {
+                var type = i.t.get();
+                var arr = type.pack;
+                arr.push(type.name);
+                if (arr.join('.') == "golgi.Api"){
+                    return i.params[0].applyTypeParameters(type.params, i.params);
+                }
+            };
+            return null;
         }
+        var api_type = find_api(cls);
 
+        var stack = [];
 
-        var api_class = getClass(api);
-        var api_name = {expr :EConst(CString(api_class.name)), pos : enm.pos};
-
-        enm.meta.add("_golgi_api", [api_name], enm.pos);
-
-        var fields = api_class.fields.get();
-        var enum_fields = [];
-
-        // capture routes
-        for (f in fields){
-            if (f.name == "new") continue;
-
-            switch(f.kind){
-                case FMethod(fn)  : {
-                    var tfnret = f.type;
-                    var wa = tfnret.toComplexType();
-                    var ret = switch(wa){
-                        case TFunction(_,ret) : ret;
-                        default : {
-                            Context.error('Method type should be function', Context.currentPos());
-                            null;
-                        }
-                    }
-                    if (!f.isPublic) continue;
-                    enum_fields.push({
-                        name : titleCase(f.name),
-                        pos : api.pos,
-                        kind : FFun({
-                            args : [{
-                                name : "result",
-                                type : ret
-                            }],
-                            expr : null,
-                            ret : null
-                        })
-                    });
-                }
-                case FVar(t,p) : {
-                    var ret = f.type.toComplexType();
-                    enum_fields.push({
-                        name : titleCase(f.name),
-                        pos : api.pos,
-                        kind : FFun({
-                            args : [{
-                                name : "result",
-                                type : ret
-                            }],
-                            expr : null,
-                            ret : null
-                        })
-
-                    });
-
-                }
-                default : continue;
+        while(api_type == null && cls.superClass != null){
+            stack.push(cls.superClass);
+            cls = cls.superClass.t.get();
+            api_type = find_api(cls);
+        };
+        if (api_type != null){
+            var req_t = api_type;
+            for (cls in stack){
+                req_t = req_t.applyTypeParameters(cls.t.get().params, cls.params);
             }
+            return req_t;
         }
-
-        return enum_fields.concat(Context.getBuildFields());
+        return null;
     }
+
 }
-#end
 
 typedef ParamConfig = {
     subroute : Bool,
@@ -514,3 +426,43 @@ typedef GolgiArg = {
 typedef TFunArg = {t : Type, opt : Bool, name : String};
 
 typedef SuperParams = {tp : Array<TypeParameter>, cp : Array<Type>};
+
+
+
+
+/**
+  Simple helper library (find another repo for these)
+**/
+private class Utils {
+  public function new(){}
+  public static function getClass(arg : Expr) {
+    var type = getType(arg);
+    var cls = type.getClass();
+    if (cls == null){
+      Context.error('Class ${type.getName()} does not exist', pos());
+    }
+    return cls;
+  }
+  public static function checkTopLevel(cls: {module : String, name : String}){
+    var modules = cls.module.split(".");
+    if (cls.name != modules[modules.length-1]){
+      Context.error("Classes and enums built by this library must be top level in their module.  Please move this declaration to a new file.", pos());
+    }
+  }
+  public static function pos() : Position {
+    return Context.currentPos();
+  }
+  public static function getType(arg : Expr) {
+    var class_name = switch(arg){
+      case {expr : EConst(CIdent(str) | CString(str))} : str;
+      default : {
+        Context.error("Argument should be a Class name", pos());
+        null;
+      }
+    }
+    return Context.getType(class_name);
+  }
+  public inline static function titleCase(name : String) : String{
+    return name.charAt(0).toUpperCase() + name.substr(1);
+  }
+}

@@ -1,0 +1,3 @@
+-main Main
+-lua out.lua
+-cmd lua out.lua

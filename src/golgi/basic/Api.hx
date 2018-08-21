@@ -4,5 +4,5 @@ import golgi.MetaGolgi;
 /**
   A basic version of the Golgi Api.
  **/
-class Api extends golgi.Api<{}>{}
+interface Api extends golgi.Api<{}>{}
 

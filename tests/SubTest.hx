@@ -1,11 +1,11 @@
 package;
 import golgi.Api;
 import foo.TestMeta;
-class SubTest extends Api<Req> {
+
+class SubTest implements Api<Req> {
     var id : Int;
-    override public function new(_id : Int){
+    public function new(_id : Int){
         this.id = _id;
-        super();
     }
 
     public function sub() : String {

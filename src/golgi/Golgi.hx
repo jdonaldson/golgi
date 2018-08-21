@@ -6,7 +6,7 @@ class Golgi<TReq, TApi:Api<TReq>, TResult, TMeta:MetaGolgi<TReq, TResult>> {
     var meta : TMeta;
     var dict : Map<String, Array<String>->Dynamic->TReq->TResult>;
 
-    function __init() : Void return null;
+    function __init() : Void {};
 
     public function new(api : TApi, ?meta : TMeta){
         this.api = api;

@@ -1,6 +1,7 @@
 package foo;
+import adadt.Build;
 
-@:build(golgi.Build.results(TestApi))
+@:build(adadt.Build.build(TestApi))
 enum TestApiResult{
     Intercepted;
 }

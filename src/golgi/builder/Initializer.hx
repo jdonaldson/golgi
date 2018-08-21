@@ -75,6 +75,7 @@ class Initializer {
     public static function build(routes:Array<Route>, enum_name : String) : Array<Expr>{
         var block = [];
         var observed_paths = new Map<String,Bool>();
+        if (enum_name == "Api_ADT") return [];
         for (route in routes){
             var field_name=  route.name;
             var paths = [field_name];
@@ -130,7 +131,6 @@ class Initializer {
                     if (!route.subroute) {
                        exprs.push( macro if (parts.length > $v{route_args}) throw golgi.Error.TooManyValues);
                     }
-
                     if (route.method){
                         exprs.push( macro return $enum_expr(api.$field_name($a{route.arg_exprs})));
                     } else {

@@ -1,2 +1,3 @@
 package foo;
-class TestBasicApiGolgi extends golgi.basic.Golgi<TestBasicApi, TestBasicApiResult> {}
+import golgi.basic.*;
+class TestBasicApiGolgi extends golgi.basic.Golgi<TestBasicApi> {}

@@ -1,5 +1,7 @@
 sudo: required
 dist: trusty
+node_js:
+  - 8
 
 language: haxe
 
@@ -9,7 +11,7 @@ os:
 
 # you can specify futher versions as found at http://haxe.org/website-content/downloads/versions.json
 haxe:
-  - "4.0.0-preview.1"
+  - "4.0.0-rc.5"
   - development
 
 matrix:

@@ -1,7 +1,6 @@
 package;
 
 import golgi.*;
-import golgi.MetaGolgi;
 import foo.*;
 import foo.TestApiGolgi;
 using TestPaths.PathTools;
@@ -38,7 +37,7 @@ class TestPaths extends haxe.unit.TestCase {
 
     public function testFailInvalidPath(){
         try{
-            var res = golgi.route("chocolate".path(), {}, req);
+            golgi.route("chocolate".path(), {}, req);
             shouldthrow();
         } catch (e : Error) {
             assertTrue(e.match(NotFound("chocolate")));
@@ -52,7 +51,7 @@ class TestPaths extends haxe.unit.TestCase {
 
     public function testFailSingleArg(){
         try{
-            var res = golgi.route("singlearg/blah".path(), {}, req);
+            golgi.route("singlearg/blah".path(), {}, req);
             shouldthrow();
         } catch (e : Error){
             assertTrue(e.match(InvalidValue("x")));
@@ -76,7 +75,7 @@ class TestPaths extends haxe.unit.TestCase {
 
     public function testFailParamArgInt() {
         try {
-            var res = golgi.route("paramArgInt".path(), {msg:'no'}, req);
+            golgi.route("paramArgInt".path(), {msg:'no'}, req);
             shouldthrow();
         } catch (e : Error){
             assertTrue(e.match(InvalidValueParam("msg")));

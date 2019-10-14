@@ -1,5 +1,4 @@
 package golgi;
-import golgi.MetaGolgi;
 
 
 /**

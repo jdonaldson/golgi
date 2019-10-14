@@ -4,7 +4,6 @@ class Main {
       var ctors = TestApiResult.getConstructors();
       trace(ctors + " is the value for ctors");
 
-      var api = new TestApi();
       var glg = new TestApiGolgi(api);
       var req = {header : "dummy"};
 

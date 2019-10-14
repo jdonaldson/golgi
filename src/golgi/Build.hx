@@ -1,16 +1,22 @@
 package golgi;
 import haxe.macro.Type;
+import haxe.macro.Expr;
+
+#if macro
+import golgi.builder.Route;
+import haxe.macro.Expr.Position;
 
 import golgi.Validate;
-import golgi.builder.Initializer.build;
+import golgi.builder.Initializer;
 import haxe.macro.Context;
-import haxe.macro.Expr.Position;
-import haxe.macro.Expr;
-import golgi.builder.*;
 import golgi.builder.Initializer.titleCase;
 using haxe.macro.ComplexTypeTools;
+import haxe.macro.Expr.ComplexType;
 using haxe.macro.TypeTools;
 using Lambda;
+#end
+
+
 
 
 #if macro
@@ -20,7 +26,7 @@ class Build {
     /**
       Shortcut for complex type unification
     **/
-    static function unify(t:haxe.macro.ComplexType, target : haxe.macro.ComplexType){
+    static function unify(t:ComplexType, target : ComplexType){
         return Context.unify(t.toType(), target.toType());
     }
 
@@ -54,7 +60,7 @@ class Build {
     /**
       An error message creator for argument problems
      **/
-    static function arg_error(arg : GolgiArg, ?param : String, ?pos : haxe.macro.Position){
+    static function arg_error(arg : GolgiArg, ?param : String, ?pos : Position){
         var type = arg.type.toType().toString();
         if (pos == null) pos = Context.currentPos();
         var name = arg.name;
@@ -193,7 +199,7 @@ class Build {
       Process the  function information, ensuring that special named arguments
       are the right type, and in the right order
      **/
-    static function processClassField(f : ClassField , args : Array<TFunArg>, treq  : haxe.macro.Type , class_meta : Metadata) : Route {
+    static function processClassField(f : ClassField , args : Array<TFunArg>, treq  : Type , class_meta : Metadata) : Route {
         var path_arg = 0;
         var path_idx = 0;
         var status = paramConfig(args);

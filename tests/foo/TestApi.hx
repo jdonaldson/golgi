@@ -1,6 +1,5 @@
 package foo;
 import golgi.*;
-import golgi.meta.*;
 import SubTestGolgi;
 
 class TestApi extends Api<Req> {
@@ -41,7 +40,7 @@ class TestApi extends Api<Req> {
         switch(res){
             case Sub(msg)        : return '' + arg + arg2 + msg;
             case SubAlias(msg)   : return msg;
-            case SubDefault(msg) : return 'default';
+            case SubDefault(_) : return 'default';
             default : return '';
         }
     }

@@ -3,3 +3,4 @@ out*
 .haxelib/*
 tests/logs/*
 tests/nginx_error.log
+dump/*

@@ -1,7 +1,8 @@
 sudo: required
 dist: trusty
-node_js:
-  - 8
+
+language: node_js
+node_js: 8
 
 language: haxe
 
@@ -25,6 +26,7 @@ install:
   - haxelib run travix install
 
 script:
+  - node -v
   - haxelib run travix interp
   - haxelib run travix neko
   - haxelib run travix python

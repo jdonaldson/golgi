@@ -5,7 +5,6 @@ language: haxe
 
 os:
   - linux
-  - osx
 
 # you can specify futher versions as found at http://haxe.org/website-content/downloads/versions.json
 haxe:
